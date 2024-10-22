@@ -11,24 +11,21 @@ public class Utilizator extends Entitate {
     private String parola;
     private String email;
     private Data dataNasterii;
-    private int venit;
-    private String numarTelefon;
-    private String domiciliu;
-    private int containerEconomii;
-    private int dataSalar;
 
-    public Utilizator(int id, String nume, String prenume, String parola, String email, Data dataNasterii, int venit, String numarTelefon, String domiciliu, int containerEconomii, int dataSalar) {
+    private String numarTelefon;
+
+    private int idProfil;
+
+    public Utilizator(int id, String nume, String prenume, String parola, String email, Data dataNasterii, String numarTelefon ,int idProfil) {
         super(id);
         this.nume = nume;
         this.prenume = prenume;
         this.parola = parola;
         this.email = email;
         this.dataNasterii = dataNasterii;
-        this.venit = venit;
         this.numarTelefon = numarTelefon;
-        this.domiciliu = domiciliu;
-        this.containerEconomii = containerEconomii;
-        this.dataSalar = dataSalar;
+        this.idProfil=idProfil;
+
     }
 
     public String getNume() {
@@ -71,12 +68,13 @@ public class Utilizator extends Entitate {
         this.dataNasterii = dataNasterii;
     }
 
-    public int getVenit() {
-        return venit;
+
+    public int getProfil() {
+        return idProfil;
     }
 
-    public void setVenit(int venit) {
-        this.venit = venit;
+    public void setProfil(int profil) {
+        this.idProfil = profil;
     }
 
     public String getNumarTelefon() {
@@ -87,27 +85,5 @@ public class Utilizator extends Entitate {
         this.numarTelefon = numarTelefon;
     }
 
-    public String getDomiciuliu() {
-        return domiciliu;
-    }
 
-    public void setDomiciuliu(String domiciuliu) {
-        this.domiciliu = domiciuliu;
-    }
-
-    public int getContainerEconomii() {
-        return containerEconomii;
-    }
-
-    public void setContainerEconomii(int containerEconomii) {
-        this.containerEconomii = containerEconomii;
-    }
-
-    public int getDataSalar() {
-        return dataSalar;
-    }
-
-    public void setDataSalar(int dataSalar) {
-        this.dataSalar = dataSalar;
-    }
 }

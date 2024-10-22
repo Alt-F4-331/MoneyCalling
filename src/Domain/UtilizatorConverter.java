@@ -4,7 +4,10 @@ public class UtilizatorConverter implements EntitateConverter<Utilizator> {
 
     @Override
     public String toString(Utilizator utilizator) {
-        return utilizator.getId() + ", " + utilizator.getNume() + ", " + utilizator.getPrenume() + ", " + utilizator.getParola() + ", " + utilizator.getEmail() + ", " + utilizator.getDataNasterii() + ", " + utilizator.getVenit() + ", " + utilizator.getNumarTelefon() + ", " + utilizator.getDomiciuliu() + ", " + utilizator.getContainerEconomii() + ", " + utilizator.getDataSalar();
+
+
+        return utilizator.getId() + ", " + utilizator.getNume() + ", " + utilizator.getPrenume() + ", " + utilizator.getParola() + ", " + utilizator.getEmail() + ", " + utilizator.getDataNasterii() +  ", " + utilizator.getNumarTelefon()  +
+                "," + utilizator.getProfil();
     }
 
     @Override
@@ -16,6 +19,6 @@ public class UtilizatorConverter implements EntitateConverter<Utilizator> {
         //creez un obiect de tip data, cu ajutorul a ceea ce am splituit
         Data dataNasterii = new Data(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2]));
         //creez obiectul de tip utilizator
-        return new Utilizator(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3], tokens[4], dataNasterii, Integer.parseInt(tokens[6]), tokens[7], tokens[8], Integer.parseInt(tokens[9]), Integer.parseInt(tokens[10]));
+        return new Utilizator(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3], tokens[4], dataNasterii,  tokens[6], Integer.parseInt(tokens[7]));
     }
 }

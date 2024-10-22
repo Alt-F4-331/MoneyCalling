@@ -27,11 +27,10 @@ public class DiagramaConverter implements EntitateConverter<Diagrama>{
 
         int id = Integer.parseInt(tokens[0]);
         int idUser=Integer.parseInt(tokens[1]);
-        int dataSalar=Integer.parseInt(tokens[2]);
         //primele 3 elemente sunt specifice pentru diagrama,iar restul fac parte din lista cheltuiala
 
         ArrayList<Cheltuiala> lista_cheltuieli = new ArrayList<>();
-        int index = 3;//am inceput de la 3 pt ca acolo am ramas
+        int index = 2;//am inceput de la 3 pt ca acolo am ramas
 
         while(index < tokens.length)
         {
@@ -43,6 +42,6 @@ public class DiagramaConverter implements EntitateConverter<Diagrama>{
         }
         //la final,in lista_cheltuieli avem toate cheltuielile pentru o diagrama
 
-        return new Diagrama(id,idUser,dataSalar,lista_cheltuieli);
+        return new Diagrama(id,idUser,lista_cheltuieli);
     }
 }

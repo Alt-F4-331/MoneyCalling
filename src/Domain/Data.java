@@ -11,6 +11,8 @@ public class Data {
         this.an = an;
     }
 
+
+
     public int getZi() {
         return this.zi;
     }
