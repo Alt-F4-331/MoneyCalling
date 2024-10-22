@@ -14,7 +14,7 @@ public class DiagramaTests {
     public void setUp() {
         cheltuiala1 = new Cheltuiala(1, "food", 70);
         cheltuiala2 = new Cheltuiala(2, "transport", 40);
-        cheltuiala3 = new Cheltuiala(3, "", 50);
+        //cheltuiala3 = new Cheltuiala(3, "", 50);
         //diagrama = new Diagrama();
     }
 }
