@@ -1,5 +1,10 @@
 package Domain;
 
+/*
+ Pentru user am putea sa adaugam inca o clasa numita provioriu "ProfilFinanciar" care sa aiba: venit, dataSalar, containerEconomii
+                                                               "User" sa ramana doar cu: nume, prenume, dataNasterii, numarTelefon, domiciliu
+ */
+
 public class Utilizator extends Entitate {
     private String nume;
     private String prenume;
