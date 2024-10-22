@@ -17,7 +17,7 @@ public class CheltuialaTests {
     @Test
     public void testConstructor(){
         assertEquals(1, cheltuiala.getId(), "id must be 1");
-        assertEquals("Chipsuri", cheltuiala.getNume(), "nume must be home");
+        assertEquals("home", cheltuiala.getNume(), "nume must be home");
         assertEquals(15, cheltuiala.getSuma(), "suma must be 15");
     }
 

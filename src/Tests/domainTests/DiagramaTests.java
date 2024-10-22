@@ -1,20 +1,48 @@
 package Tests.domainTests;
 
-import Domain.Cheltuiala;
-import Domain.Diagrama;
+import Domain.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DiagramaTests {
     private Diagrama diagrama;
-    private Cheltuiala cheltuiala1;
-    private Cheltuiala cheltuiala2;
-    private Cheltuiala cheltuiala3;
+    private Utilizator user;
+    private Data data;
+    ArrayList<Cheltuiala> lista = new ArrayList<Cheltuiala>();
 
     @BeforeEach
     public void setUp() {
-        cheltuiala1 = new Cheltuiala(1, "food", 70);
-        cheltuiala2 = new Cheltuiala(2, "transport", 40);
-        //cheltuiala3 = new Cheltuiala(3, "", 50);
-        //diagrama = new Diagrama();
+        lista.add(new Cheltuiala(1, "food", 70));
+        lista.add(new Cheltuiala(2, "transport", 40));
+        lista.add(new Cheltuiala(3, "health", 50));
+        data = new Data(1,1,2000);
+        user = new Utilizator(1, "LastName", "FirstName", "password","email@domain.com", data, "0123456789", 1);
+
+        diagrama = new Diagrama(1, user.getId(), lista);
+    }
+
+
+    @Test
+    public void testConstructor(){
+        assertEquals(1, diagrama.getId(), "diagrama id must be 1");
+        assertEquals(user.getId(), diagrama.getIdUser(), "diagrama userid must be 1");
+        assertEquals(lista.get(1).getId(), diagrama.getListaCheltuieli().get(1).getId(), "diagrama listacheltuieli with the element on index 1 must be 1");
+    }
+
+    @Test
+    public void testsetidUser(){
+        diagrama.setIdUser(2);
+        assertEquals(2, diagrama.getIdUser(), "diagrama userid must be 2");
+    }
+
+    @Test
+    public void testsetLista(){
+        lista.add(new Cheltuiala(4, "shoes", 90));
+        diagrama.setListaCheltuieli(lista);
+        assertEquals(4, diagrama.getListaCheltuieli().get(3).getId(), "diagrama userid must be 4");
     }
 }
