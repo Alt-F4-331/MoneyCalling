@@ -47,9 +47,24 @@ public class UtilizatorTests {
     }
 
     @Test
+    public void testSetPassword(){
+        user.setParola("newPassword");
+        assertEquals("newPassword", user.getParola(), "password must be newPassword");
+    }
+
+    @Test
     public void testSetEmail(){
         user.setEmail("newEmail");
         assertEquals("newEmail", user.getEmail(), "email must be newEmail");
+    }
+
+    @Test
+    public void testSetDataNasterii(){
+        Data datanew = new Data(2,3,2004);
+        user.setDataNasterii(datanew);
+        assertEquals(2, user.getDataNasterii().getZi(), "user zi must be 2");
+        assertEquals(3, user.getDataNasterii().getLuna(), "user luna must be 3");
+        assertEquals(2004, user.getDataNasterii().getAn(), "user an must be 2004");
     }
 
     @Test

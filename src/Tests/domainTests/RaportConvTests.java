@@ -28,6 +28,6 @@ public class RaportConvTests {
         Raport raport = converter.fromString(linie);
 
         assertEquals(1, raport.getId(), "raport id must be 1");
-        assertEquals(2, raport.getId(), "raport idDiagrama must be 2");
+        assertEquals(2, raport.getIdDiagrama(), "raport idDiagrama must be 2");
     }
 }
