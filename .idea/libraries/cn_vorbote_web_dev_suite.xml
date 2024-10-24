@@ -1,0 +1,20 @@
+<component name="libraryTable">
+  <library name="cn.vorbote.web.dev.suite" type="repository">
+    <properties maven-id="cn.vorbote:web-dev-suite:3.4.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/cn/vorbote/web-dev-suite/3.4.1/web-dev-suite-3.4.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/cn/vorbote/simple-jwt/3.4.1/simple-jwt-3.4.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/cn/vorbote/core/3.4.1/core-3.4.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/ch/qos/logback/logback-core/1.2.11/logback-core-1.2.11.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/ch/qos/logback/logback-classic/1.2.11/logback-classic-1.2.11.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.24/lombok-1.18.24.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/auth0/java-jwt/3.19.2/java-jwt-3.19.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.13.2.2/jackson-databind-2.13.2.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.13.2/jackson-annotations-2.13.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.13.2/jackson-core-2.13.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -20,7 +20,6 @@ public class RaportConvTests {
 
     @Test
     public void testfromString(){
-        // TODO : eroare la scriere from string nu vede al 2 lea token corec
         String linie = "1, 2";
 
         RaportConverter converter = new RaportConverter();
@@ -28,6 +27,6 @@ public class RaportConvTests {
         Raport raport = converter.fromString(linie);
 
         assertEquals(1, raport.getId(), "raport id must be 1");
-        assertEquals(2, raport.getId(), "raport idDiagrama must be 2");
+        assertEquals(2, raport.getIdDiagrama(), "raport idDiagrama must be 2");
     }
 }

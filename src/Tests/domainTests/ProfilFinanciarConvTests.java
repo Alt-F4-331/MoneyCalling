@@ -21,7 +21,17 @@ public class ProfilFinanciarConvTests {
 
     @Test
     public void testfromString(){
-        // TODO -fromString()- FUNCTIA DE FROMSTRING DIN PROFILFINANCIARCONVERTER DA NULL ---- NU AM TEST
+        String line = "1,500,City,700,15";
+
+        ProfilFinanciarConverter pfc = new ProfilFinanciarConverter();
+
+        ProfilFinanciar pf = pfc.fromString(line);
+
+        assertEquals(1, pf.getId(), "profilFinanciar id must be 1");
+        assertEquals(500, pf.getVenit(), "profilFinanciar venit must be 500");
+        assertEquals("City", pf.getDomiciliu(), "profilFinanciar domiciliu must be City");
+        assertEquals(700, pf.getContainerEconomii(), "profilFinanciar containerEconomii must be 700");
+        assertEquals(15, pf.getDataSalar(), "profilFinanciar dataSalar must be 15");
     }
 
 }

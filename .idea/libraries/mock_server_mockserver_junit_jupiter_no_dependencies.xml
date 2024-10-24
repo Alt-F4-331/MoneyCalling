@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="mock.server.mockserver.junit.jupiter.no.dependencies" type="repository">
+    <properties maven-id="org.mock-server:mockserver-junit-jupiter-no-dependencies:5.15.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/mock-server/mockserver-junit-jupiter-no-dependencies/5.15.0/mockserver-junit-jupiter-no-dependencies-5.15.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

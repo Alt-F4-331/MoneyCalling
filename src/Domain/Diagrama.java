@@ -22,7 +22,6 @@ public class Diagrama extends Entitate {
         this.idUser = idUser;
     }
 
-
     public ArrayList<Cheltuiala> getListaCheltuieli() {
         return listaCheltuieli;
     }

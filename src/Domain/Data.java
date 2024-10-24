@@ -11,7 +11,10 @@ public class Data {
         this.an = an;
     }
 
-
+    @Override
+    public String toString() {
+        return zi + "."+ luna + "." + an;
+    }
 
     public int getZi() {
         return this.zi;
