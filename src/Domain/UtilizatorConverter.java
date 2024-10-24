@@ -7,7 +7,7 @@ public class UtilizatorConverter implements EntitateConverter<Utilizator> {
 
 
         return utilizator.getId() + ", " + utilizator.getNume() + ", " + utilizator.getPrenume() + ", " + utilizator.getParola() + ", " + utilizator.getEmail() + ", " + utilizator.getDataNasterii().toString() +  ", " + utilizator.getNumarTelefon()  +
-                "," + utilizator.getProfil();
+                ", " + utilizator.getProfil();
     }
 
     @Override

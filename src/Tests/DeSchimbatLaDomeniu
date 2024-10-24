@@ -1,11 +1,12 @@
-Pentru Diagrama:
+REZOLVAT Pentru Diagrama:
     ?- trebuie actualizat functia toString pentru ca lipsesc niste virgule si spatii
             momentan pentru Diagrama(1, 1, {1, food, 70}):
                 1,1food,70
             cum ar trebui sa fie:
                 1, 1, 1, food, 70
 
-Pentru ProfilFinanciar:
+
+REZOLVAT Pentru ProfilFinanciar:
     - trebuie scrisa functia de fromString in Converter
 
 Pentru Raport
@@ -13,7 +14,9 @@ Pentru Raport
     clasa Raport cred ca trebuie modificata
 
 Pentru Utilizator:
-    - trebuie rescrisa functia de toString pentru ca la data apare o eroare de transformare din int in string
+    REZOLVAT- trebuie rescrisa functia de toString pentru ca la data apare o eroare de transformare din int in string
     cel mai probabil nu merge pentru ca am avea nevoie de converter si pentru Data
-    - trebuie rescrisa functia de fromString da eroare la index
+    REZOLVAT- trebuie rescrisa functia de fromString da eroare la index
         (Index 0 out of bounds for length 0)
+    - exista o problema la scrierea la data, cand se da fromString data trebuie scrisa tot cu ", " de exemplu
+    "1, 1, 2000"--- 1.1.2000 asa apare pentru toString

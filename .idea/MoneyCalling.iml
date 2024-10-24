@@ -9,5 +9,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="epam.jdi.matchers.junit" level="project" />
+    <orderEntry type="library" name="cn.vorbote.web.dev.suite" level="project" />
+    <orderEntry type="library" name="ocadotechnology.SuiteTestEngine" level="project" />
+    <orderEntry type="library" name="mock.server.mockserver.junit.jupiter.no.dependencies" level="project" />
   </component>
 </module>

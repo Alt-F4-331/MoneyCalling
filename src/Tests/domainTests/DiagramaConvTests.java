@@ -13,9 +13,6 @@ public class DiagramaConvTests {
 
     @Test
     public void testtoString(){
-        // TODO: trebuie refacut toString lipsesc niste virgule si spatii
-        //  momentan arata 1,1food,70
-        //  ar trebui (id_diag)1, (id_prod)1, (numec)food, (pretc)70
         ArrayList<Cheltuiala> lista = new ArrayList<Cheltuiala>();
         lista.add(new Cheltuiala(1, "food", 70));
         lista.add(new Cheltuiala(2, "transport", 40));
@@ -24,7 +21,7 @@ public class DiagramaConvTests {
 
         DiagramaConverter diagc = new DiagramaConverter();
 
-        String expected = "1,1food,70,2transport,40";
+        String expected = "1,1,food,70,2,transport,40";
 
         assertEquals(expected, diagc.toString(diag));
     }

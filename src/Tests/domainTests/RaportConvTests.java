@@ -20,7 +20,6 @@ public class RaportConvTests {
 
     @Test
     public void testfromString(){
-        // TODO : eroare la scriere from string nu vede al 2 lea token corec
         String linie = "1, 2";
 
         RaportConverter converter = new RaportConverter();
