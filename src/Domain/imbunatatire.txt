@@ -33,3 +33,10 @@ public void setProfilFinanciar(ProfilFinanciar profilFinanciar) {
 Refactorizare:
 
 În cazul unor clase complexe, e important să te asiguri că nu supraîncarci constructorii cu prea multe parametri. În astfel de cazuri, poate fi util să folosești un "Builder Pattern" sau un ProfileManager care să construiască obiectele ProfilFinanciar.
+
+
+//nu doar back-endu (3,4 pt back-end)
+1.Buton profil financiar
+2.Logo aplicatie
+3.sex la utilizator
+4.Tip de data float unde ii vorba de bani, si recontemplare la tipurile de data
