@@ -12,7 +12,7 @@ public class DiagramaConverter implements EntitateConverter<Diagrama>{
         for(Cheltuiala c:d.getListaCheltuieli())
         {
             //pt ca e lista,trebuie adaugate elemente de pe ficere pozitie
-            element=element+ ","+ c.getId()+c.getNume()+","+c.getSuma();
+            element=element+ ","+ c.getId() +","+c.getNume()+","+c.getSuma();
         }
         return element;
     }
