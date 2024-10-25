@@ -80,7 +80,6 @@ public class Utilizator extends Entitate {
         this.sex = sex;
     }
 
-
     public ProfilFinanciar getProfil() {
         return profil;
     }
