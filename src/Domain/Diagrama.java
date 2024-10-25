@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Diagrama extends Entitate {
 
-    private int idUser;
+    private final int idUser;
     
     private ArrayList<Cheltuiala> listaCheltuieli;
 
@@ -18,9 +18,6 @@ public class Diagrama extends Entitate {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
-    }
 
     public ArrayList<Cheltuiala> getListaCheltuieli() {
         return listaCheltuieli;

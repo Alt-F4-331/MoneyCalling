@@ -2,13 +2,13 @@ package Domain;
 
 public class ProfilFinanciar extends Entitate{
 
-    private int venit;
+    private float venit;
 
     private String domiciliu;
-    private int containerEconomii;
+    private float containerEconomii;
     private int dataSalar;
 
-    public ProfilFinanciar(int id, int venit, String domiciliu, int containerEconomii, int dataSalar) {
+    public ProfilFinanciar(int id, float venit, String domiciliu, float containerEconomii, int dataSalar) {
         super(id);
         this.venit = venit;
         this.domiciliu = domiciliu;
@@ -16,11 +16,11 @@ public class ProfilFinanciar extends Entitate{
         this.dataSalar = dataSalar;
     }
 
-    public int getVenit() {
+    public float getVenit() {
         return venit;
     }
 
-    public void setVenit(int venit) {
+    public void setVenit(float venit) {
         this.venit = venit;
     }
 
@@ -32,11 +32,11 @@ public class ProfilFinanciar extends Entitate{
         this.domiciliu = domiciliu;
     }
 
-    public int getContainerEconomii() {
+    public float getContainerEconomii() {
         return containerEconomii;
     }
 
-    public void setContainerEconomii(int containerEconomii) {
+    public void setContainerEconomii(float containerEconomii) {
         this.containerEconomii = containerEconomii;
     }
 

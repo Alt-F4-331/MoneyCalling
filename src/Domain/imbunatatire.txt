@@ -4,7 +4,7 @@ Encapsularea datelor:
 Folosirea unor metode getter și setter pentru toate atributele e bună, însă asigură-te că nu faci publice atribute care nu ar trebui modificate sau accesate în mod direct de utilizatori. Dacă anumite date ar trebui să fie doar citite (de exemplu, id-ul unui profil), poți marca acele câmpuri drept finale sau elimina metodele setter pentru acestea.
 Validare și verificări:
 
-În metodele setter, ar fi bine să incluzi validări pentru a preveni valori invalide (de exemplu, pentru nume, parole sau veniturile utilizatorului). De asemenea, asigură-te că datele critice sunt bine validate (e.g., venitul să fie pozitiv).
+În metodele setter, ar fi bine să incluzi validări pentru a preveni valori invalide (de exemplu, pentru nume, parole sau veniturile utilizatorului). De asemenea, asigură-te că datele critice sunt bine validate (e.g., venitul să fie pozitiv).  //pe astea le facem in repository(sunt exceptii)
 Dependințe între clase:
 
 În loc să folosești un idProfil în clasa Utilizator, poți să stochezi un obiect de tip ProfilFinanciar. Acest lucru ar putea simplifica relațiile dintre clase și ar face codul mai orientat pe obiecte. De exemplu:

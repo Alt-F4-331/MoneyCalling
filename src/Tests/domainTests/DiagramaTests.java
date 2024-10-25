@@ -20,7 +20,8 @@ public class DiagramaTests {
         lista.add(new Cheltuiala(2, "transport", 40));
         lista.add(new Cheltuiala(3, "health", 50));
         data = new Data(1,1,2000);
-        user = new Utilizator(1, "LastName", "FirstName", "password","email@domain.com", data, "0123456789", 1);
+        ProfilFinanciar profil = new ProfilFinanciar(1, 4000.0F,"Cluj",15000,15);
+        user = new Utilizator(1, "LastName", "FirstName", "password","email@domain.com", data,"masculin", "0123456789", profil);
 
         diagrama = new Diagrama(1, user.getId(), lista);
     }
@@ -33,11 +34,6 @@ public class DiagramaTests {
         assertEquals(lista.get(1).getId(), diagrama.getListaCheltuieli().get(1).getId(), "diagrama listacheltuieli with the element on index 1 must be 1");
     }
 
-    @Test
-    public void testsetidUser(){
-        diagrama.setIdUser(2);
-        assertEquals(2, diagrama.getIdUser(), "diagrama userid must be 2");
-    }
 
     @Test
     public void testsetLista(){

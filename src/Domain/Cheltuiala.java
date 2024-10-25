@@ -4,9 +4,9 @@ public class Cheltuiala extends Entitate {
 
      private String nume;
 
-     private int suma;
+     private float suma;
 
-     public Cheltuiala(int id, String nume, int suma)
+     public Cheltuiala(int id, String nume, float suma)
      {
           super(id);
           this.nume=nume;
@@ -21,11 +21,11 @@ public class Cheltuiala extends Entitate {
           this.nume = nume;
      }
 
-     public int getSuma() {
+     public float getSuma() {
           return suma;
      }
 
-     public void setSuma(int suma) {
+     public void setSuma(float suma) {
           this.suma = suma;
      }
 }

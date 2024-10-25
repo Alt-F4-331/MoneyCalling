@@ -1,1 +1,11 @@
 Testele sunt facute momentan pe tot domeniul, singurul loc unde crapa e pe UtilizatorConverter
+
+Actualizari domeniu:
+
+-am scos setteri pentru id-uri
+-am modificat la utilizator urmatoarele:-am adaugat sex
+                                        -am schimbat idProfil cu clasa ProfilFinanciar
+                                        -(aici ti am umblat putin la tesgte sa nu fie eroare,dar tot trebuie sa te uiti tu cu coverage)
+-la ProfilFinanciar am modificat suma si containerEconomii in float
+-la Cheltuieli am modificat suma in float
+-am facut si schimbari aferente la converteri

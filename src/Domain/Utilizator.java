@@ -12,19 +12,23 @@ public class Utilizator extends Entitate {
     private String email;
     private Data dataNasterii;
 
+
+    private String sex;
+
     private String numarTelefon;
 
-    private int idProfil;
+    private ProfilFinanciar profil;
 
-    public Utilizator(int id, String nume, String prenume, String parola, String email, Data dataNasterii, String numarTelefon ,int idProfil) {
+    public Utilizator(int id, String nume, String prenume, String parola, String email, Data dataNasterii,String sex, String numarTelefon ,ProfilFinanciar idProfil) {
         super(id);
         this.nume = nume;
         this.prenume = prenume;
         this.parola = parola;
         this.email = email;
         this.dataNasterii = dataNasterii;
+        this.sex=sex;
         this.numarTelefon = numarTelefon;
-        this.idProfil=idProfil;
+        this.profil=idProfil;
 
     }
 
@@ -68,13 +72,21 @@ public class Utilizator extends Entitate {
         this.dataNasterii = dataNasterii;
     }
 
-
-    public int getProfil() {
-        return idProfil;
+    public String getSex() {
+        return sex;
     }
 
-    public void setProfil(int profil) {
-        this.idProfil = profil;
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+
+    public ProfilFinanciar getProfil() {
+        return profil;
+    }
+
+    public void setProfil(ProfilFinanciar profil) {
+        this.profil = profil;
     }
 
     public String getNumarTelefon() {
