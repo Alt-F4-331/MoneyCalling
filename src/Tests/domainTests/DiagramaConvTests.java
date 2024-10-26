@@ -21,14 +21,14 @@ public class DiagramaConvTests {
 
         DiagramaConverter diagc = new DiagramaConverter();
 
-        String expected = "1,1,food,70,2,transport,40";
+        String expected = "1, 1, food, 70.0, 2, transport, 40.0";
 
         assertEquals(expected, diagc.toString(diag));
     }
 
     @Test
     public void testfromString(){
-        String line = "1,1,1,food,70,2,health,60";
+        String line = "1, 1, 1, food, 70.0F, 2, health, 60.0F";
 
         DiagramaConverter diagc = new DiagramaConverter();
 

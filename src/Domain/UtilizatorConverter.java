@@ -18,7 +18,7 @@ public class UtilizatorConverter implements EntitateConverter<Utilizator> {
         //creez un obiect de tip data, cu ajutorul a ceea ce am splituit
         Data dataNasterii = new Data(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6]), Integer.parseInt(tokens[7]));
         //creez un obiect ProfilFinanciar
-        ProfilFinanciar profilFinanciar= new ProfilFinanciar(Integer.parseInt(tokens[10]),Integer.parseInt(tokens[11]), tokens[12] ,Integer.parseInt(tokens[13]),Integer.parseInt(tokens[14]));
+        ProfilFinanciar profilFinanciar= new ProfilFinanciar(Integer.parseInt(tokens[10]),Float.parseFloat(tokens[11]), tokens[12] ,Float.parseFloat(tokens[13]),Integer.parseInt(tokens[14]));
         //creez obiectul de tip utilizator
         return new Utilizator(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3], tokens[4], dataNasterii,tokens[8],  tokens[9], profilFinanciar);
     }

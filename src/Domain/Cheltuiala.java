@@ -3,7 +3,6 @@ package Domain;
 public class Cheltuiala extends Entitate {
 
      private String nume;
-
      private float suma;
 
      public Cheltuiala(int id, String nume, float suma)

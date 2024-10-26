@@ -16,8 +16,8 @@ public class UtilizatorTests {
     @BeforeEach
     public void setUp() {
         data = new Data(1,1,2000);
-        pf = new ProfilFinanciar(1, 300, "City", 500, 15);
-        user = new Utilizator(1, "LastName", "FirstName", "password","email@domain.com", data, "0123456789", pf.getId());
+        pf = new ProfilFinanciar(1, 300.0F, "City", 500.0F, 15);
+        user = new Utilizator(1, "LastName", "FirstName", "password","email@domain.com", data, "man", "0123456789", pf);
     }
 
     @Test
@@ -30,8 +30,13 @@ public class UtilizatorTests {
         assertEquals(1, user.getDataNasterii().getZi(), "user zi must be 1");
         assertEquals(1, user.getDataNasterii().getLuna(), "user luna must be 1");
         assertEquals(2000, user.getDataNasterii().getAn(), "user an must be 2000");
+        assertEquals("man", user.getSex(), "user sex must be man");
         assertEquals("0123456789", user.getNumarTelefon(), "user NumarTelefon must be 0123456789");
-        assertEquals(1, user.getProfil(), "user profil must be 1");
+        assertEquals(pf.getId(), user.getProfil().getId(), "user profil id must be 1");
+        assertEquals(pf.getVenit(), user.getProfil().getVenit(), "user profil venit must be 300.0F");
+        assertEquals(pf.getDomiciliu(), user.getProfil().getDomiciliu(), "user profil domiciliu must be City");
+        assertEquals(pf.getContainerEconomii(), user.getProfil().getContainerEconomii(), "user containerEconomii must be 500.0F");
+        assertEquals(pf.getDataSalar(), user.getProfil().getDataSalar(), "user profil dataSalar must be 15");
     }
 
     @Test
@@ -68,6 +73,12 @@ public class UtilizatorTests {
     }
 
     @Test
+    public void testsetSex(){
+        user.setSex("woman");
+        assertEquals("woman", user.getSex(), "user sex must be woman");
+    }
+
+    @Test
     public void testSetNumarTelefon(){
         user.setNumarTelefon("newTelefon");
         assertEquals("newTelefon", user.getNumarTelefon(), "telefon must be newTelefon");
@@ -75,7 +86,8 @@ public class UtilizatorTests {
 
     @Test
     public void testSetProfil(){
-        user.setProfil(2);
-        assertEquals(2, user.getProfil(), "idprofil must be 2");
+        ProfilFinanciar pfnew = new ProfilFinanciar(2, 400.0F, "Town", 600.0F, 20);
+        user.setProfil(pfnew);
+        assertEquals(pfnew, user.getProfil(), "idprofil must be pfnew");
     }
 }

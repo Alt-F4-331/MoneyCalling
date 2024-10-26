@@ -10,27 +10,27 @@ public class ProfilFinanciarConvTests {
 
     @Test
     public void testtoString(){
-        ProfilFinanciar pf = new ProfilFinanciar(1, 500, "City", 700, 15);
+        ProfilFinanciar pf = new ProfilFinanciar(1, 500.0F, "City", 700.0F, 15);
 
         ProfilFinanciarConverter pfc = new ProfilFinanciarConverter();
 
-        String expected = "1,500,City,700,15";
+        String expected = "1, 500.0, City, 700.0, 15";
 
         assertEquals(expected, pfc.toString(pf));
     }
 
     @Test
     public void testfromString(){
-        String line = "1,500,City,700,15";
+        String line = "1, 500.0F, City, 700.0F, 15";
 
         ProfilFinanciarConverter pfc = new ProfilFinanciarConverter();
 
         ProfilFinanciar pf = pfc.fromString(line);
 
         assertEquals(1, pf.getId(), "profilFinanciar id must be 1");
-        assertEquals(500, pf.getVenit(), "profilFinanciar venit must be 500");
+        assertEquals(500.0F, pf.getVenit(), "profilFinanciar venit must be 500.0F");
         assertEquals("City", pf.getDomiciliu(), "profilFinanciar domiciliu must be City");
-        assertEquals(700, pf.getContainerEconomii(), "profilFinanciar containerEconomii must be 700");
+        assertEquals(700.0F, pf.getContainerEconomii(), "profilFinanciar containerEconomii must be 700.0F");
         assertEquals(15, pf.getDataSalar(), "profilFinanciar dataSalar must be 15");
     }
 

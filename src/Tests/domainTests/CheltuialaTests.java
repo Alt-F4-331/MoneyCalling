@@ -11,14 +11,14 @@ public class CheltuialaTests {
 
     @BeforeEach
     public void setUp(){
-        cheltuiala =  new Cheltuiala(1,"home", 15);
+        cheltuiala =  new Cheltuiala(1,"home", 15.0F);
     }
 
     @Test
     public void testConstructor(){
         assertEquals(1, cheltuiala.getId(), "id must be 1");
         assertEquals("home", cheltuiala.getNume(), "nume must be home");
-        assertEquals(15, cheltuiala.getSuma(), "suma must be 15");
+        assertEquals(15.0F, cheltuiala.getSuma(), "suma must be 15.0");
     }
 
     @Test

@@ -1,0 +1,77 @@
+/* Containerul principal va ocupa toată fereastra */
+.register-container {
+  display: flex;
+  flex-direction: column; /* Orientare pe coloană pentru formular */
+  align-items: center; /* Centrare pe orizontală */
+  justify-content: center; /* Centrare pe verticală */
+  height: 100vh; /* Înălțime completă a ferestrei */
+  width: 100vw; /* Lățime completă a ferestrei */
+  background-color: #f5f5f5; /* Fundalul paginii */
+  margin: 0; /* Elimină marginile implicite */
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column; /* Orientare pe coloană pentru câmpuri */
+  align-items: center; /* Centrare pe orizontală */
+  padding: 20px; /* Adaugă puțin padding pentru estetică */
+  border-radius: 8px; /* Colțuri rotunjite */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Umbra pentru adâncire */
+  background-color: white; /* Fundal alb pentru formular */
+  width: 300px; /* Lățimea formularului */
+}
+
+input, select {
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%; /* Lățimea câmpurilor să fie 100% din container */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.date-inputs {
+  display: flex; /* Folosește flexbox pentru a aranja input-urile pe același rând */
+  justify-content: space-between; /* Spațiu egal între ele */
+  margin-bottom: 10px; /* Margine între câmpurile de dată și celelalte câmpuri */
+}
+
+.date-inputs input {
+  width: 30%; /* Lățimea fiecărui input să fie de 30% din container */
+  padding: 8px; /* Padding pentru un aspect mai plăcut */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+h2 {
+  color: #000000
+}
+
+.next-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  width: 100%; /* Lățimea butoanelor să fie 100% din container */
+  color: white; /* Culoarea textului */
+  border: none; /* Fără border */
+  border-radius: 10px; /* Colțuri rotunjite */
+  cursor: pointer; /* Cursor pointer la hover */
+}
+
+.next-button:hover {
+  background-color: #45a049; /* Schimbă culoarea la hover */
+}
+
+
+.back-button {
+  padding: 10px 80px; /* Dimensiuni mai mici pentru buton */
+  width: auto; /* Lățime automată pentru a se adapta conținutului */
+  font-size: 14px; /* Dimensiunea textului, poți ajusta după preferințe */
+  margin-top: 5px; /* Spatiu deasupra butonului */
+  color: white; /* Culoarea textului */
+  border: none; /* Fără border */
+  border-radius: 10px; /* Colțuri rotunjite */
+  cursor: pointer; /* Cursor pointer la hover */
+}
+
+.back-button:hover {
+  background-color: darkred; /* Schimbă culoarea la hover */
+}

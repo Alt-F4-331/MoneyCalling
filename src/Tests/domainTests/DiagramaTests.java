@@ -21,7 +21,7 @@ public class DiagramaTests {
         lista.add(new Cheltuiala(3, "health", 50));
         data = new Data(1,1,2000);
         ProfilFinanciar profil = new ProfilFinanciar(1, 4000.0F,"Cluj",15000,15);
-        user = new Utilizator(1, "LastName", "FirstName", "password","email@domain.com", data,"masculin", "0123456789", profil);
+        user = new Utilizator(1, "LastName", "FirstName", "password","email@domain.com", data,"man", "0123456789", profil);
 
         diagrama = new Diagrama(1, user.getId(), lista);
     }

@@ -5,14 +5,14 @@ public class ProfilFinanciarConverter implements EntitateConverter<ProfilFinanci
     @Override
     public String toString(ProfilFinanciar pf)
     {
-        return pf.getId() + "," +  pf.getVenit() + "," + pf.getDomiciliu() + "," +pf.getContainerEconomii()
-                + "," + pf.getDataSalar();
+        return pf.getId() + ", " +  pf.getVenit() + ", " + pf.getDomiciliu() + ", " +pf.getContainerEconomii()
+                + ", " + pf.getDataSalar();
     }
 
     @Override
     public ProfilFinanciar fromString(String line) {
 
-        String[] tokens = line.split(",");
+        String[] tokens = line.split(", ");
         int id = Integer.parseInt(tokens[0]);
         float venit = Float.parseFloat(tokens[1]);
         float eco = Float.parseFloat(tokens[3]);
