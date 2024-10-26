@@ -19,4 +19,4 @@ Pentru Utilizator:
     REZOLVAT- trebuie rescrisa functia de fromString da eroare la index
         (Index 0 out of bounds for length 0)
     - exista o problema la scrierea la data, cand se da fromString data trebuie scrisa tot cu ", " de exemplu
-    "1, 1, 2000"--- 1.1.2000 asa apare pentru toString
+    "1, 1, 2000"--- 1.1.2000 asa apare pentru toString //rezolvat
