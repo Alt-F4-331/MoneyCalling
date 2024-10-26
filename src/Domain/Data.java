@@ -13,7 +13,7 @@ public class Data {
 
     @Override
     public String toString() {
-        return zi + "."+ luna + "." + an;
+        return zi + ", "+ luna + ", " + an;
     }
 
     public int getZi() {
