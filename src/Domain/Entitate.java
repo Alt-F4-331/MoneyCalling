@@ -18,5 +18,4 @@ public class Entitate implements Serializable {
         return id;
     }
 
-
 }

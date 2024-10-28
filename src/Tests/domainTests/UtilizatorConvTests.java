@@ -22,7 +22,7 @@ public class UtilizatorConvTests {
 
     @Test
     public void testfromString(){
-        String line = "1, LastName, FirstName, password, email@domain.com, 1, 1, 2000, man, 0123456789, 1, 300.0, City, 500.0, 15";
+        String line = "1, LastName, FirstName, password, email@domain.com, 1.1.2000, man, 0123456789, 1, 300.0, City, 500.0, 15";
 
         UtilizatorConverter utc = new UtilizatorConverter();
 

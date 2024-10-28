@@ -18,7 +18,6 @@ public class ProfilFinanciarConverter implements EntitateConverter<ProfilFinanci
         float eco = Float.parseFloat(tokens[3]);
         int dataSalar = Integer.parseInt(tokens[4]);
 
-
         return new ProfilFinanciar(id , venit , tokens[2] , eco , dataSalar);//tokens[2] e domiciliu
     }
 }

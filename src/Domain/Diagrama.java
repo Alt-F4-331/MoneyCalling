@@ -18,7 +18,6 @@ public class Diagrama extends Entitate {
         return idUser;
     }
 
-
     public ArrayList<Cheltuiala> getListaCheltuieli() {
         return listaCheltuieli;
     }

@@ -96,5 +96,4 @@ public class Utilizator extends Entitate {
         this.numarTelefon = numarTelefon;
     }
 
-
 }
