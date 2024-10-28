@@ -16,10 +16,11 @@ public class UtilizatorConverter implements EntitateConverter<Utilizator> {
         String[] tokens = line.split(", ");
         //token[5] contine data, pe care trebuie sa o impart din nou, pentru a putea salva informatiile
         //creez un obiect de tip data, cu ajutorul a ceea ce am splituit
-        Data dataNasterii = new Data(Integer.parseInt(tokens[5]), Integer.parseInt(tokens[6]), Integer.parseInt(tokens[7]));
+        String[] data = tokens[5].split("\\.");
+        Data dataNasterii = new Data(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2]));
         //creez un obiect ProfilFinanciar
-        ProfilFinanciar profilFinanciar= new ProfilFinanciar(Integer.parseInt(tokens[10]),Float.parseFloat(tokens[11]), tokens[12] ,Float.parseFloat(tokens[13]),Integer.parseInt(tokens[14]));
+        ProfilFinanciar profilFinanciar= new ProfilFinanciar(Integer.parseInt(tokens[8]),Float.parseFloat(tokens[9]), tokens[10] ,Float.parseFloat(tokens[11]),Integer.parseInt(tokens[12]));
         //creez obiectul de tip utilizator
-        return new Utilizator(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3], tokens[4], dataNasterii,tokens[8],  tokens[9], profilFinanciar);
+        return new Utilizator(Integer.parseInt(tokens[0]), tokens[1], tokens[2], tokens[3], tokens[4], dataNasterii,tokens[6],  tokens[7], profilFinanciar);
     }
 }
