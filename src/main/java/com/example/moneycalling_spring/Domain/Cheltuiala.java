@@ -15,15 +15,24 @@ public class Cheltuiala extends Entitate {
      @JoinColumn(name = "id_diagrama")//cheia straina
      private Diagrama diagrama;
 
+     public Diagrama getDiagrama() {
+          return diagrama;
+     }
+
+     public void setDiagrama(Diagrama diagrama) {
+          this.diagrama = diagrama;
+     }
+
      public Cheltuiala(){
 
      }
 
-     public Cheltuiala(int id, String nume, float suma)
+     public Cheltuiala(int id, String nume, float suma , Diagrama diagrama)
      {
           super(id);
           this.nume=nume;
           this.suma=suma;
+          this.diagrama = diagrama;
      }
 
      public String getNume() {

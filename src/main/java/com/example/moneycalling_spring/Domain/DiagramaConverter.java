@@ -35,9 +35,9 @@ public class DiagramaConverter implements EntitateConverter<Diagrama>{
         while(index < tokens.length)
         {
             //trecem in for cate 3,pentru a lua fiecare obiect de tip cheltuiala
-            Cheltuiala c = new Cheltuiala(Integer.parseInt(tokens[index]) , tokens[index+1] , Float.parseFloat(tokens[index+2]));
+            //Cheltuiala c = new Cheltuiala(Integer.parseInt(tokens[index]) , tokens[index+1] , Float.parseFloat(tokens[index+2]));
             
-            lista_cheltuieli.add(c);
+            //lista_cheltuieli.add(c);
             index=index+3;//pt a incepe de la urmatorul obiect Cheltuiala
         }
         //la final,in lista_cheltuieli avem toate cheltuielile pentru o diagrama
