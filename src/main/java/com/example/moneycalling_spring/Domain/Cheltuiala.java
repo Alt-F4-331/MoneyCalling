@@ -2,7 +2,8 @@ package com.example.moneycalling_spring.Domain;
 
 import jakarta.persistence.*;
 
-
+@Entity
+@Table(name="cheltuiala")
 public class Cheltuiala extends Entitate {
 
      private String nume;
@@ -10,7 +11,9 @@ public class Cheltuiala extends Entitate {
      private float suma;
 
 
-    // private Diagrama diagrama;  asta este doar pentru tabela,pentru cheie straina,nu e atribut pentru cheltuiala
+     @ManyToOne
+     @JoinColumn(name = "id_diagrama")//cheia straina
+     private Diagrama diagrama;
 
      public Cheltuiala(){
 

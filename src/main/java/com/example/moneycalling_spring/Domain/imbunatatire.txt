@@ -40,3 +40,21 @@ Refactorizare:
 2.Logo aplicatie
 3.sex la utilizator
 4.Tip de data float unde ii vorba de bani, si recontemplare la tipurile de data
+
+
+UPDATE 01.11.2024
+
+-pentru a face baza de date cu legaturile corecte,oriunde aveai un id(int) pentru o legatura,am modificat din int in obiect(de exemplu,in Diagrama nu avem int user , avem Utilizator User)
+-asta inseamna ca nu mai avem nevoie de converteri(ar trebui modificati complet)
+-baza de date e facuta,cei care vor sa se conecteze trebuie sa foloseasca datagrip,si sa se conecteze cu urmatoarele credentiale(fara conectare nu poate fi rulat codul):
+-host: 192.168.1.5
+-port:5432
+Authentification:
+-user:postgres
+-password:boghidatabase
+-database:postgres
+-URL:jdbc:postgresql://192.168.1.5:5432/postgres
+-baza de date PostgreSQL
+
+
+-Pentru teste ,trebuie toate mutate in directorul specific pentru teste

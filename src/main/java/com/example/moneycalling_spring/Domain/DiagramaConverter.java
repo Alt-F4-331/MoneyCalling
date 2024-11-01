@@ -42,6 +42,8 @@ public class DiagramaConverter implements EntitateConverter<Diagrama>{
         }
         //la final,in lista_cheltuieli avem toate cheltuielile pentru o diagrama
 
-        return new Diagrama(id,idUser,lista_cheltuieli);
+        //return new Diagrama(id,idUser,lista_cheltuieli);
+        return new Diagrama();
+        //aici nu mai avem id_uder,avem direct user pentru a lega usor baza de date
     }
 }

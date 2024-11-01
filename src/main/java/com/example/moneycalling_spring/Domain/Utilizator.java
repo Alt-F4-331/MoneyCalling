@@ -2,6 +2,8 @@ package com.example.moneycalling_spring.Domain;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 /*
  Pentru user am putea sa adaugam inca o clasa numita provioriu "ProfilFinanciar" care sa aiba: venit, dataSalar, containerEconomii
                                                                "User" sa ramana doar cu: nume, prenume, dataNasterii, numarTelefon, domiciliu
@@ -23,6 +25,9 @@ public class Utilizator extends Entitate {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profil_id", referencedColumnName = "id")
     private ProfilFinanciar profil;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Legătura cu Diagrama
+    private List<Diagrama> diagrame;
 
     public Utilizator(){
 

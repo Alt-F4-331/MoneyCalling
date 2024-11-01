@@ -10,7 +10,8 @@ public class RaportConverter implements EntitateConverter<Raport>{
     @Override
     public Raport fromString(String line) {
         String[] tokens = line.split(", ");
-        return new Raport(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
+        //return new Raport(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
         //converteste dintr-un fisier text un obiect de tip RAPORT ezpz
+        return new Raport();//aceeasi pb ca la diagrama
     }
 }

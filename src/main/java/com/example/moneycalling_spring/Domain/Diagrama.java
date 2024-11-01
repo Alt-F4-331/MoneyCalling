@@ -1,25 +1,38 @@
 package com.example.moneycalling_spring.Domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "diagrama") //numele tabelului
 public class Diagrama extends Entitate {
 
-    private final int idUser;
+    @ManyToOne
+    @JoinColumn(name = "id_user",referencedColumnName = "id")
+    private Utilizator user;
 
-    private ArrayList<Cheltuiala> listaCheltuieli;
+    @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private ArrayList<Cheltuiala> listaCheltuieli ;
 
-    public Diagrama(int id, int idUser, ArrayList<Cheltuiala> listaCheltuieli) {
+    @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private ArrayList<Raport> listaRapoarte ;// legatura cu raportul
+
+    public Diagrama(int id, Utilizator idUser, ArrayList<Cheltuiala> listaCheltuieli) {
         super(id);
-        this.idUser = idUser;
+        this.user = idUser;
         this.listaCheltuieli = listaCheltuieli;
     }
 
-    public int getIdUser() {
-        return idUser;
+    public Diagrama()
+    {
+
+    }
+
+
+    public Utilizator getIdUser() {
+        return user;
     }
 
 

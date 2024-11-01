@@ -1,14 +1,17 @@
 package com.example.moneycalling_spring.Domain;
 import jakarta.persistence.*;
-
+@Entity
+@Table(name = "raport")
 public class Raport extends Entitate {
 
-    private int idDiagrama;
+    @ManyToOne // Relația ManyToOne cu Diagrama
+    @JoinColumn(name = "id_diagrama") // Numele coloanei care face legătura
+    private Diagrama diagrama;
 
-     public Raport(int id, int idDiagrama)
+     public Raport(int id, Diagrama idDiagrama)
      {
          super(id);
-         this.idDiagrama = idDiagrama;
+         this.diagrama = idDiagrama;
 
      }
 
@@ -16,11 +19,11 @@ public class Raport extends Entitate {
 
     }
 
-    public int getIdDiagrama() {
-        return idDiagrama;
+    public Diagrama getIdDiagrama() {
+        return diagrama;
     }
 
-    public void setIdDiagrama(int idDiagrama) {
-        this.idDiagrama = idDiagrama;
+    public void setIdDiagrama(Diagrama idDiagrama) {
+        this.diagrama = idDiagrama;
     }
 }
