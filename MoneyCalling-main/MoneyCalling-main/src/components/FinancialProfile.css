@@ -1,0 +1,93 @@
+.financial-profile-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('../assets/fundal_fp.png'); /* Calea către imaginea ta */
+  background-size: cover;
+  background-position: center;
+}
+
+.financial-profile-card {
+  background-color: #1a1a44;
+  padding: 30px;
+  border-radius: 3px;
+  width: 800px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.edit-button-container {
+  display: flex;
+  justify-content: flex-end; /* Aliniază butonul în partea dreaptă */
+}
+
+
+.back-button-fp {
+  color: #ffffff; /* Culoarea textului */
+  font-size: 20px;
+  text-decoration: none;
+  position: absolute;
+  top: 20px;
+  width: 10%;
+  left: 20px;
+  background: transparent; /* Fără fundal */
+  cursor: pointer; /* Schimbă cursorul pentru a arăta că este clicabil */
+  transition: background-color 0.3s ease, border 0.3s ease; /* Adaugă tranziții pentru efectele de hover */
+}
+
+.back-button-fp:hover {
+  background-color: #1f1e4c; /* Fundal deschis la hover */
+  border-radius: 5px; /* Margine rotunjită */
+}
+
+
+.financial-profile-title {
+  color: #FFFFFF;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-group input::placeholder {
+  color: #FFFFFF; /* Culoarea albă pentru textul placeholder */
+}
+
+.financial-profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group label {
+  color: #ffffff;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 80%;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  background-color: #1f1e4c;
+  opacity: 0.9;
+  color: #FFFFFF;
+  font-size: 16px;
+}
+
+
+.edit-button {
+  width: 15%;
+  background-color: #17163c;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #1f1e4c;
+}

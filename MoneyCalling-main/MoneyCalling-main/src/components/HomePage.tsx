@@ -15,7 +15,7 @@ const HomePage: React.FC = () => {
         <nav className='nav-links'>
           <a href='#home'>Home</a>
           <a href='#dashboard'>Dashboard</a>
-          <a href='#financial-profile'>Financial Profile</a>
+          <a href='/financial-profile'>Financial Profile</a>
           <a href='#help'>Help</a>
           <a href='#about-us'>About Us</a>
         </nav>
