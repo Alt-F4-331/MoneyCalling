@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Login'; // Importă componenta de login
 import Register from './components/Register';
 import HomePage from './components/HomePage';
+import WelcomePage from './components/WelcomePage'
 import FinancialProfile from './components/FinancialProfile';
 
 const App: React.FC = () => {
@@ -10,7 +11,8 @@ const App: React.FC = () => {
     <div className='app-container'>
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} /> {/* Ruta principală pentru login */}
+        <Route path="/" element={<WelcomePage />} /> {/* Ruta pentru welcome page */}
+        <Route path="/login" element={<Login />} /> {/* Ruta principală pentru login */}
         <Route path="/register" element={<Register />} /> {/* Ruta pentru creare cont */}
         <Route path="/homepage" element={<HomePage />} /> { /*  Ruta pentru pagina principala */ }
         <Route path="/financial-profile" element={<FinancialProfile />} />

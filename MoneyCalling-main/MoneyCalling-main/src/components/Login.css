@@ -1,68 +1,93 @@
 /* Containerul principal va ocupa toată fereastra */
 .login-body {
-    display: flex; /* Folosește flexbox */
-    justify-content: center; /* Centrare pe orizontală */
-    align-items: center; /* Centrare pe verticală */
-    height: 100vh; /* Înalțime completă a ferestrei */
-    width: 100vw; /* Lățime completă a ferestrei */
-    background-color: #f5f5f5; /* Fundalul paginii */
-    margin: 0; /* Elimină marginile implicite */
-  }
-  
-  .login-container {
-    display: flex;
-    flex-direction: column; /* Orientare pe coloană pentru formular */
-    align-items: center; /* Centrare pe orizontală */
-    justify-content: center; /* Centrare pe verticală */
-    padding: 20px; /* Adaugă puțin padding pentru estetică */
-    border-radius: 8px; /* Colțuri rotunjite */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Umbra pentru adâncire */
-    background-color: white; /* Fundal alb pentru formular */
-    width: 300px; /* Lățimea formularului */
-  }
-  
-  .login-form {
-    display: flex;
-    flex-direction: column; /* Orientare pe coloană pentru câmpuri */
-    align-items: center; /* Centrare pe orizontală */
-  }
-  
-  .logo {
-    width: 100px; /* Lățimea dorită pentru logo */
-    height: auto; /* Întreținerea proporțiilor originale */
-    border-radius: 15px;
-  }
+  display: flex; /* Folosește flexbox */
+  justify-content: center; /* Centrare pe orizontală */
+  align-items: center; /* Centrare pe verticală */
+  height: 100vh; /* Înalțime completă a ferestrei */
+  width: 100vw; /* Lățime completă a ferestrei */
+  background-image: url('public/fundal pc.png'); /* Asigură-te că calea este corectă */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 0; /* Elimină marginile implicite */
+}
 
-  input {
-    margin: 10px 0;
-    padding: 10px;
-    width: 100%; /* Lățimea câmpurilor să fie 100% din container */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  h2 {
-    color: #000000;
-  }
+/* Containerul pentru formularul de login */
+.login-container {
+  display: flex;
+  flex-direction: column; /* Orientare pe coloană pentru formular */
+  align-items: center; /* Centrare pe orizontală */
+  justify-content: center; /* Centrare pe verticală */
+  padding: 20px; /* Adaugă puțin padding pentru estetică */
+  border-radius: 8px; /* Colțuri rotunjite */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Umbra pentru adâncire */
+  background-color: #1F1E4C; /* Fundalul formularului */
+  width: 300px; /* Lățimea formularului */
+}
 
-  button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    width: 100%; /* Lățimea butoanelor să fie 100% din container */
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #054078;
-  }
-  
-  .register-button {
-    margin-top: 10px;
-  }
-  
-  .register-button:hover {
-    background-color: #054078;
-  }
-  
+/* Stiluri pentru formularul de login */
+.login-form {
+  display: flex;
+  flex-direction: column; /* Orientare pe coloană pentru câmpuri */
+  align-items: center; /* Centrare pe orizontală */
+  width: 100%; /* Lățimea formularului să fie 100% din container */
+}
+
+/* Stiluri pentru input-uri */
+input {
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%; /* Lățimea câmpurilor să fie 100% din container */
+  border: 1px solid #ccc;
+  border-radius: 6px; /* Colțuri rotunjite */
+  background-color: #1F1E4C; /* Fundalul input-urilor pentru a se potrivi cu containerul */
+  color: white; /* Culoarea textului input-urilor */
+}
+
+/* Stiluri pentru titluri */
+h2 {
+  color: #ffffff; /* Culoarea textului */
+}
+
+/* Stiluri pentru butonul de logare */
+.login-button1 {
+  margin-top: 10px;
+  padding: 10px 20px;
+  width: 100%; /* Lățimea butoanelor să fie 100% din container */
+  border: none; /* Fără border */
+  border-radius: 8px; /* Colțuri rotunjite */
+  cursor: pointer; /* Cursor pointer la hover */
+  background-color: #68148e; /* Fundal mov (purpuriu) */
+  color: white; /* Culoarea textului pe buton */
+}
+
+/* Stiluri la hover pentru butonul de logare */
+.login-button1:hover {
+  background-color: transparent; /* Culoare mai deschisă la hover */
+}
+
+/* Stiluri pentru butoanele de navigare */
+.back-button,
+.signup-button {
+  background-color: transparent; /* Fundal transparent */
+  color: white; /* Culoarea textului */
+  border: none; /* Fără border */
+  border-radius: 6px; /* Colțuri rotunjite */
+  cursor: pointer; /* Cursor pointer la hover */
+  padding: 10px 15px; /* Padding pentru butoane */
+  margin-top: 10px; /* Margine între butoane */
+}
+
+/* Stiluri pentru alinierea butoanelor */
+.button-container {
+  display: flex; /* Folosește flexbox pentru a aranja butoanele */
+  justify-content: space-between; /* Spațiu egal între butoane */
+  width: 100%; /* Lățimea totală a containerului de butoane */
+}
+
+/* Altele, opționale */
+.logo {
+  width: 120px; /* Lățimea dorită pentru logo */
+  height: auto; /* Întreținerea proporțiilor originale */
+  border-radius: 15px; /* Colțuri rotunjite pentru logo */
+}
