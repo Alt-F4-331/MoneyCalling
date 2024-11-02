@@ -13,13 +13,29 @@ public class UtilizatorService {
     @Autowired
     private UtilizatorRepository utilrepo;
 
-    public Utilizator createUtilizator(Utilizator utilizator)
+    public Utilizator saveUtilizator(Utilizator utilizator)
     {
+
         return utilrepo.save(utilizator);
+        //aceasta metoda poate fi folosita si pentru update:
+        //-daca este creata un user cu un id nou il creeaza
+        //-daca exista deja acel id,il actualizeaza
+    }
+
+    public void stergeUtilizatorById(int id){
+        utilrepo.deleteById(id);
+        //sterge un user dupa un id
     }
 
     public List<Utilizator> getAllUtilizatori(){
+
         return utilrepo.findAll();
+        //returneaza toti utilizatorii
+    }
+
+    public void deleteAll(){
+        utilrepo.deleteAll();
+        //sterge toti userii
     }
 
     //metode extra dupa

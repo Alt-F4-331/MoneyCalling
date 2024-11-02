@@ -22,7 +22,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Data data = new Data(15,10,2000);
         ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-        Utilizator utilizator = new Utilizator(1,"Ion", "Popescu","ionesmecher" , "ion.popescu@example.com",data,"mascul","0777333222", profil);
+        Utilizator utilizator = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",data,"mascul","0777333222", profil);
         //Cheltuiala cheltuiala = new Cheltuiala(1, "chirie", 1500.0f);
         utilizatorRepository.save(utilizator);
         //cheltuialaRepository.save(cheltuiala);
