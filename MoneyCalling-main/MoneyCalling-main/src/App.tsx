@@ -5,6 +5,8 @@ import Register from './components/Register';
 import HomePage from './components/HomePage';
 import WelcomePage from './components/WelcomePage'
 import FinancialProfile from './components/FinancialProfile';
+import AboutUs from './components/AboutUs';
+import Help from './components/Help';
 
 const App: React.FC = () => {
   return (
@@ -16,6 +18,8 @@ const App: React.FC = () => {
         <Route path="/register" element={<Register />} /> {/* Ruta pentru creare cont */}
         <Route path="/homepage" element={<HomePage />} /> { /*  Ruta pentru pagina principala */ }
         <Route path="/financial-profile" element={<FinancialProfile />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/help" element={<Help />} />
       </Routes>
     </Router>
     </div>

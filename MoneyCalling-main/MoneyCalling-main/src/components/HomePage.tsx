@@ -1,8 +1,9 @@
 import React from 'react';
 import './HomePage.css';
-import logo from "../assets/logo.jpeg";
+import logo from "/public/logo.png";
 import profile_pic from "../assets/profile_pic.jpg";
 import PieChart from './PieChart';
+import { Link } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
   return (
@@ -13,11 +14,11 @@ const HomePage: React.FC = () => {
             <img src={logo} alt="Logo" className='logo-image' />
         </div>
         <nav className='nav-links'>
-          <a href='#home'>Home</a>
-          <a href='#dashboard'>Dashboard</a>
-          <a href='/financial-profile'>Financial Profile</a>
-          <a href='#help'>Help</a>
-          <a href='#about-us'>About Us</a>
+        <Link to='/'>Home</Link> {/* Link către welcome page */}
+        <Link to='/dashboard'>Dashboard</Link>
+        <Link to='/financial-profile'>Financial Profile</Link>
+        <Link to='/help'>Help</Link>
+        <Link to='/about-us'>About Us</Link>
         </nav>
         <a href='/my-account' className='profile-link'>
             <img src={profile_pic} alt="Profile" className="profile-image" />
@@ -32,7 +33,11 @@ const HomePage: React.FC = () => {
         <button>Generare Raport cheltuieli personale</button>
         <button>Generare Raport transport</button>
         <button>Generare Raport divertisment</button>
-        <button className='add-button'>+ Adauga raport</button>
+        <button className='add-button'>+</button>
+        <div className='savings'>
+          <span>Savings:</span>
+          <span>44448282</span>
+        </div>
       </aside>
 
       {/* Conținut principal */}
