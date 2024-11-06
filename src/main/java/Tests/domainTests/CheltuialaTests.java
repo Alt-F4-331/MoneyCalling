@@ -32,4 +32,5 @@ public class CheltuialaTests {
         cheltuiala.setSuma(25);
         assertEquals(25, cheltuiala.getSuma(), "suma must be 25");
     }
-}*/
+}
+*/

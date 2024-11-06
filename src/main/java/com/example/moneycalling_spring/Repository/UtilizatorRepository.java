@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UtilizatorRepository extends JpaRepository<Utilizator , Integer> {
     //metode personalizate
+
+    /// adauga findbyMail
 }
