@@ -14,6 +14,11 @@ public class RaportService {
     @Autowired
     private RaportRepository raportRepository ;
 
+    @Autowired
+    public RaportService(RaportRepository rap)
+    {
+        this.raportRepository = rap;
+    }
 
     public Raport saveRaport(Raport raport){
         return raportRepository.save(raport);

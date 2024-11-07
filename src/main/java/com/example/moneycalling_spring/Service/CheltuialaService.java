@@ -13,6 +13,11 @@ public class CheltuialaService {
     @Autowired
     private CheltuialaRepository cheltuialaRepository;
 
+    @Autowired
+    public CheltuialaService(CheltuialaRepository cheltuiala)
+    {
+        this.cheltuialaRepository = cheltuiala;
+    }
 
     //Metoda care adauga o noua cheltuiala
     public Cheltuiala saveCheltuiala(Cheltuiala cheltuiala)
