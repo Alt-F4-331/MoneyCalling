@@ -4,7 +4,6 @@ import com.example.moneycalling_spring.Domain.Cheltuiala;
 import com.example.moneycalling_spring.Domain.Data;
 import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Domain.Utilizator;
-//import com.example.moneycalling_spring.Repository.CheltuialaRepository;
 import com.example.moneycalling_spring.Repository.UtilizatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

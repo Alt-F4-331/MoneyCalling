@@ -1,4 +1,4 @@
-package com.example.moneycalling_spring.Service;
+package main.java.com.example.moneycalling_spring.Service;
 
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Raport;
