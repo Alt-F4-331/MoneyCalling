@@ -19,10 +19,9 @@ public class Diagrama extends Entitate {
     @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ArrayList<Raport> listaRapoarte ;// legatura cu raportul
 
-    public Diagrama(int id, Utilizator idUser, ArrayList<Cheltuiala> listaCheltuieli) {
+    public Diagrama(int id, Utilizator idUser) {
         super(id);
         this.user = idUser;
-        this.listaCheltuieli = listaCheltuieli;
     }
 
     public Diagrama()
@@ -30,6 +29,9 @@ public class Diagrama extends Entitate {
 
     }
 
+    public void setUser(Utilizator user) {
+        this.user = user;
+    }
 
     public Utilizator getIdUser() {
         return user;

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DiagramaService {
@@ -39,4 +40,10 @@ public class DiagramaService {
         diagramarepo.deleteAll();
         //sterge toate diagramele
     }
+
+    public Optional<Diagrama> getById(int id)
+    {
+        return diagramarepo.findById(id);
+    }
+
 }

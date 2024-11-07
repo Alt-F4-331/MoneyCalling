@@ -5,10 +5,7 @@ import com.example.moneycalling_spring.Service.CheltuialaService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -30,4 +27,21 @@ public class CheltuialaController {
         return cheltuiala.map(ResponseEntity::ok)
         .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    @Operation(summary = "Adauga o noua cheltuiala")
+    @PostMapping
+    public ResponseEntity<Cheltuiala> createCheltuiala(@RequestBody Cheltuiala cheltuiala)
+    {
+        Cheltuiala cheltuiala1 = cheltuialaService.saveCheltuiala(cheltuiala);
+        return new ResponseEntity<>(cheltuiala1,HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Sterge cheltuiala dupa id")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCheltuiala(@PathVariable int id) {
+        cheltuialaService.stergeCheltuialaById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    //sterge cheltuiala cu un id specific
+    //primeste ID-ul cheltuielii din URL: /API/cheltuieli/1
+    //returneaza statusul HTTP 204(utilizatorul a fost sters)
 }
