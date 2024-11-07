@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.moneycalling_spring.Domain.Diagrama;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CheltuialaService {
@@ -31,6 +32,11 @@ public class CheltuialaService {
     //Metoda care returneaza toate cheltuielile
     public List<Cheltuiala> getAllCheltuieli(){
         return cheltuialaRepository.findAll();
+    }
+
+    public Optional<Cheltuiala> getById(int id)
+    {
+        return cheltuialaRepository.findById(id);
     }
 
     public void stergeCheltuialaById(int id){
