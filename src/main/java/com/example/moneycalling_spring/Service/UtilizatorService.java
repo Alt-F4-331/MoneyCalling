@@ -6,12 +6,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UtilizatorService {
 
     @Autowired
     private UtilizatorRepository utilrepo;
+
+    @Autowired
+    public UtilizatorService(UtilizatorRepository utilizatorRepository){
+        this.utilrepo=utilizatorRepository;
+    }
 
     public Utilizator saveUtilizator(Utilizator utilizator)
     {
@@ -27,6 +33,11 @@ public class UtilizatorService {
         //sterge un user dupa un id
     }
 
+    public Optional<Utilizator> getById(int id)
+    {
+        return utilrepo.findById(id);
+    }
+
     public List<Utilizator> getAllUtilizatori(){
 
         return utilrepo.findAll();
@@ -37,6 +48,12 @@ public class UtilizatorService {
         utilrepo.deleteAll();
         //sterge toti userii
     }
+
+    public Optional<Utilizator> getByEmail(String email)
+    {
+        return utilrepo.findByEmail(email);
+    }
+
 
     //metode extra dupa
 
