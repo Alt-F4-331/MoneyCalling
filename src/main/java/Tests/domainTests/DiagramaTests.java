@@ -30,7 +30,7 @@ public class DiagramaTests {
     @Test
     public void testConstructor(){
         assertEquals(1, diagrama.getId(), "diagrama id must be 1");
-        assertEquals(user.getId(), diagrama.getIdUser(), "diagrama userid must be 1");
+        assertEquals(user.getId(), diagrama.getUser(), "diagrama userid must be 1");
         assertEquals(lista.get(1).getId(), diagrama.getListaCheltuieli().get(1).getId(), "diagrama listacheltuieli with the element on index 1 must be 1");
     }
 

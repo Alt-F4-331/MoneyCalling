@@ -2,7 +2,6 @@ package com.example.moneycalling_spring.Domain;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,7 +32,7 @@ public class Diagrama extends Entitate {
         this.user = user;
     }
 
-    public Utilizator getIdUser() {
+    public Utilizator getUser() {
         return user;
     }
 

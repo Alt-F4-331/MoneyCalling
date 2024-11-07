@@ -35,7 +35,7 @@ public class DiagramaConvTests {
         Diagrama diag = diagc.fromString(line);
 
         assertEquals(1, diag.getId(), "Diagrama id must be 1");
-        assertEquals(1, diag.getIdUser(), "Diagrama user id must be 1");
+        assertEquals(1, diag.getUser(), "Diagrama user id must be 1");
         assertEquals(1, diag.getListaCheltuieli().getFirst().getId(), "1st cheltuiala id must be 1");
         assertEquals(2, diag.getListaCheltuieli().get(1).getId(), "2nd cheltuiala id must be 2");
         assertEquals("food", diag.getListaCheltuieli().getFirst().getNume(), "1st cheltuiala name must be food");
