@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.moneycalling_spring.Domain.Diagrama;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -65,4 +66,23 @@ public class CheltuialaController {
     //sterge cheltuiala cu un id specific
     //primeste ID-ul cheltuielii din URL: /API/cheltuieli/1
     //returneaza statusul HTTP 204(utilizatorul a fost sters)
+
+
+    // Endpoint pentru a obține toate cheltuielile după id-ul diagramei
+    @Operation(summary = "Obtine toate cheltuielile dintr-o diagrama")
+    @GetMapping("/diagrama/{idDiagrama}")
+    public ResponseEntity<List<Cheltuiala>> getAllCheltuieliByIdDiagrama(@PathVariable int idDiagrama) {
+        Optional<Diagrama> diagrama_opt = diagramaService.getById(idDiagrama);
+        if (diagrama_opt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Dacă nu există, returnăm 404
+        }
+
+        Diagrama diagrama = diagrama_opt.get();
+
+        List<Cheltuiala> cheltuieli = cheltuialaService.getAllCheltuieliByIdDiagrama(diagrama);
+        if (cheltuieli.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(cheltuieli);
+    }
 }

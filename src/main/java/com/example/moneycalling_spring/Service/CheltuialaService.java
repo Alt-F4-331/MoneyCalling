@@ -48,7 +48,7 @@ public class CheltuialaService {
         cheltuialaRepository.deleteAll();
     }
 
-   List<Cheltuiala> getAllCheltuieliByIdDiagrama(Diagrama diagrama){
+     public List<Cheltuiala> getAllCheltuieliByIdDiagrama(Diagrama diagrama){
         return cheltuialaRepository.findByDiagrama(diagrama);
    }
 
