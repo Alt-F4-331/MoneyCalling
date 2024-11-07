@@ -4,7 +4,7 @@ import com.example.moneycalling_spring.Domain.Cheltuiala;
 import com.example.moneycalling_spring.Repository.CheltuialaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import com.example.moneycalling_spring.Domain.Diagrama;
 import java.util.List;
 
 @Service
@@ -42,6 +42,9 @@ public class CheltuialaService {
         cheltuialaRepository.deleteAll();
     }
 
+   List<Cheltuiala> getAllCheltuieliByIdDiagrama(Diagrama diagrama){
+        return cheltuialaRepository.findByDiagrama(diagrama);
+   }
 
 
         //metode extra dupa
