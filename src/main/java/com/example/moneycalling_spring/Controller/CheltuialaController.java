@@ -2,10 +2,13 @@ package com.example.moneycalling_spring.Controller;
 
 import com.example.moneycalling_spring.Domain.Cheltuiala;
 import com.example.moneycalling_spring.Service.CheltuialaService;
+import com.example.moneycalling_spring.Service.DiagramaService;
+import com.example.moneycalling_spring.dto.CheltuialaRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.moneycalling_spring.Domain.Diagrama;
 
 import java.util.Optional;
 
@@ -13,10 +16,12 @@ import java.util.Optional;
 @RequestMapping("/api/cheltuieli")
 public class CheltuialaController {
     private final CheltuialaService cheltuialaService;
+    private final DiagramaService diagramaService;
 
 
-    public CheltuialaController(CheltuialaService cheltuialaService) {
+    public CheltuialaController(CheltuialaService cheltuialaService, DiagramaService diagramaService) {
         this.cheltuialaService = cheltuialaService;
+        this.diagramaService= diagramaService;
     }
 
     @Operation(summary = "Obtine cheltuiala dupa id")
@@ -29,10 +34,26 @@ public class CheltuialaController {
     }
     @Operation(summary = "Adauga o noua cheltuiala")
     @PostMapping
-    public ResponseEntity<Cheltuiala> createCheltuiala(@RequestBody Cheltuiala cheltuiala)
+    public ResponseEntity<Cheltuiala> createCheltuiala(@RequestBody CheltuialaRequestDTO cheltuialaRequestDTO)
     {
-        Cheltuiala cheltuiala1 = cheltuialaService.saveCheltuiala(cheltuiala);
-        return new ResponseEntity<>(cheltuiala1,HttpStatus.CREATED);
+        Optional<Diagrama> diagrama_opt = diagramaService.getById(cheltuialaRequestDTO.getId());
+
+        if (diagrama_opt.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Dacă nu există, returnăm 404
+        }
+
+        Cheltuiala ch = new Cheltuiala();
+
+        // Dacă utilizatorul există, îl asociem diagramei
+        Diagrama diagrama = diagrama_opt.get();
+        // Obținem utilizatorul din Optional
+
+        ch.setId(cheltuialaRequestDTO.getId());
+        ch.setDiagrama(diagrama);
+        ch.setNume(cheltuialaRequestDTO.getNume());
+        ch.setSuma(cheltuialaRequestDTO.getSuma());
+        Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
+        return new ResponseEntity<>(savedCheltuiala, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Sterge cheltuiala dupa id")

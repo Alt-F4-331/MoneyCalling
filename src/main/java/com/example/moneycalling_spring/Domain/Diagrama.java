@@ -14,10 +14,10 @@ public class Diagrama extends Entitate {
     private Utilizator user;
 
     @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ArrayList<Cheltuiala> listaCheltuieli ;
+    private List<Cheltuiala> listaCheltuieli ;
 
     @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private ArrayList<Raport> listaRapoarte ;// legatura cu raportul
+    private List<Raport> listaRapoarte ;// legatura cu raportul
 
     public Diagrama(int id, Utilizator idUser) {
         super(id);
@@ -38,11 +38,8 @@ public class Diagrama extends Entitate {
     }
 
 
-    public ArrayList<Cheltuiala> getListaCheltuieli() {
+    public List<Cheltuiala> getListaCheltuieli() {
         return listaCheltuieli;
     }
 
-    public void setListaCheltuieli(ArrayList<Cheltuiala> listaCheltuieli) {
-        this.listaCheltuieli = listaCheltuieli;
-    }
 }
