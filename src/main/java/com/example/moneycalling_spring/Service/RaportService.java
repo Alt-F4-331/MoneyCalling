@@ -1,4 +1,4 @@
-package main.java.com.example.moneycalling_spring.Service;
+package com.example.moneycalling_spring.Service;
 
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Raport;
@@ -13,6 +13,7 @@ public class RaportService {
 
     @Autowired
     private RaportRepository raportRepository ;
+
 
     public Raport saveRaport(Raport raport){
         return raportRepository.save(raport);
