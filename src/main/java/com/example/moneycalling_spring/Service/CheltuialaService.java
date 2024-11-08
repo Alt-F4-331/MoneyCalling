@@ -2,6 +2,8 @@ package com.example.moneycalling_spring.Service;
 
 import com.example.moneycalling_spring.Domain.Cheltuiala;
 import com.example.moneycalling_spring.Repository.CheltuialaRepository;
+import com.example.moneycalling_spring.Repository.DiagramaRepository;
+import com.example.moneycalling_spring.dto.CheltuialaRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.moneycalling_spring.Domain.Diagrama;
@@ -15,10 +17,44 @@ public class CheltuialaService {
     private CheltuialaRepository cheltuialaRepository;
 
     @Autowired
-    public CheltuialaService(CheltuialaRepository cheltuiala)
+    private final DiagramaRepository diagramaRepository;
+
+    @Autowired
+    public CheltuialaService(CheltuialaRepository cheltuiala,DiagramaRepository diagramaRepository)
     {
+
         this.cheltuialaRepository = cheltuiala;
+        this.diagramaRepository = diagramaRepository;
     }
+
+
+    // Mapping from DTO to Entity
+    public Cheltuiala mapToEntity(CheltuialaRequestDTO dto) {
+        Cheltuiala cheltuiala = new Cheltuiala();
+        cheltuiala.setId(dto.getId());
+        cheltuiala.setNume(dto.getNume());
+        cheltuiala.setSuma(dto.getSuma());
+
+        // Fetch and set Diagrama
+        Diagrama diagrama = diagramaRepository.findById(dto.getIdDiagrama())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Diagrama ID: " + dto.getIdDiagrama()));
+        cheltuiala.setDiagrama(diagrama);
+
+        return cheltuiala;
+    }
+
+    // Mapping from Entity to DTO
+    public CheltuialaRequestDTO mapToDTO(Cheltuiala cheltuiala) {
+        CheltuialaRequestDTO dto = new CheltuialaRequestDTO();
+        dto.setId(cheltuiala.getId());
+        dto.setNume(cheltuiala.getNume());
+        dto.setSuma(cheltuiala.getSuma());
+        if (cheltuiala.getDiagrama() != null) {
+            dto.setIdDiagrama(cheltuiala.getDiagrama().getId());
+        }
+        return dto;
+    }
+
 
     //Metoda care adauga o noua cheltuiala
     public Cheltuiala saveCheltuiala(Cheltuiala cheltuiala)
