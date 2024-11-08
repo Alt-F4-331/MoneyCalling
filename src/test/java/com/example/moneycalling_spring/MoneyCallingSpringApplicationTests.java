@@ -1,9 +1,8 @@
 package com.example.moneycalling_spring;
 
 import com.example.moneycalling_spring.Domain.*;
-import com.example.moneycalling_spring.Repository.UtilizatorRepository;
-import jdk.jshell.execution.Util;
-import org.junit.jupiter.api.Test;
+import com.example.moneycalling_spring.Repository.*;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,20 +12,26 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class MoneyCallingSpringApplicationTests {
-
-    @Autowired
-    private UtilizatorRepository utilizatorRepository;
     // ==============================
     //        Teste Domeniu
     // ==============================
+
+
+    private final Data dataNasterii = new Data(15, 12, 1998);
+    private final ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
+    private final Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
+    private final Utilizator utilizator2 = new Utilizator(1, "Marinescu", "Stefan", "parola1235", "stef.mari@email.com", dataNasterii, "M", "0723456789", profil);
+    private final Diagrama diag  = new Diagrama(1, utilizator);
+    private final Diagrama diag2 = new Diagrama(2, utilizator2);
+    private final Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, diag);
+    private final Raport raport = new Raport(1, diag);
+
     @Test
+    @Order(1)
     public void testConstructorGetteriUtilizator(){
         //Configurarea obiectului Utilizator
-        Data dataNasterii = new Data(15, 12, 1998);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-
-        Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
 
         //Testarea tuturor campurilor din acest obiect cu ajutorul functiilor definite get
         assertEquals(1, utilizator.getId(), "user id must be 1");
@@ -47,12 +52,9 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(2)
     public void testSetteriUtilizator(){
         //Configurarea obiectului Utilizator
-        Data dataNasterii = new Data(15, 12, 1998);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-
-        Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
 
         //Testarea functiei set pentru nume
         utilizator.setNume("newPopescu");
@@ -96,9 +98,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(3)
     public void testConstructorGetteriProfilFinanciar(){
-        // Configurarea obiectului ProfilFinanciar
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
 
         //Testarea tuturor campurilor din acest obiect cu ajutorul functiilor get
         assertEquals(1, profil.getId(), "profil id must be 1");
@@ -109,9 +110,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(4)
     public void testSetteriProfilFinanciar(){
-        //Configurarea obiectului ProfilFinanciar
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
 
         //Testarea functiei set pentru id
         profil.setId(2);
@@ -135,9 +135,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(5)
     public void testConstructorGetteriData(){
-        //Configurarea obiectului Data
-        Data dataNasterii = new Data(15, 12, 1998);
 
         //Testarea tuturor campurilor din acest obiect cu ajutorul functiilor get
         assertEquals(15, dataNasterii.getZi(), "dataNasterii zi must be 15");
@@ -146,9 +145,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(6)
     public void testSetteriData(){
-        //Configurarea obiectului Data
-        Data dataNasterii = new Data(15, 12, 1998);
 
         //Testarea functiei set pentru zi nasterii
         dataNasterii.setZi(30);
@@ -164,14 +162,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(7)
     public void testConstructorGetteriCheltuiala(){
-        //Configurarea obiectului Cheltuiala
-        Data dataNasterii = new Data(15, 12, 1998);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-        Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
-        Diagrama diag  = new Diagrama(1, utilizator);
-
-        Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, diag);
 
         //Testarea tuturor campurilor din acest obiect cu ajutorul functiilor get
         assertEquals(1, cheltuiala.getId(), "cheltuiala id must be 1");
@@ -181,16 +173,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(8)
     public void testSetteriCheltuiala(){
-        //Configurarea obiectului Cheltuiala
-        Data dataNasterii = new Data(15, 12, 1998);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-        Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
-        Utilizator utilizator2 = new Utilizator(1, "Marinescu", "Stefan", "parola1235", "stef.mari@email.com", dataNasterii, "M", "0723456789", profil);
-        Diagrama diag  = new Diagrama(1, utilizator);
-        Diagrama diag2 = new Diagrama(2, utilizator2);
-
-        Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, diag);
 
         //Testarea functiei set pentru id
         cheltuiala.setId(2);
@@ -206,13 +190,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(9)
     public void testConstructorGetteriDiagrama(){
-        //Configurarea obiectului Diagrama
-        Data dataNasterii = new Data(15, 12, 1998);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-        Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
-
-        Diagrama diag  = new Diagrama(1, utilizator);
 
         //Testarea tuturor campurilor din acest obiect cu ajutorul functiilor get
         assertEquals(1, diag.getId(), "diag id must be 1");
@@ -220,14 +199,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(10)
     public void testSetteriDiagrama(){
-        //Configurarea obiectului Diagrama
-        Data dataNasterii = new Data(15, 12, 1998);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-        Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
-        Utilizator utilizator2 = new Utilizator(1, "Marinescu", "Stefan", "parola1235", "stef.mari@email.com", dataNasterii, "M", "0723456789", profil);
-
-        Diagrama diag  = new Diagrama(1, utilizator);
 
         //Testarea functiei set pentru id
         diag.setId(2);
@@ -239,14 +212,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(11)
     public void testConstructorGetteriRaport(){
-        //Configurarea obiectului Raport
-        Data dataNasterii = new Data(15, 12, 1998);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-        Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
-        Diagrama diag  = new Diagrama(1, utilizator);
-
-        Raport raport = new Raport(1, diag);
 
         //Testarea tuturor campurilor din acest obiect cu ajutorul functiilor get
         assertEquals(1, raport.getId(), "raport id must be 1");
@@ -254,17 +221,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
+    @Order(12)
     public void testSetteriRaport(){
-        //Configurarea obiectului Raport
-        Data dataNasterii = new Data(15, 12, 1998);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-        Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
-        Utilizator utilizator2 = new Utilizator(1, "Marinescu", "Stefan", "parola1235", "stef.mari@email.com", dataNasterii, "M", "0723456789", profil);
-        Diagrama diag  = new Diagrama(1, utilizator);
-        Diagrama diag2 = new Diagrama(2, utilizator2);
-
-        Raport raport = new Raport(1, diag);
-
         //Testarea functiei set pentru id
         raport.setId(2);
         assertEquals(2, raport.getId(), "raport id must be 2");
@@ -275,78 +233,171 @@ class MoneyCallingSpringApplicationTests {
     }
 
 
+    // ==============================
+    //        Teste Repository
+    // ==============================
+
+    private final Data dataRepo = new Data(15,10,2000);
+    private final ProfilFinanciar profilRepo = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
+    private final Utilizator utilizatorRepo = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataRepo,"mascul","0777333222", profilRepo);
+    private final Diagrama diagRepo  = new Diagrama(1, utilizatorRepo);
+    private final Cheltuiala cheltuialaRepo = new Cheltuiala(1, "home", 50000.0F, diagRepo);
+    private final Raport raportRepo = new Raport(1, diagRepo);
+
+    @Autowired
+    private UtilizatorRepository utilizatorRepository;
+
+    @Autowired
+    private ProfilFinanciarRepository profilFinanciarRepository;
+
+    @Autowired
+    private CheltuialaRepository cheltuialaRepository;
+
+    @Autowired
+    private DiagramaRepository diagramaRepository;
+
+    @Autowired
+    private RaportRepository raportRepository;
+
+
+    @Test
+    @Order(13)
+    public void testSaveAndFindByIdFindAllUtilizator() {
+        //Cautarea utilizatorului in repository
+        List<Utilizator> list = utilizatorRepository.findAll();
+        Optional<Utilizator> found = utilizatorRepository.findById(list.get(0).getId());
+        assertEquals(utilizatorRepo.getNume(), found.get().getNume());
+    }
+/*
+    @Test
+    public void testFindByEmail() {
+
+        //Cautarea utilizatorului dupa email
+        Optional<Utilizator> found = utilizatorRepository.findByEmail("ion.popescu@example.com");
+        assertTrue(found.isPresent());
+        assertEquals(utilizator.getPrenume(), found.get().getPrenume());
+    }
+
+*/
+    @Test
+    @Order(18)
+    public void testDeletebyIdUtilizator() {
+        //Initializarea cu un utilizator deja existent in repository
+        Utilizator util = utilizatorRepository.getReferenceById(1);
+
+        //Stergerea utilizatorului
+        utilizatorRepository.deleteById(util.getId());
+
+        //Cautarea utilizatorului
+        assertFalse(utilizatorRepository.findById(util.getId()).isPresent());
+    }
+/*
+    @Test
+    public void testDeleteAllUtilizator(){
+        //Stergerea tuturor insantelor din repository
+        utilizatorRepository.deleteAll();
+
+        assertTrue(utilizatorRepository.findAll().isEmpty());
+    }
+*/
+    @Test
+    @Order(14)
+    public void testSaveAndFindByIdFindALlProfilFinanciar(){
+        //Salvarea in repository
+        profilFinanciarRepository.save(profilRepo);
+
+        List<ProfilFinanciar> lista = profilFinanciarRepository.findAll();
+        Optional<ProfilFinanciar> found = profilFinanciarRepository.findById(lista.get(0).getId());
+        assertEquals(profilRepo.getVenit(), found.get().getVenit());
+    }
+
+    @Test
+    @Order(19)
+    public void testDeleteByIdProfilFinanciar() {
+        //Initializarea cu un profil deja existent in repository
+        ProfilFinanciar profi = profilFinanciarRepository.getReferenceById(1);
+
+        //Stergerea din repository
+        profilFinanciarRepository.deleteById(profi.getId());
+
+        //Cautarea profilului
+        assertFalse(profilFinanciarRepository.findById(profi.getId()).isPresent());
+    }
+
+    @Test
+    @Order(16)
+    public void testSaveAndFindByIdFindAllCheltuiala(){
+        //Salvare in repository
+        cheltuialaRepository.save(cheltuialaRepo);
+
+        List<Cheltuiala> lista = cheltuialaRepository.findAll();
+        Optional<Cheltuiala> found = cheltuialaRepository.findById(lista.get(0).getId());
+        assertEquals(cheltuialaRepo.getNume(), found.get().getNume());
+    }
+
+    @Test
+    @Order(20)
+    public void testDeleteByIdCheltuiala() {
+        //Initializarea cu o cheltuiala deja existenta in repository
+        Cheltuiala chel = cheltuialaRepository.getReferenceById(1);
+
+        //Stergerea din repository
+        cheltuialaRepository.deleteById(chel.getId());
+
+        //Cautarea cheltuielii
+        assertFalse(cheltuialaRepository.findById(chel.getId()).isPresent());
+    }
+
+    @Test
+    @Order(15)
+    public void testSaveAndFindByIdFindAllDiagrama(){
+        //Salvare in repository
+        diagramaRepository.save(diagRepo);
+
+        List<Diagrama> lista = diagramaRepository.findAll();
+        Optional<Diagrama> found = diagramaRepository.findById(lista.get(0).getId());
+        assertEquals(diagRepo.getUser(), found.get().getUser());
+    }
+
+    @Test
+    @Order(21)
+    public void testDeleteByIdDiagrama() {
+        //Initializarea cu o diagrama deja existenta in repository
+        Diagrama diagr = diagramaRepository.getReferenceById(1);
+
+        //Stergerea din repository
+        diagramaRepository.deleteById(diagr.getId());
+
+        //Cautarea diagramei
+        assertFalse(diagramaRepository.findById(diagr.getId()).isPresent());
+    }
+
+    @Test
+    @Order(17)
+    public void testSaveAndFindByIdFindAllRaport(){
+        //Salvarea in repository
+        raportRepository.save(raportRepo);
+
+        List<Raport> lista = raportRepository.findAll();
+        Optional<Raport> found = raportRepository.findById(lista.get(0).getId());
+        assertEquals(raportRepo.getIdDiagrama(), found.get().getIdDiagrama());
+    }
+
+    @Test
+    @Order(22)
+    public void testDeleteByIdRaport() {
+        //Initializarea cu o diagrama deja existenta in repository
+        Raport raport = raportRepository.getReferenceById(1);
+
+        //Stergerea din repository
+        raportRepository.deleteById(raport.getId());
+
+        //Cautarea raportului
+        assertFalse(raportRepository.findById(raport.getId()).isPresent());
+    }
 
     // ==============================
     //        Teste Repository
     // ==============================
 
-
-
-    @Test
-    public void testSaveAndFindByIdUtilizator() {
-        // Configurarea obiectului Utilizator
-        Data dataNasterii = new Data(15, 12, 1995);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-        Utilizator utilizator = new Utilizator(8, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
-
-        //Salvarea in repository
-        utilizatorRepository.save(utilizator);
-
-        List<Utilizator> lista = utilizatorRepository.findAll();
-        utilizator = lista.get(1);
-        //Cautarea utilizatorului in repository
-        Optional<Utilizator> found = utilizatorRepository.findById(utilizator.getId());
-        assertTrue(found.isPresent());
-        assertEquals(utilizator.getNume(), found.get().getNume());
-    }
-
-    @Test
-    public void testDeletebyIdUtilizator() {
-        //Initializarea cu un utilizator deja existent in repository
-        Utilizator utilizator = utilizatorRepository.getReferenceById(1);
-
-        //Stergerea utilizatorului
-        utilizatorRepository.deleteById(utilizator.getId());
-
-        //Cautarea utilizatorului
-        assertFalse(utilizatorRepository.findById(utilizator.getId()).isPresent());
-    }
-
-    @Test
-    public void testFindAllUtilizator(){
-        //Adaugam un nou utilizator
-        Data dataNasterii = new Data(12, 1, 1999);
-        ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "Iasi",6000.0f , 15);
-        Utilizator utilizator = new Utilizator(2, "Ionescu", "Maria", "parola456", "maria.ionescu@email.com", dataNasterii, "F", "0734567890", profil);
-        utilizatorRepository.save(utilizator);
-
-        //Initializam lista cu toti utilizatorii din repository
-        List<Utilizator> lista = utilizatorRepository.findAll();
-
-        assertFalse(lista.isEmpty());
-        assertEquals(utilizator.getNume(), lista.get(0).getNume());
-    }
-
-    @Test
-    public void testFindByEmail() {
-        //Configurarea obiectului Utilizator
-        Data dataNasterii = new Data(1995, 12, 15);
-        ProfilFinanciar profil = new ProfilFinanciar(2, 3000.0f, "București", 6000.0f, 15);
-        Utilizator utilizator = new Utilizator(2, "Ionescu", "Maria", "parola456", "maria.ionescu@email.com", dataNasterii, "F", "0734567890", profil);
-
-        //Salvarea in repository
-        utilizatorRepository.save(utilizator);
-
-        //Cautarea utilizatorului dupa email
-        Optional<Utilizator> found = utilizatorRepository.findByEmail("maria.ionescu@email.com");
-        assertTrue(found.isPresent());
-        assertEquals(utilizator.getPrenume(), found.get().getPrenume());
-    }
-
-    @Test
-    public void testDeleteAllUtilizator(){
-        utilizatorRepository.deleteAll();
-
-        assertTrue(utilizatorRepository.findAll().isEmpty());
-    }
 }
