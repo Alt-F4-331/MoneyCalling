@@ -62,3 +62,5 @@ nume: MoneyCalling
 parola: boghidatabase
 
 -Pentru teste ,trebuie toate mutate in directorul specific pentru teste
+
+pentru swagger http://localhost:8080/swagger-ui.html
