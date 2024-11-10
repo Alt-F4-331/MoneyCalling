@@ -1,7 +1,10 @@
 package com.example.moneycalling_spring.Controller;
 
+import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Service.UtilizatorService;
+import com.example.moneycalling_spring.dto.CreareContDto;
+import com.example.moneycalling_spring.dto.LoginRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,5 +78,50 @@ public class UtilizatorController {
         List<Utilizator> utilizatori = utilizatorService.getAllUtilizatori();
         return new ResponseEntity<>(utilizatori, HttpStatus.OK);
     }//returneaza HTTP status 200
+
+
+    @Operation(summary = "Autentificare utilizator", description = "Verifică email-ul și parola utilizatorului pentru autentificare")
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
+        String email = loginRequest.getEmail();
+        String parola = loginRequest.getParola();
+
+        Optional<Utilizator> utilizator = utilizatorService.getByEmail(email);
+
+        if (utilizator.isPresent() && utilizator.get().getParola().equals(parola)) {
+            return ResponseEntity.ok("Autentificare reușită");
+        } else {
+            return new ResponseEntity<>("Email sau parolă incorectă", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @Operation(summary = "Creează un cont de utilizator fără profil financiar completat")
+    @PostMapping("/createAccount")
+    public ResponseEntity<Utilizator> createAccount(@RequestBody CreareContDto cont) {
+        // Inițializează un profil financiar gol
+        Utilizator utilizator = new Utilizator();
+
+        utilizator.setId(cont.getId());
+        utilizator.setNume(cont.getNume());
+        utilizator.setPrenume(cont.getPrenume());
+        utilizator.setParola(cont.getParola());
+        utilizator.setEmail(cont.getEmail());
+        utilizator.setDataNasterii(cont.getDataNasterii());
+        utilizator.setSex(cont.getSex());
+        utilizator.setNumarTelefon(cont.getNumarTelefon());
+
+        ProfilFinanciar profilFinanciarGol = new ProfilFinanciar();
+
+        // Setează profilul financiar gol pentru utilizatorul nou
+        utilizator.setProfil(profilFinanciarGol);
+
+        // Salvează utilizatorul cu profilul financiar necompletat
+        Utilizator utilizatorSalvat = utilizatorService.saveUtilizator(utilizator);
+
+        // Returnează utilizatorul creat cu HTTP Status 201 Created
+        return new ResponseEntity<>(utilizatorSalvat, HttpStatus.CREATED);
+    }
+
+
 }
 
