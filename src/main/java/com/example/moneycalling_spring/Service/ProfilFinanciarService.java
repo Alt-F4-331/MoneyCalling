@@ -36,6 +36,7 @@ public class ProfilFinanciarService {
     {
         return profilrepo.findAll();
         // returneaza toate profilurile financiare
+        // doar pt administrator?
     }
 
     public void deleteAll(){

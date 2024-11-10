@@ -14,7 +14,6 @@ public class Entitate implements Serializable {
     private static final long serialVersionUID = 1000L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int id;
 
     public Entitate(){

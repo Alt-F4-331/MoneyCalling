@@ -68,6 +68,7 @@ public class CheltuialaService {
     //Metoda care returneaza toate cheltuielile
     public List<Cheltuiala> getAllCheltuieli(){
         return cheltuialaRepository.findAll();
+        //pt admin?
     }
 
     public Optional<Cheltuiala> getById(int id)

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RaportService {
@@ -39,10 +40,12 @@ public class RaportService {
         return raportRepository.findByDiagrama(diagrama);
         //returneaza toate rapoartele dupa o diagrama
     }
-
     public void deleteAllRapoarteByIdDIagrama(Diagrama diagrama)
     {
         raportRepository.deleteAllByDiagrama(diagrama);
     }
-
+    public Optional<Raport> getById(int id)
+    {
+        return raportRepository.findById(id);
+    }
 }

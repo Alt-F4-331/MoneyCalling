@@ -34,8 +34,9 @@ public class DiagramaService {
     public List<Diagrama> getAllDiagrame(){
         return diagramarepo.findAll();
         //returneaza toate diagramele
+        // pt admin
     }
-
+    // getalldiagrame dupa id user
     public void deleteAll(){
         diagramarepo.deleteAll();
         //sterge toate diagramele
