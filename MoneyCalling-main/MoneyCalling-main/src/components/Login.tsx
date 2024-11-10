@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import axios from 'axios';
 import logo from '/public/logo.png'; // Import logo
 
 const Login: React.FC = () => {
@@ -8,12 +9,28 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // Logic for login
-    console.log('Username:', username);
-    console.log('Password:', password);
+    //console.log('Username:', username);
+    //console.log('Password:', password);
 
-    navigate('/homepage'); // Redirect to homepage after login
+    //navigate('/homepage'); // Redirect to homepage after login
+
+      try {
+          const response = await axios.post('http://localhost:8080/api/utilizatori/login', {
+              email: username,
+              parola: password 
+          });
+          if (response.status === 200) {
+              console.log('Login successful:', response.data);
+              alert('Login successful!');
+              navigate('/homepage'); // Redirect on success
+          }
+      } catch (error) {
+          console.error('Login failed:', error);
+          alert('Invalid email or password');
+      }
+
   };
 
   return (
