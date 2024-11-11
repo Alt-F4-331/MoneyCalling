@@ -37,22 +37,15 @@ public class CheltuialaController {
     @PostMapping
     public ResponseEntity<Cheltuiala> createCheltuiala(@RequestBody CheltuialaRequestDTO cheltuialaRequestDTO)
     {
-        Optional<Diagrama> diagrama_opt = diagramaService.getById(cheltuialaRequestDTO.getId());
+        Optional<Diagrama> diagrama_opt = diagramaService.getById(cheltuialaRequestDTO.getIdDiagrama());
 
         if (diagrama_opt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Dacă nu există, returnăm 404
         }
 
-        Cheltuiala ch = new Cheltuiala();
-
-        // Dacă utilizatorul există, îl asociem diagramei
         Diagrama diagrama = diagrama_opt.get();
-        // Obținem utilizatorul din Optional
+        Cheltuiala ch = cheltuialaRequestDTO.mapToEntity(diagrama);
 
-        ch.setId(cheltuialaRequestDTO.getId());
-        ch.setDiagrama(diagrama);
-        ch.setNume(cheltuialaRequestDTO.getNume());
-        ch.setSuma(cheltuialaRequestDTO.getSuma());
         Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
         return new ResponseEntity<>(savedCheltuiala, HttpStatus.CREATED);
     }

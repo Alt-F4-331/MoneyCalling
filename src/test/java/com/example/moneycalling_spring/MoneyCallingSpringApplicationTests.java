@@ -1,4 +1,4 @@
-/*package com.example.moneycalling_spring;
+package com.example.moneycalling_spring;
 
 import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Repository.*;
@@ -268,7 +268,7 @@ class MoneyCallingSpringApplicationTests {
         Optional<Utilizator> found = utilizatorRepository.findById(list.get(0).getId());
         assertEquals(utilizatorRepo.getNume(), found.get().getNume());
     }
-/*
+
     @Test
     public void testFindByEmail() {
 
@@ -278,8 +278,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(utilizator.getPrenume(), found.get().getPrenume());
     }
 
-*/
-   /* @Test
+   @Test
     @Order(18)
     public void testDeletebyIdUtilizator() {
         //Initializarea cu un utilizator deja existent in repository
@@ -291,7 +290,7 @@ class MoneyCallingSpringApplicationTests {
         //Cautarea utilizatorului
         assertFalse(utilizatorRepository.findById(util.getId()).isPresent());
     }
-/*
+
     @Test
     public void testDeleteAllUtilizator(){
         //Stergerea tuturor insantelor din repository
@@ -299,8 +298,8 @@ class MoneyCallingSpringApplicationTests {
 
         assertTrue(utilizatorRepository.findAll().isEmpty());
     }
-*/
-   /* @Test
+
+    @Test
     @Order(14)
     public void testSaveAndFindByIdFindALlProfilFinanciar(){
         //Salvarea in repository
@@ -400,4 +399,4 @@ class MoneyCallingSpringApplicationTests {
     //        Teste Repository
     // ==============================
 
-}*/
+}
