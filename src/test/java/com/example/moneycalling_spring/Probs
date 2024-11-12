@@ -1,3 +1,9 @@
 Functiile de deleteAll in orice repository nu pot fi testate, merg dar strica restul testelor
 Iar pentru toate care au legatura cu utilizatorul din cauza ca id-ul e generat automat nu pot sa le verific, de fiecare
 data trebuie sa vad care e id ul din baza de date si sa-l actualizez pentru teste
+
+12nov
+findbyEmail nu merge
+de schimbat numele la metoda din Raport
+getAllRapoarteByIdDiagrama in getAllRapoarteByDiagrama
+in functie cere diagrama nu id diagrama
