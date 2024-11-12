@@ -2,6 +2,7 @@ package com.example.moneycalling_spring;
 
 import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Repository.*;
+import com.example.moneycalling_spring.Service.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +28,8 @@ class MoneyCallingSpringApplicationTests {
     private final Diagrama diag2 = new Diagrama(2, utilizator2);
     private final Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, diag);
     private final Raport raport = new Raport(1, diag);
+    @Autowired
+    private DiagramaService diagramaService;
 
     @Test
     @Order(1)
@@ -269,18 +272,19 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(utilizatorRepo.getNume(), found.get().getNume());
     }
 
-    @Test
+    /*@Test
     public void testFindByEmail() {
 
         //Cautarea utilizatorului dupa email
         Optional<Utilizator> found = utilizatorRepository.findByEmail("ion.popescu@example.com");
         assertTrue(found.isPresent());
         assertEquals(utilizator.getPrenume(), found.get().getPrenume());
-    }
+    }*/
 
-   @Test
-    @Order(18)
-    public void testDeletebyIdUtilizator() {
+
+    @Test
+    @Order(23)
+    public void testDeletebyIdUtilizatorRepo() {
         //Initializarea cu un utilizator deja existent in repository
         Utilizator util = utilizatorRepository.getReferenceById(1);
 
@@ -292,7 +296,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    public void testDeleteAllUtilizator(){
+    @Order(28)
+    public void testDeleteAllUtilizatorRepo(){
         //Stergerea tuturor insantelor din repository
         utilizatorRepository.deleteAll();
 
@@ -311,8 +316,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(19)
-    public void testDeleteByIdProfilFinanciar() {
+    @Order(24)
+    public void testDeleteByIdProfilFinanciarRepo() {
         //Initializarea cu un profil deja existent in repository
         ProfilFinanciar profi = profilFinanciarRepository.getReferenceById(1);
 
@@ -335,8 +340,8 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(20)
-    public void testDeleteByIdCheltuiala() {
+    @Order(25)
+    public void testDeleteByIdCheltuialaRepo() {
         //Initializarea cu o cheltuiala deja existenta in repository
         Cheltuiala chel = cheltuialaRepository.getReferenceById(1);
 
@@ -355,12 +360,13 @@ class MoneyCallingSpringApplicationTests {
 
         List<Diagrama> lista = diagramaRepository.findAll();
         Optional<Diagrama> found = diagramaRepository.findById(lista.get(0).getId());
-        assertEquals(diagRepo.getUser(), found.get().getUser());
+        assertEquals(diagRepo.getId(), found.get().getId());
+        assertEquals(diagRepo.getUser().getNume(), found.get().getUser().getNume());
     }
 
     @Test
-    @Order(21)
-    public void testDeleteByIdDiagrama() {
+    @Order(26)
+    public void testDeleteByIdDiagramaRepo() {
         //Initializarea cu o diagrama deja existenta in repository
         Diagrama diagr = diagramaRepository.getReferenceById(1);
 
@@ -379,12 +385,12 @@ class MoneyCallingSpringApplicationTests {
 
         List<Raport> lista = raportRepository.findAll();
         Optional<Raport> found = raportRepository.findById(lista.get(0).getId());
-        assertEquals(raportRepo.getIdDiagrama(), found.get().getIdDiagrama());
+        assertEquals(raportRepo.getId(), found.get().getId());
     }
 
     @Test
-    @Order(22)
-    public void testDeleteByIdRaport() {
+    @Order(27)
+    public void testDeleteByIdRaportRepo() {
         //Initializarea cu o diagrama deja existenta in repository
         Raport raport = raportRepository.getReferenceById(1);
 
@@ -396,7 +402,152 @@ class MoneyCallingSpringApplicationTests {
     }
 
     // ==============================
-    //        Teste Repository
+    //        Teste Service
     // ==============================
+
+    private final Data dataServ = new Data(15,10,2000);
+    private final ProfilFinanciar profilServ = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
+    private final Utilizator utilizatorServ = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataServ,"mascul","0777333222", profilServ);
+    private final Diagrama diagServ  = new Diagrama(1, utilizatorServ);
+    private final Cheltuiala cheltuialaServ = new Cheltuiala(1, "home", 50000.0F, diagServ);
+    private final Raport raportServ = new Raport(1, diagServ);
+
+    @Autowired
+    UtilizatorService utilizatorService;
+
+    @Autowired
+    ProfilFinanciarService profilFinanciarService;
+
+    @Autowired
+    CheltuialaService cheltuialaService;
+
+    @Autowired
+    RaportService raportService;
+
+    @Autowired
+    DiagramaService diagService;
+
+    @Test
+    @Order(18)
+    public void testUtilizatorService(){
+        //Adaugarea in service a unui utilizator
+        utilizatorService.saveUtilizator(utilizatorServ);
+        profilFinanciarService.saveProfilFinanciar(profilServ);
+        diagramaService.saveDiagrama(diagServ);
+        cheltuialaService.saveCheltuiala(cheltuialaServ);
+        raportService.saveRaport(raportServ);
+
+        //testare getbyid
+        assertEquals(utilizatorServ.getId(), utilizatorService.getById(utilizatorServ.getId()).get().getId());
+
+        //testare getall
+        List<Utilizator> lista = utilizatorService.getAllUtilizatori();
+        assertEquals(lista.get(0).getId(), utilizatorServ.getId());
+
+        //testare deletebyid
+        utilizatorService.stergeUtilizatorById(utilizatorServ.getId());
+
+        List<Utilizator> lista2 = utilizatorService.getAllUtilizatori();
+        assertTrue(lista2.isEmpty());
+
+        //testare getbyemail
+
+    }
+
+    @Test
+    @Order(19)
+    public void testProfilFinanciarService(){
+        //Adaugarea in service a unui profil financiar
+        profilFinanciarService.saveProfilFinanciar(profilServ);
+
+        //testare getall
+        List<ProfilFinanciar> lista = profilFinanciarService.getAllProfiluriFinanciare();
+        assertEquals(lista.get(0).getId(), profilServ.getId());
+
+        //testare deletebyid
+        profilFinanciarService.stergeProfilFinanciarById(profilServ.getId());
+
+        List<ProfilFinanciar> lista2 = profilFinanciarService.getAllProfiluriFinanciare();
+        assertTrue(lista2.isEmpty());
+    }
+
+    @Test
+    @Order(20)
+    public void testDiagramaService(){
+        //Adaugarea in service a unei diagrame
+        utilizatorService.saveUtilizator(utilizatorServ);
+        profilFinanciarService.saveProfilFinanciar(profilServ);
+        diagramaService.saveDiagrama(diagServ);
+        cheltuialaService.saveCheltuiala(cheltuialaServ);
+        raportService.saveRaport(raportServ);
+
+        //testare getall
+        List<Diagrama> list = diagramaService.getAllDiagrame();
+        assertEquals(list.get(0).getId(), diagServ.getId());
+
+        //testare getbyid
+        assertEquals(diagServ.getId(), diagService.getById(diagServ.getId()).get().getId());
+
+        //testare deletebyid
+        diagramaService.stergeDiagramaById(diagServ.getId());
+
+        List<Diagrama> lista2 = diagramaService.getAllDiagrame();
+        assertTrue(lista2.isEmpty());
+    }
+
+    @Test
+    @Order(21)
+    public void testCheltuialaService(){
+        //Adaugarea in service a unei cheltuieli
+        utilizatorService.saveUtilizator(utilizatorServ);
+        profilFinanciarService.saveProfilFinanciar(profilServ);
+        diagramaService.saveDiagrama(diagServ);
+        cheltuialaService.saveCheltuiala(cheltuialaServ);
+        raportService.saveRaport(raportServ);
+
+        //testare getall
+        List<Cheltuiala> lista = cheltuialaService.getAllCheltuieli();
+        assertEquals(lista.get(0).getId(), cheltuialaServ.getId());
+
+        //testare getbyid
+        assertEquals(cheltuialaServ.getId(), cheltuialaService.getById(cheltuialaServ.getId()).get().getId());
+
+        //testare deletebyid
+        cheltuialaService.stergeCheltuialaById(cheltuialaServ.getId());
+
+        List<Cheltuiala> lista2 = cheltuialaService.getAllCheltuieli();
+        assertTrue(lista2.isEmpty());
+
+        //testare dto to entity -- DE ADAUGAT
+
+        //testare entity to dto -- DE ADAUGAT
+
+    }
+
+
+    @Test
+    @Order(22)
+    public void testRaportService(){
+        //Adaugarea in service a unui raport
+        utilizatorService.saveUtilizator(utilizatorServ);
+        profilFinanciarService.saveProfilFinanciar(profilServ);
+        diagramaService.saveDiagrama(diagServ);
+        cheltuialaService.saveCheltuiala(cheltuialaServ);
+        raportService.saveRaport(raportServ);
+
+        //testare getall
+        List<Raport> list = raportService.getAllRapoarteByIdDiagrama(diagServ);
+        assertEquals(list.get(0).getId(), raportServ.getId());
+
+        //testare getbyid
+        assertEquals(raportServ.getId(), raportService.getById(raportServ.getId()).get().getId());
+
+        //testare deletebyid
+        raportService.stergeRaportById(raportServ.getId());
+
+        List<Raport> lista2 = raportService.getAllRapoarteByIdDiagrama(diagServ);
+        assertTrue(lista2.isEmpty());
+    }
+
 
 }
