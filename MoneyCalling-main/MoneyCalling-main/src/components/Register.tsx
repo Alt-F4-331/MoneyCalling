@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
 import logo from '/public/logo.png'; // Import logo
+import axios from 'axios';
+
 
 const Register: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -15,14 +17,52 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const [error, setError] = useState<string | null>(null);
+  
+
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
   
-  const submitForm = () => {
-    // Logic for account creation
-    console.log({ firstName, lastName, birthDate, sex, email, phone, username, password });
-    alert('Account created successfully!');
-    navigate('/');
+  const submitForm = async () => {
+    // Pregătește datele pentru a se potrivi cu CreareContDto
+    const contData = {
+      nume: firstName,
+      prenume: lastName,
+      parola: password,
+      email: email,
+      dataNasterii: {
+        zi: parseInt(birthDate.day, 10), // Convertiți ziua la int
+        luna: parseInt(birthDate.month, 10), // Convertiți luna la int
+        an: parseInt(birthDate.year, 10), // Convertiți anul la int
+      },
+      sex: sex,
+      numarTelefon: phone,
+    };
+  
+    console.log("Datele trimise:", contData);
+    console.log(typeof contData.dataNasterii.an); // Tipul variabilei an (int)
+  
+    try {
+      // Trimite cererea POST cu Axios
+      const response = await axios.post('http://localhost:8080/api/utilizatori/createAccount', contData, {
+        headers: {
+          'Content-Type': 'application/json', // Specifică tipul de conținut
+        },
+      });
+  
+      if (response.status === 201) {
+        console.log("Răspunsul API-ului:", response);
+        alert('Cont creat cu succes!');
+        navigate('/');
+      } else {
+        // Dacă răspunsul nu este OK, afișează eroarea
+        console.error("Eroare la crearea contului:", response.data);
+        setError('Eroare la crearea contului. Încearcă din nou.');
+      }
+    } catch (err) {
+      console.error("Eroare la comunicarea cu serverul:", err);
+      setError('Eroare la comunicarea cu serverul. Încearcă din nou.');
+    }
   };
 
   return (
