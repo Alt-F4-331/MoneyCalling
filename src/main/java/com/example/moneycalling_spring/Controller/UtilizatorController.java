@@ -2,6 +2,7 @@ package com.example.moneycalling_spring.Controller;
 
 import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Domain.Utilizator;
+import com.example.moneycalling_spring.Service.ProfilFinanciarService;
 import com.example.moneycalling_spring.Service.UtilizatorService;
 import com.example.moneycalling_spring.dto.CreareContDto;
 import com.example.moneycalling_spring.dto.LoginRequestDTO;
@@ -14,14 +15,17 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/utilizatori")
 public class UtilizatorController {
     private final UtilizatorService utilizatorService;
 
+    private final ProfilFinanciarService profilFinanciarService;
 
-    public UtilizatorController(UtilizatorService utilizatorService) {
+
+    public UtilizatorController(UtilizatorService utilizatorService, ProfilFinanciarService profilFinanciarService) {
+
         this.utilizatorService = utilizatorService;
+        this.profilFinanciarService=profilFinanciarService;
     }
     @Operation(summary = "Obtine utilizator dupa email")
     @GetMapping("/email")
@@ -84,6 +88,8 @@ public class UtilizatorController {
     @Operation(summary = "Autentificare utilizator", description = "Verifică email-ul și parola utilizatorului pentru autentificare")
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
+
+
         String email = loginRequest.getEmail();
         String parola = loginRequest.getParola();
 
@@ -99,10 +105,12 @@ public class UtilizatorController {
     @Operation(summary = "Creează un cont de utilizator fără profil financiar completat")
     @PostMapping("/createAccount")
     public ResponseEntity<Utilizator> createAccount(@RequestBody CreareContDto cont) {
-        // Inițializează un profil financiar gol
+
+        System.out.println("Creare cont primit: ");  // Log pentru a verifica dacă cererea ajunge
+        // Inițializează un utilizator gol
         Utilizator utilizator = new Utilizator();
 
-        utilizator.setId(cont.getId());
+        utilizator.setId(utilizatorService.getFirstAvailableId());
         utilizator.setNume(cont.getNume());
         utilizator.setPrenume(cont.getPrenume());
         utilizator.setParola(cont.getParola());
@@ -112,6 +120,7 @@ public class UtilizatorController {
         utilizator.setNumarTelefon(cont.getNumarTelefon());
 
         ProfilFinanciar profilFinanciarGol = new ProfilFinanciar();
+        profilFinanciarGol.setId(profilFinanciarService.getFirstAvailableId());
 
         // Setează profilul financiar gol pentru utilizatorul nou
         utilizator.setProfil(profilFinanciarGol);

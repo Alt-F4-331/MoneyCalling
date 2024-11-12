@@ -4,24 +4,30 @@ import com.example.moneycalling_spring.Domain.Data;
 
 public class CreareContDto {
 
-    private int id;
-
     private String nume;
     private String prenume;
     private String parola;
     private String email;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     private Data dataNasterii;
     private String sex;
     private String numarTelefon;
+
+    public CreareContDto(String nume, String prenume, String parola, String email, Data dataNasterii, String sex, String numarTelefon) {
+        this.nume = nume;
+        this.prenume = prenume;
+        this.parola = parola;
+        this.email = email;
+        this.dataNasterii = dataNasterii;
+        this.sex = sex;
+        this.numarTelefon = numarTelefon;
+    }
+
+    public CreareContDto()
+    {
+
+    }
+
 
     public String getNume() {
         return nume;
@@ -62,6 +68,8 @@ public class CreareContDto {
     public void setDataNasterii(Data dataNasterii) {
         this.dataNasterii = dataNasterii;
     }
+
+
 
     public String getSex() {
         return sex;

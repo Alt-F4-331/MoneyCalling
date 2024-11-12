@@ -32,6 +32,15 @@ public class ProfilFinanciarService {
         // sterge un profil dupa id
     }
 
+    public int getFirstAvailableId() {
+        List<Integer> allIds = profilrepo.findAllIds();
+        int id = 1;
+        while (allIds.contains(id)) {
+            id++;
+        }
+        return id;
+    }
+
     public List<ProfilFinanciar> getAllProfiluriFinanciare()
     {
         return profilrepo.findAll();

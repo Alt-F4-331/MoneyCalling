@@ -28,6 +28,16 @@ public class UtilizatorService {
         //-daca exista deja acel id,il actualizeaza
     }
 
+    // Metodă care returnează primul ID liber
+    public int getFirstAvailableId() {
+        List<Integer> allIds = utilrepo.findAllIds();
+        int id = 1;
+        while (allIds.contains(id)) {
+            id++;
+        }
+        return id;
+    }
+
     public void stergeUtilizatorById(int id){
         utilrepo.deleteById(id);
         //sterge un user dupa un id
