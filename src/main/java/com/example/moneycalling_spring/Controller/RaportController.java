@@ -2,8 +2,11 @@ package com.example.moneycalling_spring.Controller;
 
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Raport;
+import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Repository.DiagramaRepository;
+import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.RaportService;
+import com.example.moneycalling_spring.Service.UtilizatorService;
 import com.example.moneycalling_spring.dto.RaportRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,12 +23,17 @@ import java.util.stream.Collectors;
 public class RaportController {
 
     private final RaportService raportService;
+    private final UtilizatorService utilizatorService;
     private final DiagramaRepository diagramaRepository;
 
+    private final JwtUtil jwtutil;
+
     @Autowired
-    public RaportController(RaportService raportService, DiagramaRepository diagramaRepository) {
+    public RaportController(RaportService raportService, UtilizatorService utilizatorService, DiagramaRepository diagramaRepository, JwtUtil jwtutil) {
         this.raportService = raportService;
+        this.utilizatorService = utilizatorService;
         this.diagramaRepository = diagramaRepository;
+        this.jwtutil = jwtutil;
     }
 
     // Endpoint pentru salvarea sau actualizarea unui raport
@@ -79,7 +88,22 @@ public class RaportController {
     // Endpoint pentru sugerarea chiriei pe baza venitului
     @GetMapping("/sugereaza-chirie")
     @Operation(summary = "Sugerează chiria pe baza venitului")
-    public ResponseEntity<Float> sugereazaChirie(@RequestParam float venit) {
+    public ResponseEntity<Float> sugereazaChirie(@RequestHeader ("Authorization") String token) {
+        if (token == null || !token.startsWith("Bearer ")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        String jwtToken = token.substring(7);  // Extrage token-ul fără "Bearer "
+//
+        // 1. Extrage userId din token
+        if(!jwtutil.validateToken(jwtToken))
+        {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        int userId = jwtutil.extractUserId(jwtToken);
+        Utilizator utilizator = utilizatorService.getById(userId).get();
+        float venit = utilizator.getProfil().getVenit();
         float chirieSugerata = raportService.sugereazaChirieByVenit(venit);
         return new ResponseEntity<>(chirieSugerata, HttpStatus.OK);
     }
