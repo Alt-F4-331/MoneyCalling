@@ -11,6 +11,8 @@ public class Diagrama extends Entitate {
     @ManyToOne
     @JoinColumn(name = "id_user",referencedColumnName = "id")
     private Utilizator user;
+    @Embedded
+    private Data DataDiagrama;
 
     @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cheltuiala> listaCheltuieli ;

@@ -3,7 +3,6 @@ package com.example.moneycalling_spring.Controller;
 import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Service.ProfilFinanciarService;
 import com.example.moneycalling_spring.Service.UtilizatorService;
-import com.example.moneycalling_spring.dto.CreareProfilDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
