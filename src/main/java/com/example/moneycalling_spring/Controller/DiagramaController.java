@@ -101,4 +101,27 @@ public class DiagramaController {
         }
     }
 
+    // Endpoint pentru obținerea tuturor diagramelor asociate unui utilizator
+    @Operation(summary = "Obține toate diagramele pentru un utilizator")
+    @GetMapping("/utilizator/{userId}")
+    public ResponseEntity<List<Diagrama>> getAllDiagrameByUtilizator(@PathVariable int userId) {
+        // Căutăm utilizatorul după ID
+        Optional<Utilizator> optionalUtilizator = utilizatorService.getById(userId);
+
+        if (optionalUtilizator.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Returnăm 404 dacă utilizatorul nu există
+        }
+
+        // Dacă utilizatorul există, obținem diagramele asociate
+        Utilizator utilizator = optionalUtilizator.get();
+        List<Diagrama> diagrame = diagramaService.getAllDiagrameByUtilizator(utilizator);
+
+        if (diagrame.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Returnăm 204 dacă nu sunt diagrame
+        }
+
+        return new ResponseEntity<>(diagrame, HttpStatus.OK); // Returnăm diagramele cu status 200
+    }
+
+
 }

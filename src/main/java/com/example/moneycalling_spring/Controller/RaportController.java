@@ -76,4 +76,21 @@ public class RaportController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    // Endpoint pentru sugerarea chiriei pe baza venitului
+    @GetMapping("/sugereaza-chirie")
+    @Operation(summary = "Sugerează chiria pe baza venitului")
+    public ResponseEntity<Float> sugereazaChirie(@RequestParam float venit) {
+        float chirieSugerata = raportService.sugereazaChirieByVenit(venit);
+        return new ResponseEntity<>(chirieSugerata, HttpStatus.OK);
+    }
+
+    // Endpoint pentru sugerarea ratei pe baza sumei și numărului de ani
+    @GetMapping("/sugereaza-rata")
+    @Operation(summary = "Sugerează rata pe baza sumei și numărului de ani")
+    public ResponseEntity<Float> sugereazaRata(
+            @RequestParam float suma,
+            @RequestParam int ani) {
+        float rataSugerata = raportService.sugereazaRataByVenit(suma, ani);
+        return new ResponseEntity<>(rataSugerata, HttpStatus.OK);
+    }
 }
