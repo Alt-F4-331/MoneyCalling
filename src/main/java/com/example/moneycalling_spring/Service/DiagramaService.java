@@ -1,6 +1,7 @@
 package com.example.moneycalling_spring.Service;
 
 import com.example.moneycalling_spring.Domain.Diagrama;
+import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Repository.DiagramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,4 +48,7 @@ public class DiagramaService {
         return diagramarepo.findById(id);
     }
 
+    public List<Diagrama> getAllDiagrameByUtilizator(Utilizator utilizator) {
+        return diagramarepo.findByUser(utilizator);
+    }
 }

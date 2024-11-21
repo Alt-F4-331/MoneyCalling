@@ -1,5 +1,6 @@
 package com.example.moneycalling_spring.Controller;
 
+import com.example.moneycalling_spring.Domain.Data;
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Service.DiagramaService;
@@ -37,7 +38,13 @@ public class DiagramaController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-
+    /*@Operation(summary = "Obtine diagrama dupa luna si an")
+    @GetMapping("/{data}")
+    public ResponseEntity<Diagrama> getDiagramaByData(@PathVariable Data data){
+        Optional<Diagrama> diagrama = diagramaService.getDiagramaByData(data.getLuna(), data.getAn());
+        return diagrama.map(ResponseEntity::ok)
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }*/
     @Operation(summary = "Obtine toate diagramele")
     @GetMapping
     public ResponseEntity<List<Diagrama>> getAllDiagrame() {
@@ -93,5 +100,28 @@ public class DiagramaController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // În caz de eroare
         }
     }
+
+    // Endpoint pentru obținerea tuturor diagramelor asociate unui utilizator
+    @Operation(summary = "Obține toate diagramele pentru un utilizator")
+    @GetMapping("/utilizator/{userId}")
+    public ResponseEntity<List<Diagrama>> getAllDiagrameByUtilizator(@PathVariable int userId) {
+        // Căutăm utilizatorul după ID
+        Optional<Utilizator> optionalUtilizator = utilizatorService.getById(userId);
+
+        if (optionalUtilizator.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Returnăm 404 dacă utilizatorul nu există
+        }
+
+        // Dacă utilizatorul există, obținem diagramele asociate
+        Utilizator utilizator = optionalUtilizator.get();
+        List<Diagrama> diagrame = diagramaService.getAllDiagrameByUtilizator(utilizator);
+
+        if (diagrame.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Returnăm 204 dacă nu sunt diagrame
+        }
+
+        return new ResponseEntity<>(diagrame, HttpStatus.OK); // Returnăm diagramele cu status 200
+    }
+
 
 }

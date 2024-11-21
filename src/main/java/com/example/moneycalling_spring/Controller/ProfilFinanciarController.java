@@ -2,6 +2,8 @@ package com.example.moneycalling_spring.Controller;
 
 import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Service.ProfilFinanciarService;
+import com.example.moneycalling_spring.Service.UtilizatorService;
+import com.example.moneycalling_spring.dto.CreareProfilDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,19 +17,23 @@ import java.util.List;
 public class ProfilFinanciarController {
 
     private final ProfilFinanciarService profilFinanciarService;
+    private final UtilizatorService utilizatorService;
 
     @Autowired
-    public ProfilFinanciarController(ProfilFinanciarService profilFinanciarService) {
+    public ProfilFinanciarController(ProfilFinanciarService profilFinanciarService, UtilizatorService utilizatorService)
+    {
+        this.utilizatorService = utilizatorService;
         this.profilFinanciarService = profilFinanciarService;
     }
 
     // Endpoint pentru a salva sau actualiza un profil financiar
-    @PostMapping
+   /* @PostMapping
     @Operation(summary = "adauga un nou profil")
-    public ResponseEntity<ProfilFinanciar> saveProfilFinanciar(@RequestBody ProfilFinanciar profilFinanciar) {
+    public ResponseEntity<ProfilFinanciar> saveProfilFinanciar(@RequestBody CreareProfilDTO profilFinanciar) {
+
         ProfilFinanciar savedProfil = profilFinanciarService.saveProfilFinanciar(profilFinanciar);
         return new ResponseEntity<>(savedProfil, HttpStatus.CREATED);
-    }
+    }*/
 
     // Endpoint pentru a șterge un profil financiar după ID
     @DeleteMapping("/{id}")
