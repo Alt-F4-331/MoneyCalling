@@ -153,7 +153,7 @@ public class UtilizatorController {
         }
 
         String jwtToken = token.substring(7);  // Extrage token-ul fără "Bearer "
-
+//
         // 1. Extrage userId din token
         if(!jwtutil.validateToken(jwtToken))
         {

@@ -18,6 +18,7 @@ public class ProfilFinanciarDto {
     public float getVenit() {
         return venit;
     }
+    //
 
     public void setVenit(float venit) {
         this.venit = venit;

@@ -38,7 +38,7 @@ public class JwtUtil {
         return Integer.parseInt(claims.getSubject());
     }
 
-    // Metodă pentru validarea token-ului
+    // Metodă pentru validarea token-ului//
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
