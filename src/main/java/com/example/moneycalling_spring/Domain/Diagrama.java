@@ -43,6 +43,7 @@ public class Diagrama extends Entitate {
         return dataDiagrama;
     }
 
+    //set data
     public void setDataDiagrama(Data dataDiagrama) {
         this.dataDiagrama = dataDiagrama;
     }
