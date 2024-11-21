@@ -17,9 +17,9 @@ const Help: React.FC = () => {
       <header className="help-header">
         <h1>Help Center</h1>
       </header>
+      <section className="help-section">
         <p>Welcome to the Help Center! We're here to assist you in making the most of our money management tools. Browse the topics below or reach out to us if you have questions.</p>
         <p></p>
-      <section className="help-section">
         <h2>Getting Started</h2>
         <h3>What does this platform do?</h3>
         <p>
@@ -80,8 +80,6 @@ const Help: React.FC = () => {
           Phone Support: 07********
         </p>
       </section>
-
-      <p>We’re committed to helping you take control of your finances. Let us know if you need assistance, and thank you for choosing us as your financial partner!</p>
 
     </div>
     </div>

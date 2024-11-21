@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap');
-
-/* Setări generale */
+/*@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap');
+*/
+@import url('https://fonts.googleapis.com/css2?family=Jockey+One&display=swap');
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Jockey One", sans-serif;
 }
 
 .home-page {
@@ -21,39 +21,40 @@
 .navbar {
   width: 100%;
   height: 80px;
-  background-color: #1A1A40; /* fundal întunecat */
+  background-color: #110F34; /* fundal întunecat */
   display: flex;
   align-items: center;
-  justify-content: start;
-  padding: 0 30px;
+  justify-content: space-between;
+  padding: 0 10px;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 35px;
+  font-weight: normal;
 }
 
 .logo-image {
-  width: 100px;
-  align-items: center;
+  width: 120px;
   height: auto;
   object-fit: contain;
+  margin: 0;
+  margin-right: 20px;
 }
 
 .nav-links {
   display: flex;
-  gap: 30px;
+  gap: 20px;
   align-items: center;
-  margin-left: 20px;
+  flex: 1;
 }
 
 .nav-links a {
   color: #FFFFFF;
   text-decoration: none;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 10px 15px;
+  font-size: 20px;
+  font-weight: normal;
+  padding: 5px 18px;
   transition: background-color 0.3s, color 0.3s;
   border-radius: 5px;
 }
@@ -72,6 +73,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-right: 10px;
 }
 
 .profile-image {
@@ -88,67 +90,73 @@
 
 /* Meniu lateral */
 .sidebar {
-  width: 200px;
-  background-color: #19193A;
+  width: 270px;
   display: flex;
+  align-items: center;
   flex-direction: column;
-  padding: 20px;
+  padding: 15px;
   position: fixed;
-  top: 80px;
-  bottom: 0;
-  left: 0;
+  top: 100px;
+  bottom: 10px;
+  left: 40px;
   color: #FFFFFF;
-  gap: 10px;
+  gap: 15px;
 }
 
 .sidebar button {
-  background-color: transparent;
+  width: 300px;
+  height: 70px;
+  font-size: 18px;
+  background-color: #14123BD9; /* Fundal albastru-închis */
   border: none;
-  color: #FFFFFF;
-  font-size: 15px;
-  text-align: left;
+  border-radius: 5px;
   cursor: pointer;
-  padding: 25px 0 20px 0;
-  transition: color 0.3s, transform 0.2s;
+  transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
 .sidebar button:hover {
   color: #FFFFFF;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 .sidebar .add-button {
-  background-color: #1A1A40; /* Albastru închis */
+  background-color: #14123B; /* Albastru închis */
   color: #FFFFFF;
-  font-size: 24px;
+  font-size: 35px;
   font-weight: bold;
-  width: 50px;
-  height: 50px;
+  margin-bottom: 180px;
+  width: auto;
+  margin-top: 10px;
+  height: auto;
+  text-align: center;
   border-radius: 50%; /* Formă rotundă */
   border: none;
   display: flex;
+  padding: 20px;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Umbră */
-  margin: 20px auto 0; /* Centrare în bara laterală */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Umbră *//* Centrare în bara laterală */
 }
 
 .sidebar .add-button:hover {
   background-color: #263663;
   color: #FFFFFF;
+  transform: scale(1.1);    
 }
 
 .savings {
-  background-color: #1A1A40; /* fundal albastru-închis pentru chenar */
+  background-color: #14123BD9; /* fundal albastru-închis pentru chenar */
   padding: 10px 20px;
-  margin-top: 25px;
+  width: 200px;
+  margin-top: 20px;
+  margin-bottom: 5px;
   border-radius: 8px;
   text-align: center;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* umbră pentru chenar */
   color: #FFFFFF;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   display: flex;
   flex-direction: column;
@@ -156,7 +164,7 @@
 }
 
 .savings-label {
-  font-size: 14px;
+  font-size: 18px;
   color: #CBE3EF; /* nuanță mai deschisă de albastru pentru textul "Savings:" */
 }
 
@@ -174,44 +182,76 @@
   padding: 80px 20px 20px 250px; /* alocă spațiu pentru sidebar */
 }
 
-.diagram {
-  width: 400px;
-  height: 400px;
+.diagram-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* Centrare orizontală */
+  align-items: flex-start; /* Aliniere sus */
+  gap: 20px; /* Spațiu între diagramă și chenar */
+  margin-top: 30px;
+  margin-left: 40px;
   position: relative;
 }
 
-/* Stiluri pentru diagrame */
-.diagram canvas {
-  max-width: 100%;
-  height: auto;
+.pie-chart {
+  position: relative;
+  width: 600px;
+  height: 600px;
 }
 
-.legend {
-  position: absolute;
-  right: -100px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.categories-card {
+  background-color: #14123BE5; /* Fundal închis */
+  padding: 15px;
+  margin-top: 200px;
+  margin-left: 150px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #FFFFFF;
+  font-size: 18px;
+  min-width: 200px; /* Lățime minimă */
 }
 
-.legend-item {
+.categories-card h4 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.category {
   display: flex;
   align-items: center;
   gap: 10px;
+  margin-bottom: 8px;
 }
 
-.legend-item div {
-  width: 20px;
-  height: 20px;
+.category span {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
   border-radius: 3px;
 }
 
-.legend-item-text {
-  font-size: 14px;
+.history-button {
+  position: absolute;
+  left: 400px; /* Ajustează poziția în funcție de sidebar */
+  margin-top: 710px; /* Poziționare sub diagramă */
+  align-items: center;
+}
+
+.history-button button {
+  height: 60px;
+  width: 170px;
+  background-color: #14123B; /* Fundal similar cu sidebar */
   color: #FFFFFF;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.history-button button:hover {
+  background-color: #263663; /* Culoare hover */
 }

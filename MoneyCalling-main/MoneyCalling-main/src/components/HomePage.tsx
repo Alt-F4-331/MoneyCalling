@@ -10,9 +10,7 @@ const HomePage: React.FC = () => {
     <div className='home-page'>
       {/* Bara de navigare */}
       <header className='navbar'>
-        <div className='logo'>
-            <img src={logo} alt="Logo" className='logo-image' />
-        </div>
+        <img src={logo} alt="Logo" className='logo-image' />
         <nav className='nav-links'>
         <Link to='/'>Home</Link> {/* Link către welcome page */}
         <Link to='/dashboard'>Dashboard</Link>
@@ -36,7 +34,7 @@ const HomePage: React.FC = () => {
         <button className='add-button'>+</button>
         <div className='savings'>
           <span>Savings:</span>
-          <span>44448282</span>
+          <span>0</span>
         </div>
       </aside>
 
@@ -44,6 +42,9 @@ const HomePage: React.FC = () => {
       <main className='main-content'>
         <div className='diagram'>
           <PieChart />
+        </div>
+        <div className="history-button">
+            <button>History</button>
         </div>
       </main>
     </div>

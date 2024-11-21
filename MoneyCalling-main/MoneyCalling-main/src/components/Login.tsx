@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     //navigate('/homepage'); // Redirect to homepage after login
 
       try {
-          const response = await axios.post('/api/utilizatori/login', {
+          const response = await axios.post('http://localhost:8080/api/utilizatori/login', {
             parola: password,  
             email: username
                

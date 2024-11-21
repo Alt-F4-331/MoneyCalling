@@ -17,6 +17,7 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
   
 

@@ -51,7 +51,6 @@ p {
     margin-top: 5px; /* Small margin above for separation from the header */
     margin-bottom: 40px; /* Margin below for spacing */
     text-align: center; /* Center text for the paragraph */
-    max-width: 500px; /* Set a maximum width for better line length control */
     margin-left: auto; /* Center paragraph */
     margin-right: auto; /* Center paragraph */
 }

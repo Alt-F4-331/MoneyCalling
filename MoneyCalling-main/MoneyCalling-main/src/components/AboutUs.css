@@ -1,63 +1,111 @@
-/* Stiluri generale pentru pagina About Us */
+
+html {
+  height: 100%;
+  background-color: #0f1127; /* Asigură continuitatea fundalului */
+  overflow: hidden; /* Previne alte scroll-uri nedorite */
+}
+
+/* Containerul principal pentru secțiunea About Us */
 .about-us {
-    padding: 60px 100px;
-    background-color: #1A1A40; /* Fundal albastru închis */
-    color: #FFFFFF;
-    line-height: 1.6;
-    overflow-y: auto; /* Activează scrollbar */
-  }
-  
-  /* Header-ul paginii */
-  .about-header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  
-  .about-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    color: #5AA8D6; /* Culoare albastră pentru titlu */
-  }
-  
-  .about-header p {
-    font-size: 1.2rem;
-    color: #CBE3EF;
-  }
-  
-  /* Secțiunile din pagina */
-  .about-section {
-    margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .about-section h2 {
-    font-size: 1.3rem;
-    color: #FFFFFF; /* Culoare galbenă pentru subtitluri */
-    text-align: center;
-  }
+  position: absolute;
+  width: 85%; /* Lățimea containerului, ajustată pentru a fi mai lat */
+  max-width: 4000px; /* Lățime maximă pentru ecrane mari */
+  height: 100vh; /* Înălțime relativă la ecran */
+  padding: 40px 20px;
+  background-color: #1A1A40; /* Fundal pentru container */
+  color: #FFFFFF;
+  margin-left: 150px;
+  margin-top: 100px;
+  margin-right: 150px;
+  line-height: 1.8; /* Spațiere între linii */
+  overflow-y: auto; /* Activează scroll-ul intern */
+  border-radius: 12px; /* Colțuri rotunjite */
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4); /* Umbra containerului */
+}
 
-  .about-section h3 {
-    font-size: 1.2rem;
-    color: #FFFFFF;
-    text-align: center;
-  }
-  
-  .about-section p {
-    font-size: 1rem;
-    color: #FFFFFF;
+/* Header-ul paginii */
+.about-header {
+  text-align: left;
+  font-size: 55px;
+  margin-bottom: 50px;
+}
 
-  }
+.about-header h1 {
+  font-size: 55px !important; /* Titlu mai mare */
+  margin-bottom: 10px;
+  color: #5AA8D6;
+}
 
- 
-  /* Secțiunea Contact */
-  .about-section a {
-    color: #5AA8D6;
-    text-decoration: underline;
-  }
-  
-  .about-section a:hover {
-    color: #FFC107;
-  }
-  
+.about-header p {
+  font-size: 50px; /* Font mai mare pentru subtitlu */
+  color: #CBE3EF;
+  text-align: left;
+}
+
+/* Secțiunile din pagină */
+.about-section {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.about-section h2 {
+  font-size: 50px; /* Subtitluri mai mari */
+  color: #FFFFFF;
+  text-align: left;
+}
+
+.about-section h3 {
+  font-size: 50px; /* Font mai mare pentru subtitluri secundare */
+  color: #FFFFFF;
+  text-align: left;
+}
+
+.about-section p {
+  font-size: 40px; /* Text mai lizibil */
+  color: #CBE3EF;
+  text-align: left;
+}
+
+/* Linkuri */
+.about-section a {
+  color: #5AA8D6;
+  text-decoration: underline;
+  font-size: 40px;
+}
+
+.about-section a:hover {
+  color: #FFC107; /* Efect galben pe hover */
+}
+
+/* Butonul Înapoi */
+.back-button-fp {
+  position: absolute;
+  top: 20px;
+  left: 0px;
+  background: none;
+  border: none;
+  color: #CBE3EF; /* Albastru deschis */
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.back-button-fp:hover {
+  color: #FFFFFF; /* Alb pe hover */
+}
+
+/* Scroll personalizat pentru container */
+.about-us::-webkit-scrollbar {
+  width: 10px;
+}
+
+.about-us::-webkit-scrollbar-thumb {
+  background-color: #5AA8D6; /* Albastru pentru scrollbar */
+  border-radius: 5px;
+}
+
+.about-us::-webkit-scrollbar-track {
+  background: #1A1A40;
+}

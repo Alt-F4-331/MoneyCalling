@@ -8,24 +8,17 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const PieChart: React.FC = () => {
   // Datele pentru Pie Chart
   const data = {
-    labels: ['A', 'B', 'C', 'D'], // Etichetele pentru fiecare secțiune
+    labels: ['Category 1', 'Category 2', 'Category 3'], // Etichetele pentru fiecare secțiune
     datasets: [
       {
         label: 'My First Dataset',
-        data: [300, 50, 100, 150], // Valorile pentru fiecare secțiune
+        data: [300, 50, 100], // Valorile pentru fiecare secțiune
         backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
+          '#DE80F2',
+          '#EFDA89',
+          '#3BAEE1',
         ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-        ],
-        borderWidth: 1,
+        borderWidth: 0,
       },
     ],
   };
@@ -34,7 +27,8 @@ const PieChart: React.FC = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top' as const,
+        //position: 'top' as const,
+        display: false,
       },
       title: {
         display: true,
@@ -44,10 +38,23 @@ const PieChart: React.FC = () => {
   };
 
   return (
-    <div style={{ width: '600px', height: '600px' }}>
-
-  <Pie data={data} options={options} />
+    <div className="diagram-container">
+  <div className="pie-chart">
+    <Pie data={data} options={options} />
   </div>
+  <div className="categories-card">
+    <h4>Categories</h4>
+    <div className="category">
+      <span style={{ backgroundColor: '#DE80F2' }}></span>Category 1
+    </div>
+    <div className="category">
+      <span style={{ backgroundColor: '#EFDA89' }}></span>Category 2
+    </div>
+    <div className="category">
+      <span style={{ backgroundColor: '#3BAEE1' }}></span>Category 3
+    </div>
+  </div>
+</div>
   );
 };
 
