@@ -12,12 +12,13 @@ public class Diagrama extends Entitate {
     @JoinColumn(name = "id_user",referencedColumnName = "id")
     private Utilizator user;
 
+    private Data dataDiagrama;
+
     @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cheltuiala> listaCheltuieli ;
 
     @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Raport> listaRapoarte ;// legatura cu raportul
-
     public Diagrama(int id, Utilizator idUser) {
         super(id);
         this.user = idUser;

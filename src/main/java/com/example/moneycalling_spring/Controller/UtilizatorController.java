@@ -2,10 +2,12 @@ package com.example.moneycalling_spring.Controller;
 
 import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Domain.Utilizator;
+import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.ProfilFinanciarService;
 import com.example.moneycalling_spring.Service.UtilizatorService;
 import com.example.moneycalling_spring.dto.CreareContDto;
 import com.example.moneycalling_spring.dto.LoginRequestDTO;
+import com.example.moneycalling_spring.dto.ProfilFinanciarDto;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +23,14 @@ public class UtilizatorController {
 
     private final ProfilFinanciarService profilFinanciarService;
 
+    private final JwtUtil jwtutil;
 
-    public UtilizatorController(UtilizatorService utilizatorService, ProfilFinanciarService profilFinanciarService) {
+
+    public UtilizatorController(UtilizatorService utilizatorService, ProfilFinanciarService profilFinanciarService ,JwtUtil jwt) {
 
         this.utilizatorService = utilizatorService;
         this.profilFinanciarService=profilFinanciarService;
+        this.jwtutil = jwt;
     }
     @Operation(summary = "Obtine utilizator dupa email")
     @GetMapping("/email")
@@ -96,7 +101,10 @@ public class UtilizatorController {
         Optional<Utilizator> utilizator = utilizatorService.getByEmail(email);
 
         if (utilizator.isPresent() && utilizator.get().getParola().equals(parola)) {
-            return ResponseEntity.ok("Autentificare reușită");
+            int userId = utilizator.get().getId();
+            String token = jwtutil.generateToken(userId);
+
+            return ResponseEntity.ok(token);
         } else {
             return new ResponseEntity<>("Email sau parolă incorectă", HttpStatus.UNAUTHORIZED);
         }
@@ -130,6 +138,52 @@ public class UtilizatorController {
 
         // Returnează utilizatorul creat cu HTTP Status 201 Created
         return new ResponseEntity<>(utilizatorSalvat, HttpStatus.CREATED);
+    }
+    @PutMapping("/profil-financiar")
+    @Operation(summary = "Actualizeaza profil financiar al utilizatorului logat")
+    public ResponseEntity<ProfilFinanciar> updateProfilFinanciar(
+            @RequestHeader("Authorization") String token,
+            @RequestBody ProfilFinanciarDto profilFinanciarNou) {
+
+        System.out.println("Token primit: " + token); // Adaugă log pentru a verifica dacă token-ul este corect
+
+        // Verifică dacă token-ul este valid
+        if (token == null || !token.startsWith("Bearer ")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        String jwtToken = token.substring(7);  // Extrage token-ul fără "Bearer "
+
+        // 1. Extrage userId din token
+        if(!jwtutil.validateToken(jwtToken))
+        {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        int userId = jwtutil.extractUserId(jwtToken);
+
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Utilizator utilizator = utilizatorOptional.get();
+
+        ProfilFinanciar profilExistent = utilizator.getProfil();
+        if (profilExistent == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Dacă nu există profil, returnează 404
+        }
+
+        profilExistent.setVenit(profilFinanciarNou.getVenit());
+        profilExistent.setDomiciliu(profilFinanciarNou.getDomiciliu());
+        profilExistent.setContainerEconomii(profilFinanciarNou.getContainerEconomii());
+        profilExistent.setDataSalar(profilFinanciarNou.getDataSalar());
+
+        ProfilFinanciar profilSalvat = profilFinanciarService.saveProfilFinanciar(profilExistent);
+
+        // 4. Returnează profilul actualizat
+        return ResponseEntity.ok(profilSalvat);
+
+
     }
 
 
