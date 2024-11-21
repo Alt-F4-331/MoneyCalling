@@ -1,7 +1,12 @@
 package com.example.moneycalling_spring.Service;
 
+import com.example.moneycalling_spring.Domain.Data;
 import com.example.moneycalling_spring.Domain.Diagrama;
+import com.example.moneycalling_spring.Domain.ProfilFinanciar;
+import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Repository.DiagramaRepository;
+import com.example.moneycalling_spring.Repository.ProfilFinanciarRepository;
+import com.example.moneycalling_spring.Repository.UtilizatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +17,9 @@ import java.util.Optional;
 public class DiagramaService {
     @Autowired
     private DiagramaRepository diagramarepo;
+
+    private ProfilFinanciarRepository profilrepo;
+    private UtilizatorRepository utilizatorrepo;
 
     @Autowired
     public DiagramaService(DiagramaRepository diagrama)
@@ -46,5 +54,6 @@ public class DiagramaService {
     {
         return diagramarepo.findById(id);
     }
+
 
 }
