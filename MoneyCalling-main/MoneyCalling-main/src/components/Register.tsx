@@ -13,17 +13,20 @@ const Register: React.FC = () => {
   const [sex, setSex] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [cpassword, setCPassword] = useState('');
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // Mesaj de succes
+
+
   const navigate = useNavigate();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
-  
+
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
-  
+
   const submitForm = async () => {
     // Pregătește datele pentru a se potrivi cu CreareContDto
     const contData = {
@@ -39,10 +42,10 @@ const Register: React.FC = () => {
       sex: sex,
       numarTelefon: phone,
     };
-  
+
     console.log("Datele trimise:", contData);
     console.log(typeof contData.dataNasterii.an); // Tipul variabilei an (int)
-  
+
     try {
       // Trimite cererea POST cu Axios
       const response = await axios.post('http://localhost:8080/api/utilizatori/createAccount', contData, {
@@ -50,11 +53,10 @@ const Register: React.FC = () => {
           'Content-Type': 'application/json', // Specifică tipul de conținut
         },
       });
-  
+
       if (response.status === 201) {
         console.log("Răspunsul API-ului:", response);
-        alert('Cont creat cu succes!');
-        navigate('/');
+        setSuccessMessage('Cont creat cu succes!'); // Afișează mesajul de succes
       } else {
         // Dacă răspunsul nu este OK, afișează eroarea
         console.error("Eroare la crearea contului:", response.data);
@@ -70,9 +72,16 @@ const Register: React.FC = () => {
     <div className="login-body"> {/* Use the same class for background */}
       <div className="login-container"> {/* Change to login-container */}
         <img src={logo} alt="Logo" className="logo" />
-        <h2>Create Account</h2>
+        {successMessage && (
+        <div className="overlay" onClick={() => setSuccessMessage(null)}>
+          <div className="success-message">
+            {successMessage}
+          </div>
+        </div>
+      )}
         {step === 1 && (
           <div className="login-form"> {/* Use login-form */}
+            <h2>Create Account</h2>
             <input
               type="text"
               placeholder="First Name"
@@ -91,6 +100,7 @@ const Register: React.FC = () => {
         )}
         {step === 2 && (
           <div className="login-form"> {/* Use login-form */}
+            <h2>Date of Birth</h2>
             <div className="date-inputs">
               <input
                 type="text"
@@ -111,17 +121,26 @@ const Register: React.FC = () => {
                 onChange={(e) => setBirthDate({ ...birthDate, year: e.target.value })}
               />
             </div>
-            <select value={sex} onChange={(e) => setSex(e.target.value)}>
-              <option value="">Sex</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
+            <div className="sex-option">
+              <select
+                value={sex}
+                onChange={(e) => setSex(e.target.value)}
+              >
+                <option value="">
+                  Select Gender
+                </option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+
             <button className="next-button" onClick={nextStep}>Next</button>
             <button className="back-button" onClick={prevStep}>Back</button>
           </div>
         )}
         {step === 3 && (
           <div className="login-form"> {/* Use login-form */}
+            <h2>Contact Information</h2>
             <input
               type="email"
               placeholder="Email"
@@ -130,7 +149,7 @@ const Register: React.FC = () => {
             />
             <input
               type="tel"
-              placeholder="Phone"
+              placeholder="Phone Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
@@ -140,17 +159,18 @@ const Register: React.FC = () => {
         )}
         {step === 4 && (
           <div className="login-form"> {/* Use login-form */}
-            <input
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+            <h2>Create a Password</h2>
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={cpassword}
+              onChange={(e) => setCPassword(e.target.value)}
             />
             <button className="next-button" onClick={submitForm}>Register</button>
             <button className="back-button" onClick={prevStep}>Back</button>

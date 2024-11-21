@@ -8,6 +8,8 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // Mesaj de succes
+
 
   const handleLogin = async () => {
     // Logic for login
@@ -24,12 +26,11 @@ const Login: React.FC = () => {
           });
           if (response.status === 200) {
               console.log('Login successful:', response.data);
-              alert('Login successful!');
-              navigate('/homepage'); // Redirect on success
+              setSuccessMessage('Cont creat cu succes!'); // Afișează mesajul de succes
           }
       } catch (error) {
           console.error('Login failed:', error);
-          alert('Invalid email or password');
+          setSuccessMessage('Invalid email or password');
       }
 
   };
@@ -38,11 +39,18 @@ const Login: React.FC = () => {
     <div className="login-body">
       <div className="login-container">
         <img src={logo} alt="Logo" className="logo" />
+        {successMessage && (
+        <div className="overlay" onClick={() => setSuccessMessage(null)}>
+          <div className="success-message">
+            {successMessage}
+          </div>
+        </div>
+      )}
         <h2>Log In</h2>
         <div className="login-form">
           <input
             type="text"
-            placeholder="Username"
+            placeholder="Email or Phone Number"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />

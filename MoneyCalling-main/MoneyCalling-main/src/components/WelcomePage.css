@@ -1,6 +1,6 @@
 
 body {
-    background-image: url('public/fundal pc.png'); /* Ensure the path is correct */
+    background-color: #c9bef9;
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -74,7 +74,7 @@ button {
 }
 
 .login-button {
-    background-color: #68148e; /* Color for login button */
+    background-color: #3325b3; /* Color for login button */
     color: white; /* Text color */
     margin-top: 10px;
 }
@@ -85,7 +85,7 @@ button {
 }
 
 h1 {
-    background: linear-gradient(90deg, #3325b3, #ffffff);
+    background: linear-gradient(90deg, #3325b3, #bcaef8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
