@@ -64,7 +64,7 @@ public class CheltuialaController {
     // Endpoint pentru a obține toate cheltuielile după id-ul diagramei
     @Operation(summary = "Obtine toate cheltuielile dintr-o diagrama")
     @GetMapping("/diagrama/{idDiagrama}")
-    public ResponseEntity<List<Cheltuiala>> getAllCheltuieliByIdDiagrama(@PathVariable int idDiagrama) {
+    public ResponseEntity<List<CheltuialaRequestDTO>> getAllCheltuieliByIdDiagrama(@PathVariable int idDiagrama) {
         Optional<Diagrama> diagrama_opt = diagramaService.getById(idDiagrama);
         if (diagrama_opt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Dacă nu există, returnăm 404
@@ -76,6 +76,16 @@ public class CheltuialaController {
         if (cheltuieli.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(cheltuieli);
+        // Transformăm entitățile în DTO-uri
+        List<CheltuialaRequestDTO> cheltuialaDTOs = cheltuieli.stream()
+                .map(cheltuiala -> new CheltuialaRequestDTO(
+                        cheltuiala.getId(),
+                        cheltuiala.getNume(),
+                        cheltuiala.getSuma(),
+                        diagrama.getId() // sau cheltuiala.getIdDiagrama() dacă există direct
+                ))
+                .toList();
+
+        return ResponseEntity.ok(cheltuialaDTOs);
     }
 }

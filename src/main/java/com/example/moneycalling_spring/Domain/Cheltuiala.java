@@ -10,6 +10,8 @@ public class Cheltuiala extends Entitate {
 
      private float suma;
 
+     private float procent;
+
 
      @ManyToOne
      @JoinColumn(name = "id_diagrama")//cheia straina
@@ -27,12 +29,21 @@ public class Cheltuiala extends Entitate {
 
      }
 
-     public Cheltuiala(int id, String nume, float suma , Diagrama diagrama)
+     public Cheltuiala(int id, String nume, float suma ,float procent, Diagrama diagrama)
      {
           super(id);
           this.nume=nume;
           this.suma=suma;
           this.diagrama = diagrama;
+          this.procent = procent;
+     }
+
+     public float getProcent() {
+          return procent;
+     }
+
+     public void setProcent(float procent) {
+          this.procent = procent;
      }
 
      public String getNume() {

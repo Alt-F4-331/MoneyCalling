@@ -20,8 +20,7 @@ public class CheltuialaService {
     private final DiagramaRepository diagramaRepository;
 
     @Autowired
-    public CheltuialaService(CheltuialaRepository cheltuiala,DiagramaRepository diagramaRepository)
-    {
+    public CheltuialaService(CheltuialaRepository cheltuiala, DiagramaRepository diagramaRepository) {
 
         this.cheltuialaRepository = cheltuiala;
         this.diagramaRepository = diagramaRepository;
@@ -57,8 +56,7 @@ public class CheltuialaService {
 
 
     //Metoda care adauga o noua cheltuiala
-    public Cheltuiala saveCheltuiala(Cheltuiala cheltuiala)
-    {
+    public Cheltuiala saveCheltuiala(Cheltuiala cheltuiala) {
         return cheltuialaRepository.save(cheltuiala);
         //aceasta metoda poate fi folosita si pentru update:
         //-daca este creata o noua cheltuiala cu un id nou il creeaza
@@ -66,17 +64,25 @@ public class CheltuialaService {
     }
 
     //Metoda care returneaza toate cheltuielile
-    public List<Cheltuiala> getAllCheltuieli(){
+    public List<Cheltuiala> getAllCheltuieli() {
         return cheltuialaRepository.findAll();
         //pt admin?
     }
 
-    public Optional<Cheltuiala> getById(int id)
-    {
+    public int getFirstAvailableId() {
+        List<Integer> allIds = cheltuialaRepository.findAllIds();
+        int id = 1;
+        while (allIds.contains(id)) {
+            id++;
+        }
+        return id;
+    }
+
+    public Optional<Cheltuiala> getById(int id) {
         return cheltuialaRepository.findById(id);
     }
 
-    public void stergeCheltuialaById(int id){
+    public void stergeCheltuialaById(int id) {
         cheltuialaRepository.deleteById(id);
     }
 
@@ -85,11 +91,23 @@ public class CheltuialaService {
         cheltuialaRepository.deleteAll();
     }
 
-     public List<Cheltuiala> getAllCheltuieliByIdDiagrama(Diagrama diagrama){
+    public List<Cheltuiala> getAllCheltuieliByIdDiagrama(Diagrama diagrama) {
         return cheltuialaRepository.findByDiagrama(diagrama);
-   }
+    }
+
+    public void adaugaCheltuieli(Diagrama diagrama) {
+
+        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "locuinta", 0,30, diagrama));
+        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "alimentatie", 0,15, diagrama));
+        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "transport", 0,15, diagrama));
+        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "sanatate", 0,10, diagrama));
+        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "imbracaminte-incaltaminte", 0,5, diagrama));
+        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "divertisment", 0,10, diagrama));
+        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "educatie", 0,5, diagrama));
+        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "economii", 0,10, diagrama));
+
+    }
 
 
-        //metode extra dupa
 
 }

@@ -1,13 +1,15 @@
 package com.example.moneycalling_spring.Controller;
 
+import com.example.moneycalling_spring.Domain.Cheltuiala;
 import com.example.moneycalling_spring.Domain.Data;
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Utilizator;
+import com.example.moneycalling_spring.Security.JwtUtil;
+import com.example.moneycalling_spring.Service.CheltuialaService;
 import com.example.moneycalling_spring.Service.DiagramaService;
 import com.example.moneycalling_spring.Service.UtilizatorService;
 import com.example.moneycalling_spring.dto.DiagramaRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +26,16 @@ public class DiagramaController {
 
     private final UtilizatorService utilizatorService;
 
-    public DiagramaController(DiagramaService service,UtilizatorService utilizatorService)
+    private final CheltuialaService cheltuialaService;
+
+    private final JwtUtil jwtutil;
+
+    public DiagramaController(DiagramaService service, UtilizatorService utilizatorService, CheltuialaService cheltuialaService, JwtUtil jwtutil)
     {
         this.diagramaService = service;
         this.utilizatorService = utilizatorService;
+        this.cheltuialaService = cheltuialaService;
+        this.jwtutil = jwtutil;
     }
 
     @Operation(summary = "Obtine diagrama dupa id")
@@ -70,10 +78,14 @@ public class DiagramaController {
         // Dacă utilizatorul există, îl asociem diagramei
         Utilizator user = optionalUser.get();
         // Obținem utilizatorul din Optional
-
+        Data data = new Data(diagramaRequestDTO.getData().getZi(),diagramaRequestDTO.getData().getLuna(),diagramaRequestDTO.getData().getAn());
         diagrama.setId(diagramaRequestDTO.getId());
+        diagrama.setDataDiagrama(data);
         diagrama.setUser(user);
         Diagrama savedDiagrama = diagramaService.saveDiagrama(diagrama);
+        float venit = user.getProfil().getVenit();
+        cheltuialaService.adaugaCheltuieli(diagrama);
+
         return new ResponseEntity<>(savedDiagrama, HttpStatus.CREATED); // Răspuns cu 201 când e salvat
     }
 
