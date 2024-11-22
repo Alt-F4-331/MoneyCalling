@@ -1,0 +1,84 @@
+
+body {
+    background-color: #c9bef9;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: white; /* Text color */
+    font-family: sans-serif !important; /* Change font to Jockey One */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex; /* Split the container into two parts */
+    align-items: center; /* Center items vertically */
+    height: 100vh; /* Full height of the viewport */
+    position: relative; /* Allows absolute positioning for buttons */
+}
+
+.logo {
+    flex: 1; /* Take half the space for the logo */
+    display: flex; /* Flexbox for centering */
+    justify-content: center; /* Center logo horizontally */
+    align-items: center; /* Center logo vertically */
+}
+
+.text {
+    flex: 1; /* Take half the space for the text */
+    text-align: center; /* Center text in this container */
+    display: flex; /* Activează flexbox */
+    flex-direction: column; /* Direcția de organizare a elementelor */
+    justify-content: center; /* Centrează vertical textul */
+    height: 50%; /* Setează înălțimea secțiunii pentru a limita textul */
+    margin: auto; /* Centrează secțiunea */
+}
+
+h1 {
+    font-size: 35px !important; /* Reduced font size for the header */
+    margin-bottom: 0; /* Remove bottom margin to eliminate gap */
+    padding-right: 20px; /* Add space on the right to move it left */
+    text-align: center; /* Center the header text */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    line-height: 1.5;
+}
+
+p {
+    font-size: 16px; /* Font size for paragraph */
+    margin-top: 5px; /* Small margin above for separation from the header */
+    margin-bottom: 40px; /* Margin below for spacing */
+    text-align: center; /* Center text for the paragraph */
+    margin-left: auto; /* Center paragraph */
+    margin-right: auto; /* Center paragraph */
+}
+
+
+h1 {
+    background: linear-gradient(90deg, #3325b3, #bcaef8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.home-button {
+    position: absolute; /* Poziționare absolută */
+    top: 20px; /* Distanța față de partea de sus */
+    left: 20px; /* Distanța față de partea din stânga */
+    border: none; /* Elimină conturul */
+    padding: 10px 20px; /* Adaugă spațiu în interiorul butonului */
+    border-radius: 5px; /* Colțuri rotunjite */
+    cursor: pointer; /* Schimbă cursorul la pointer */
+    font-size: 20px; /* Dimensiune font */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5a537d;
+    height: 50px;
+}
+
+.home-button:hover {
+    background-color: transparent; /* Culoare mai deschisă la hover */
+}

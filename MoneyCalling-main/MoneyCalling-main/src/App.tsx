@@ -7,6 +7,8 @@ import WelcomePage from './components/WelcomePage'
 import FinancialProfile from './components/FinancialProfile';
 import AboutUs from './components/AboutUs';
 import Help from './components/Help';
+import Dashboard from './components/Dashboard';
+import InfoPage from './components/InfoPage';
 
 const App: React.FC = () => {
   return (
@@ -20,6 +22,8 @@ const App: React.FC = () => {
         <Route path="/financial-profile" element={<FinancialProfile />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/help" element={<Help />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/info-page" element={<InfoPage />} />
       </Routes>
     </Router>
     </div>

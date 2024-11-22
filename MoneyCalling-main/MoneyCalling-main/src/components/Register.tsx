@@ -57,6 +57,7 @@ const Register: React.FC = () => {
       if (response.status === 201) {
         console.log("Răspunsul API-ului:", response);
         setSuccessMessage('Cont creat cu succes!'); // Afișează mesajul de succes
+        navigate('/homepage')
       } else {
         // Dacă răspunsul nu este OK, afișează eroarea
         console.error("Eroare la crearea contului:", response.data);

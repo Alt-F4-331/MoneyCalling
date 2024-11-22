@@ -1,26 +1,19 @@
-
-html {
-  height: 100%;
-  background-color: #0f1127; /* Asigură continuitatea fundalului */
-  overflow: hidden; /* Previne alte scroll-uri nedorite */
-}
-
 /* Containerul principal pentru secțiunea About Us */
 .about-us {
   position: absolute;
-  width: 85%; /* Lățimea containerului, ajustată pentru a fi mai lat */
-  max-width: 4000px; /* Lățime maximă pentru ecrane mari */
-  height: 100vh; /* Înălțime relativă la ecran */
+  width: 85%; /* Lățimea containerului */
+  max-width: 4000px; /* Lățime maximă */
+  height: 100vh; /* Înălțime completă */
   padding: 40px 20px;
-  background-color: #1A1A40; /* Fundal pentru container */
+  background-color: #1A1A40; /* Fundal */
   color: #FFFFFF;
   margin-left: 150px;
   margin-top: 100px;
   margin-right: 150px;
-  line-height: 1.8; /* Spațiere între linii */
-  overflow-y: auto; /* Activează scroll-ul intern */
-  border-radius: 12px; /* Colțuri rotunjite */
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4); /* Umbra containerului */
+  line-height: 1.8;
+  overflow-y: auto; /* Scroll activat */
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4); /* Umbra */
 }
 
 /* Header-ul paginii */
@@ -31,13 +24,13 @@ html {
 }
 
 .about-header h1 {
-  font-size: 55px !important; /* Titlu mai mare */
+  font-size: 55px !important;
   margin-bottom: 10px;
   color: #5AA8D6;
 }
 
 .about-header p {
-  font-size: 50px; /* Font mai mare pentru subtitlu */
+  font-size: 50px;
   color: #CBE3EF;
   text-align: left;
 }
@@ -48,22 +41,30 @@ html {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  opacity: 0; /* Inițial invizibil */
+  transform: translateY(20px); /* Poziționare mai jos pentru efect */
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.about-section.fade-in-scroll {
+  opacity: 1; /* Devine vizibil */
+  transform: translateY(0); /* Poziționare normală */
 }
 
 .about-section h2 {
-  font-size: 50px; /* Subtitluri mai mari */
+  font-size: 50px;
   color: #FFFFFF;
   text-align: left;
 }
 
 .about-section h3 {
-  font-size: 50px; /* Font mai mare pentru subtitluri secundare */
+  font-size: 50px;
   color: #FFFFFF;
   text-align: left;
 }
 
 .about-section p {
-  font-size: 40px; /* Text mai lizibil */
+  font-size: 40px;
   color: #CBE3EF;
   text-align: left;
 }
@@ -76,25 +77,9 @@ html {
 }
 
 .about-section a:hover {
-  color: #FFC107; /* Efect galben pe hover */
+  color: #FFC107; /* Efect pe hover */
 }
 
-/* Butonul Înapoi */
-.back-button-fp {
-  position: absolute;
-  top: 20px;
-  left: 0px;
-  background: none;
-  border: none;
-  color: #CBE3EF; /* Albastru deschis */
-  font-size: 1.2rem;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.back-button-fp:hover {
-  color: #FFFFFF; /* Alb pe hover */
-}
 
 /* Scroll personalizat pentru container */
 .about-us::-webkit-scrollbar {
@@ -102,10 +87,24 @@ html {
 }
 
 .about-us::-webkit-scrollbar-thumb {
-  background-color: #5AA8D6; /* Albastru pentru scrollbar */
+  background-color: #5AA8D6;
   border-radius: 5px;
 }
 
 .about-us::-webkit-scrollbar-track {
   background: #1A1A40;
 }
+
+/* Animatie pentru fade-in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+

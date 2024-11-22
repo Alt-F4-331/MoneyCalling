@@ -1,0 +1,170 @@
+.dashboard-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #0D0B2D;
+    color: #FFFFFF;
+    font-family: "Jockey One", sans-serif;
+  }
+  
+  /* Bara de navigare */
+  .navbar {
+    width: 100%;
+    height: 80px;
+    background-color: #110F34;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  }
+  
+  .logo-image {
+    width: 120px;
+    height: auto;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav-links a {
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+  }
+  
+  .nav-links a.active {
+    background-color: #3C3C6A;
+  }
+  
+  .nav-links a:hover {
+    background-color: #263663;
+  }
+  
+  .profile-link .profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  /* Conținut principal */
+  .main-content {
+    display: flex;
+    gap: 40px;
+    margin-top: 180px;
+    padding: 20px;
+    justify-content: center;
+  }
+  
+  /* Calendar */
+  .calendar-section {
+    background-color: #14123BD9;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 40%
+  }
+  
+  .calendar-section h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
+  }
+  
+  .months-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  
+  .months-grid button {
+    background-color: #1F1B4D;
+    color: #FFFFFF;
+    border: none;
+    padding: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  .months-grid button:hover {
+    background-color: #263663;
+  }
+  
+  /* Chart Section */
+  .chart-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .pie-chart-dash {
+    width: 250px;
+    height: 250px;
+    background: conic-gradient(
+      #FF69B4 0% 33%,
+      #FFD700 33% 66%,
+      #1E90FF 66% 100%
+    );
+    border-radius: 50%;
+  }
+  
+  .legend {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 18px;
+  }
+  
+  .legend-color {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+    border-radius: 3px;
+  }
+  
+  .legend-color.pink {
+    background-color: #FF69B4;
+  }
+  
+  .legend-color.yellow {
+    background-color: #FFD700;
+  }
+  
+  .legend-color.blue {
+    background-color: #1E90FF;
+  }
+  .year-selector {
+    margin-bottom: 20px;
+  }
+  
+  .year-selector select {
+    background-color: #1F1B4D;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .year-selector select:hover {
+    background-color: #263663;
+  }
+  
+  .year-selector select:focus {
+    outline: none;
+    box-shadow: 0 0 5px #FFD700;
+  }
+    

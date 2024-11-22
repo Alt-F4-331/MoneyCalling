@@ -26,7 +26,7 @@ const Login: React.FC = () => {
           });
           if (response.status === 200) {
               console.log('Login successful:', response.data);
-              setSuccessMessage('Cont creat cu succes!'); // Afișează mesajul de succes
+              navigate('/homepage');
           }
       } catch (error) {
           console.error('Login failed:', error);

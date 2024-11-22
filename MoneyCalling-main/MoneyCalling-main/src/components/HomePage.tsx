@@ -10,16 +10,18 @@ const HomePage: React.FC = () => {
     <div className='home-page'>
       {/* Bara de navigare */}
       <header className='navbar'>
-        <img src={logo} alt="Logo" className='logo-image' />
+        <Link to="/info-page">
+          <img src={logo} alt="Logo" className="logo-image" />
+        </Link>
         <nav className='nav-links'>
-        <Link to='/'>Home</Link> {/* Link către welcome page */}
-        <Link to='/dashboard'>Dashboard</Link>
-        <Link to='/financial-profile'>Financial Profile</Link>
-        <Link to='/help'>Help</Link>
-        <Link to='/about-us'>About Us</Link>
+          <Link to='/homepage' className="active">Home</Link> {/* Link către welcome page */}
+          <Link to='/dashboard'>Dashboard</Link>
+          <Link to='/financial-profile'>Financial Profile</Link>
+          <Link to='/help'>Help</Link>
+          <Link to='/about-us'>About Us</Link>
         </nav>
         <a href='/my-account' className='profile-link'>
-            <img src={profile_pic} alt="Profile" className="profile-image" />
+          <img src={profile_pic} alt="Profile" className="profile-image" />
         </a>
       </header>
 
@@ -39,12 +41,12 @@ const HomePage: React.FC = () => {
       </aside>
 
       {/* Conținut principal */}
-      <main className='main-content'>
+      <main className='main-contents'>
         <div className='diagram'>
           <PieChart />
         </div>
         <div className="history-button">
-            <button>History</button>
+          <button>History</button>
         </div>
       </main>
     </div>

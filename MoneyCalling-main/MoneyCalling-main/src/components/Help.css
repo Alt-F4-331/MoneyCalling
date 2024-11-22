@@ -1,7 +1,7 @@
-/* Stiluri generale pentru pagina About Us */
+/* Stiluri generale pentru pagina Help */
 .help {
   position: absolute;
-  width: 85%; /* Lățimea containerului, ajustată pentru a fi mai lat */
+  width: 85%; /* Lățimea containerului */
   max-width: 4000px; /* Lățime maximă pentru ecrane mari */
   height: 100vh; /* Înălțime relativă la ecran */
   padding: 40px 20px;
@@ -14,82 +14,72 @@
   overflow-y: auto; /* Activează scroll-ul intern */
   border-radius: 12px; /* Colțuri rotunjite */
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4); /* Umbra containerului */
-  }
-  
-  /* Header-ul paginii */
-  .help-header {
-    text-align: left;
-    font-size: 55px;
-    margin-bottom: 50px;
-  }
-  
-  .help-header h1 {
-    font-size: 55px !important; /* Titlu mai mare */
-    margin-bottom: 10px;
-    color: #5AA8D6;
-  }
-  
-  .help-header p {
-    font-size: 50px; /* Font mai mare pentru subtitlu */
-    color: #CBE3EF;
-    text-align: left;
-  }
-  
-  /* Secțiunile din pagina */
-  .help-section {
-    margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .help-section h2 {
-    font-size: 50px;
-    color: #FFFFFF; 
-    text-align: left;
-  }
+}
 
-  .help-section h3 {
-    font-size: 50px;
-    color: #FFFFFF;
-    text-align: left;
-  }
-  
-  .help-section p {
-    font-size: 40px;
-    color:#CBE3EF;
-    text-align: left;
+/* Header-ul paginii */
+.help-header {
+  text-align: left;
+  font-size: 55px;
+  margin-bottom: 50px;
+}
 
-  }
+.help-header h1 {
+  font-size: 55px !important; /* Titlu mai mare */
+  margin-bottom: 10px;
+  color: #5AA8D6;
+}
 
- 
-  /* Secțiunea Contact */
-  .help-section a {
-    color: #5AA8D6;
-    text-decoration: underline;
-    font-size: 40px;
-  }
-  
-  .help-section a:hover {
-    color: #FFC107;
-  }
+.help-header p {
+  font-size: 50px; /* Font mai mare pentru subtitlu */
+  color: #CBE3EF;
+  text-align: left;
+}
 
-  /* Butonul Înapoi */
-.back-button-fp {
-  position: absolute;
-  top: 20px;
-  left: 0px;
-  background: none;
-  border: none;
-  color: #CBE3EF; /* Albastru deschis */
-  font-size: 1.2rem;
-  cursor: pointer;
+/* Secțiunile din pagina */
+.help-section {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  opacity: 0; /* Elementele sunt inițial invizibile */
+  transform: translateY(20px); /* Poziționare mai jos pentru efect */
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.help-section.fade-in-scroll {
+  opacity: 1; /* Vizibilitate */
+  transform: translateY(0); /* Poziționare inițială */
+}
+
+.help-section h2 {
+  font-size: 50px;
+  color: #FFFFFF; 
+  text-align: left;
+}
+
+.help-section h3 {
+  font-size: 50px;
+  color: #FFFFFF;
+  text-align: left;
+}
+
+.help-section p {
+  font-size: 40px;
+  color: #CBE3EF;
+  text-align: left;
+}
+
+/* Secțiunea Contact */
+.help-section a {
+  color: #5AA8D6;
   text-decoration: underline;
+  font-size: 40px;
 }
 
-.back-button-fp:hover {
-  color: #FFFFFF; /* Alb pe hover */
+.help-section a:hover {
+  color: #FFC107;
 }
+
 
 /* Scroll personalizat pentru container */
 .about-us::-webkit-scrollbar {
@@ -105,4 +95,14 @@
   background: #1A1A40;
 }
 
-  
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
