@@ -3,7 +3,9 @@ package com.example.moneycalling_spring;
 import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Repository.*;
 import com.example.moneycalling_spring.Service.*;
+import com.example.moneycalling_spring.dto.CheltuialaRequestDTO;
 import org.junit.jupiter.api.*;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -21,12 +23,13 @@ class MoneyCallingSpringApplicationTests {
 
 
     private final Data dataNasterii = new Data(15, 12, 1998);
+    private final Data dataC = new Data(9, 9, 2003);
     private final ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
     private final Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
     private final Utilizator utilizator2 = new Utilizator(1, "Marinescu", "Stefan", "parola1235", "stef.mari@email.com", dataNasterii, "M", "0723456789", profil);
-    private final Diagrama diag  = new Diagrama(1, utilizator);
-    private final Diagrama diag2 = new Diagrama(2, utilizator2);
-    private final Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, diag);
+    private final Diagrama diag  = new Diagrama(1, dataC, utilizator);
+    private final Diagrama diag2 = new Diagrama(2, dataC, utilizator);
+    private final Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, 15, diag);
     private final Raport raport = new Raport(1, diag);
     @Autowired
     private DiagramaService diagramaService;
@@ -145,6 +148,8 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(15, dataNasterii.getZi(), "dataNasterii zi must be 15");
         assertEquals(12, dataNasterii.getLuna(), "dataNasterii luna must be 12");
         assertEquals(1998, dataNasterii.getAn(), "dataNasterii an must be 1998");
+
+        assertEquals("15.12.1998", dataNasterii.toString(), "dataNasterii must be 15.12.1998");
     }
 
     @Test
@@ -172,6 +177,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(1, cheltuiala.getId(), "cheltuiala id must be 1");
         assertEquals("home", cheltuiala.getNume(), "cheltuiala nume must be home");
         assertEquals(50000.0F, cheltuiala.getSuma(), "cheltuiala suma must be 50000.0F");
+        assertEquals(15.0F, cheltuiala.getProcent(), "cheltuiala procent must be 15.0F" );
         assertEquals(diag, cheltuiala.getDiagrama(), "cheltuiala diagrama content must be same as diag content");
     }
 
@@ -187,6 +193,14 @@ class MoneyCallingSpringApplicationTests {
         cheltuiala.setNume("newhome");
         assertEquals("newhome", cheltuiala.getNume(), "cheltuiala nume must be newhome");
 
+        //Testarea functiei set pentru suma
+        cheltuiala.setSuma(60000.0F);
+        assertEquals(60000.0F, cheltuiala.getSuma(), "cheltuiala suma must be 60000.0F");
+
+        //Testarea functiei set pentru procent
+        cheltuiala.setProcent(20.0F);
+        assertEquals(20.0F, cheltuiala.getProcent(), "cheltuiala procent must be 20.0F");
+
         //Testarea functiei set pentru diagrama
         cheltuiala.setDiagrama(diag2);
         assertEquals(diag2, cheltuiala.getDiagrama(), "cheltuiala diagrama content must be same as diag2 content");
@@ -198,7 +212,12 @@ class MoneyCallingSpringApplicationTests {
 
         //Testarea tuturor campurilor din acest obiect cu ajutorul functiilor get
         assertEquals(1, diag.getId(), "diag id must be 1");
+        assertEquals(9, diag.getDataDiagrama().getZi(), "diag data zi must be 9");
+        assertEquals(9, diag.getDataDiagrama().getLuna(), "diag data luna must be 9");
+        assertEquals(2003, diag.getDataDiagrama().getAn() , "diag data an must be 2003");
         assertEquals(utilizator, diag.getUser(), "diag user must be utilizator");
+        List<Cheltuiala> list = diag.getListaCheltuieli();
+        assertEquals(list, diag.getListaCheltuieli());
     }
 
     @Test
@@ -208,6 +227,15 @@ class MoneyCallingSpringApplicationTests {
         //Testarea functiei set pentru id
         diag.setId(2);
         assertEquals(2, diag.getId(), "diag id must be 2");
+
+        //Testarea functiei set pentru data
+        dataC.setZi(29);
+        dataC.setLuna(9);
+        dataC.setAn(2002);
+        diag.setDataDiagrama(dataC);
+        assertEquals(29, diag.getDataDiagrama().getZi(), "diag data zi must be 29");
+        assertEquals(9, diag.getDataDiagrama().getLuna(), "diag data luna must be 9");
+        assertEquals(2002, diag.getDataDiagrama().getAn() , "diag data an must be 2002");
 
         //Testarea functiei set pentru utilizator
         diag.setUser(utilizator2);
@@ -243,8 +271,8 @@ class MoneyCallingSpringApplicationTests {
     private final Data dataRepo = new Data(15,10,2000);
     private final ProfilFinanciar profilRepo = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
     private final Utilizator utilizatorRepo = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataRepo,"mascul","0777333222", profilRepo);
-    private final Diagrama diagRepo  = new Diagrama(1, utilizatorRepo);
-    private final Cheltuiala cheltuialaRepo = new Cheltuiala(1, "home", 50000.0F, diagRepo);
+    private final Diagrama diagRepo  = new Diagrama(1, dataRepo,  utilizatorRepo);
+    private final Cheltuiala cheltuialaRepo = new Cheltuiala(1, "home", 50000.0F, 20, diagRepo);
     private final Raport raportRepo = new Raport(1, diagRepo);
 
     @Autowired
@@ -408,8 +436,8 @@ class MoneyCallingSpringApplicationTests {
     private final Data dataServ = new Data(15,10,2000);
     private final ProfilFinanciar profilServ = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
     private final Utilizator utilizatorServ = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataServ,"mascul","0777333222", profilServ);
-    private final Diagrama diagServ  = new Diagrama(1, utilizatorServ);
-    private final Cheltuiala cheltuialaServ = new Cheltuiala(1, "home", 50000.0F, diagServ);
+    private final Diagrama diagServ  = new Diagrama(1, dataServ, utilizatorServ);
+    private final Cheltuiala cheltuialaServ = new Cheltuiala(1, "home", 50000.0F, 20, diagServ);
     private final Raport raportServ = new Raport(1, diagServ);
 
     @Autowired
@@ -430,6 +458,12 @@ class MoneyCallingSpringApplicationTests {
     @Test
     @Order(18)
     public void testUtilizatorService(){
+        //testarea functiei deleteALL
+        utilizatorService.deleteAll();
+        List<Utilizator> dlist = utilizatorRepository.findAll();
+        assertTrue(dlist.isEmpty());
+
+
         //Adaugarea in service a unui utilizator
         utilizatorService.saveUtilizator(utilizatorServ);
         profilFinanciarService.saveProfilFinanciar(profilServ);
@@ -439,6 +473,9 @@ class MoneyCallingSpringApplicationTests {
 
         //testare getbyid
         assertEquals(utilizatorServ.getId(), utilizatorService.getById(utilizatorServ.getId()).get().getId());
+
+        //testare getbyemail
+        assertEquals(utilizatorServ.getId(), utilizatorService.getByEmail(utilizatorServ.getEmail()).get().getId());
 
         //testare getall
         List<Utilizator> lista = utilizatorService.getAllUtilizatori();
@@ -450,13 +487,16 @@ class MoneyCallingSpringApplicationTests {
         List<Utilizator> lista2 = utilizatorService.getAllUtilizatori();
         assertTrue(lista2.isEmpty());
 
-        //testare getbyemail
-
     }
 
     @Test
     @Order(19)
     public void testProfilFinanciarService(){
+        //testarea functiei deleteALL
+        profilFinanciarService.deleteAll();
+        List<ProfilFinanciar> dlist = profilFinanciarRepository.findAll();
+        assertTrue(dlist.isEmpty());
+
         //Adaugarea in service a unui profil financiar
         profilFinanciarService.saveProfilFinanciar(profilServ);
 
@@ -474,6 +514,11 @@ class MoneyCallingSpringApplicationTests {
     @Test
     @Order(20)
     public void testDiagramaService(){
+        //testarea functiei deleteALL
+        diagramaService.deleteAll();
+        List<Diagrama> dlist = diagramaRepository.findAll();
+        assertTrue(dlist.isEmpty());
+
         //Adaugarea in service a unei diagrame
         utilizatorService.saveUtilizator(utilizatorServ);
         profilFinanciarService.saveProfilFinanciar(profilServ);
@@ -485,6 +530,10 @@ class MoneyCallingSpringApplicationTests {
         List<Diagrama> list = diagramaService.getAllDiagrame();
         assertEquals(list.get(0).getId(), diagServ.getId());
 
+        //testare getallbyutilizator
+        List<Diagrama> listu = diagramaService.getAllDiagrameByUtilizator(utilizatorServ);
+        assertFalse(listu.isEmpty());
+
         //testare getbyid
         assertEquals(diagServ.getId(), diagService.getById(diagServ.getId()).get().getId());
 
@@ -495,9 +544,19 @@ class MoneyCallingSpringApplicationTests {
         assertTrue(lista2.isEmpty());
     }
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
     @Order(21)
     public void testCheltuialaService(){
+        //testarea functiei deleteALL
+        cheltuialaService.deleteAll();
+        List<Cheltuiala> dlist = cheltuialaRepository.findAll();
+        assertTrue(dlist.isEmpty());
+
         //Adaugarea in service a unei cheltuieli
         utilizatorService.saveUtilizator(utilizatorServ);
         profilFinanciarService.saveProfilFinanciar(profilServ);
@@ -509,18 +568,41 @@ class MoneyCallingSpringApplicationTests {
         List<Cheltuiala> lista = cheltuialaService.getAllCheltuieli();
         assertEquals(lista.get(0).getId(), cheltuialaServ.getId());
 
+        //testare getllallbydiagrama
+        List<Cheltuiala> listad = cheltuialaService.getAllCheltuieliByIdDiagrama(diagServ);
+        assertFalse(listad.isEmpty());
+
         //testare getbyid
         assertEquals(cheltuialaServ.getId(), cheltuialaService.getById(cheltuialaServ.getId()).get().getId());
+
+        //testare dto to entity -- DE ADAUGAT
+        CheltuialaRequestDTO dto = new CheltuialaRequestDTO();
+        dto.setId(111);
+        dto.setNume("tst");
+        dto.setSuma(555.0F);
+        dto.setIdDiagrama(diagServ.getId());
+
+        Cheltuiala cheltu = cheltuialaService.mapToEntity(dto);
+        assertNotNull(cheltu);
+        assertEquals(111, cheltu.getId(), "cheltuiala id must be 111");
+        assertEquals(555.0F, cheltu.getSuma(), "cheltuiala suma must be 555.0F");
+        assertEquals("tst", cheltu.getNume(), "cheltuiala nume must be tst");
+
+        //testare entity to dto -- DE ADAUGAT
+        CheltuialaRequestDTO dto2 = cheltuialaService.mapToDTO(cheltu);
+
+        assertNotNull(dto2);
+        assertEquals(111, dto2.getId(), "cheltuiala id must be 111");
+        assertEquals("tst", dto2.getNume(), "cheltuiala nume must be tst");
+        assertEquals(555.0F, dto2.getSuma(), "cheltuiala suma must be 555.0F");
+        assertEquals(diagServ.getId(), dto2.getIdDiagrama(), "diagrama id must be 1");
+
 
         //testare deletebyid
         cheltuialaService.stergeCheltuialaById(cheltuialaServ.getId());
 
         List<Cheltuiala> lista2 = cheltuialaService.getAllCheltuieli();
         assertTrue(lista2.isEmpty());
-
-        //testare dto to entity -- DE ADAUGAT
-
-        //testare entity to dto -- DE ADAUGAT
 
     }
 
@@ -538,6 +620,19 @@ class MoneyCallingSpringApplicationTests {
         //testare getall
         List<Raport> list = raportService.getAllRapoarteByIdDiagrama(diagServ);
         assertEquals(list.get(0).getId(), raportServ.getId());
+
+        //testare sugerare chirie
+        float sc = raportService.sugereazaChirieByVenit(profilServ.getVenit());
+        assertEquals(0.3F * profilServ.getVenit(), sc);
+
+        //testare sugerare rata by venit
+        float rv = raportService.sugereazaRataByVenit(50000, 5);
+        float dobanda = 0.05f;
+        float sumaTotala = 50000 + 50000 * dobanda * 5;
+        float numarRate = 5 * 12;
+        float valoareRate = sumaTotala / numarRate;
+        assertEquals(valoareRate, rv);
+
 
         //testare getbyid
         assertEquals(raportServ.getId(), raportService.getById(raportServ.getId()).get().getId());
