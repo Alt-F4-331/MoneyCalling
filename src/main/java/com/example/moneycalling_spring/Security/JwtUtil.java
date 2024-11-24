@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -48,5 +50,30 @@ public class JwtUtil {
             System.out.println("Token invalid! Detalii: " + e.getMessage());
             return false;
         }
+    }
+
+    public int getUserIdByToken(String token)
+    {
+        // Verifică dacă token-ul este valid
+        if (token == null || !token.startsWith("Bearer ")) {
+            System.out.println("token1");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST).getStatusCodeValue();
+        }
+
+        String jwtToken = token.substring(7);  // Extrage token-ul fără "Bearer "
+//
+        // 1. Extrage userId din token
+        if(!validateToken(jwtToken))
+        {
+            System.out.println("token2");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED).getStatusCodeValue();
+        }
+
+        int userId = extractUserId(jwtToken);
+
+
+        return userId;
+
+
     }
 }

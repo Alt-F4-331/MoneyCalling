@@ -8,10 +8,10 @@ public class Raport extends Entitate {
     @JoinColumn(name = "id_diagrama") // Numele coloanei care face legătura
     private Diagrama diagrama;
 
-     public Raport(int id, Diagrama idDiagrama)
+     public Raport(int id, Diagrama Diagrama)
      {
          super(id);
-         this.diagrama = idDiagrama;
+         this.diagrama = Diagrama;
 
      }
 
@@ -19,7 +19,7 @@ public class Raport extends Entitate {
 
     }
 
-    public Diagrama getIdDiagrama() {
+    public Diagrama getDiagrama() {
         return diagrama;
     }
 

@@ -31,7 +31,7 @@ public class RaportRequestDTO {
     public static RaportRequestDTO mapToDTO(Raport raport) {
         RaportRequestDTO dto = new RaportRequestDTO();
         dto.setId(raport.getId());
-        dto.setIdDiagrama(raport.getIdDiagrama().getId());
+        dto.setIdDiagrama(raport.getDiagrama().getId());
         return dto;
     }
 }

@@ -65,7 +65,7 @@ public class RaportController {
         Diagrama diagrama = diagramaRepository.findById(idDiagrama)
                 .orElseThrow(() -> new IllegalArgumentException("ID Diagrama invalid: " + idDiagrama));
 
-        List<Raport> rapoarte = raportService.getAllRapoarteByIdDiagrama(diagrama);
+        List<Raport> rapoarte = raportService.getAllRapoarteByDiagrama(diagrama);
 
         List<RaportRequestDTO> responseDtos = rapoarte.stream()
                 .map(RaportRequestDTO::mapToDTO)
@@ -81,7 +81,7 @@ public class RaportController {
         Diagrama diagrama = diagramaRepository.findById(idDiagrama)
                 .orElseThrow(() -> new IllegalArgumentException("ID Diagrama invalid: " + idDiagrama));
 
-        raportService.deleteAllRapoarteByIdDIagrama(diagrama);
+        raportService.deleteAllRapoarteByDiagrama(diagrama);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -89,27 +89,19 @@ public class RaportController {
     @GetMapping("/sugereaza-chirie")
     @Operation(summary = "Sugerează chiria pe baza venitului")
     public ResponseEntity<Float> sugereazaChirie(@RequestHeader ("Authorization") String token) {
-        if (token == null || !token.startsWith("Bearer ")) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        int userId = jwtutil.getUserIdByToken(token);
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        String jwtToken = token.substring(7);  // Extrage token-ul fără "Bearer "
-//
-        // 1. Extrage userId din token
-        if(!jwtutil.validateToken(jwtToken))
-        {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        int userId = jwtutil.extractUserId(jwtToken);
-        Utilizator utilizator = utilizatorService.getById(userId).get();
+        Utilizator utilizator = utilizatorOptional.get();
         float venit = utilizator.getProfil().getVenit();
         float chirieSugerata = raportService.sugereazaChirieByVenit(venit);
         return new ResponseEntity<>(chirieSugerata, HttpStatus.OK);
     }
 
     // Endpoint pentru sugerarea ratei pe baza sumei și numărului de ani
-    @GetMapping("/sugereaza-rata")
+    @GetMapping("/sugerseaza-rata")
     @Operation(summary = "Sugerează rata pe baza sumei și numărului de ani")
     public ResponseEntity<Float> sugereazaRata(
             @RequestParam float suma,

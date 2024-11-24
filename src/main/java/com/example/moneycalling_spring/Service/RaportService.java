@@ -2,8 +2,6 @@ package com.example.moneycalling_spring.Service;
 
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Raport;
-import com.example.moneycalling_spring.Domain.ProfilFinanciar;
-import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Repository.ProfilFinanciarRepository;
 import com.example.moneycalling_spring.Repository.RaportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +52,12 @@ public class RaportService {
         return valoareRate;
     }
 
-    public List<Raport> getAllRapoarteByIdDiagrama(Diagrama diagrama)
+    public List<Raport> getAllRapoarteByDiagrama(Diagrama diagrama)
     {
         return raportRepository.findByDiagrama(diagrama);
         //returneaza toate rapoartele dupa o diagrama
     }
-    public void deleteAllRapoarteByIdDIagrama(Diagrama diagrama)
+    public void deleteAllRapoarteByDiagrama(Diagrama diagrama)
     {
         raportRepository.deleteAllByDiagrama(diagrama);
     }

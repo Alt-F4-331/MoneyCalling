@@ -20,10 +20,10 @@ public class Diagrama extends Entitate {
     @Embedded
     private Data dataDiagrama;
 
-    public Diagrama(int id, Data data, Utilizator idUser) {
+    public Diagrama(int id, Data data, Utilizator User) {
         super(id);
         this.dataDiagrama = data;
-        this.user = idUser;
+        this.user = User;
     }
 
     public Diagrama()

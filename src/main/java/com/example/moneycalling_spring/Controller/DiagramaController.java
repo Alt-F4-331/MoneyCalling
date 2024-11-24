@@ -46,13 +46,6 @@ public class DiagramaController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    /*@Operation(summary = "Obtine diagrama dupa luna si an")
-    @GetMapping("/{data}")
-    public ResponseEntity<Diagrama> getDiagramaByData(@PathVariable Data data){
-        Optional<Diagrama> diagrama = diagramaService.getDiagramaByData(data.getLuna(), data.getAn());
-        return diagrama.map(ResponseEntity::ok)
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }*/
     @Operation(summary = "Obtine toate diagramele")
     @GetMapping
     public ResponseEntity<List<Diagrama>> getAllDiagrame() {

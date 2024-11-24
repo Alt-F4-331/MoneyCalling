@@ -248,7 +248,7 @@ class MoneyCallingSpringApplicationTests {
 
         //Testarea tuturor campurilor din acest obiect cu ajutorul functiilor get
         assertEquals(1, raport.getId(), "raport id must be 1");
-        assertEquals(diag, raport.getIdDiagrama(), "raport diagrama content must be same as diag content");
+        assertEquals(diag, raport.getDiagrama(), "raport diagrama content must be same as diag content");
     }
 
     @Test
@@ -260,7 +260,7 @@ class MoneyCallingSpringApplicationTests {
 
         //Testarea functiei set pentru diagrama
         raport.setIdDiagrama(diag2);
-        assertEquals(diag2, raport.getIdDiagrama(), "raport diagrama content must be same as diag2 content");
+        assertEquals(diag2, raport.getDiagrama(), "raport diagrama content must be same as diag2 content");
     }
 
 
@@ -618,7 +618,7 @@ class MoneyCallingSpringApplicationTests {
         raportService.saveRaport(raportServ);
 
         //testare getall
-        List<Raport> list = raportService.getAllRapoarteByIdDiagrama(diagServ);
+        List<Raport> list = raportService.getAllRapoarteByDiagrama(diagServ);
         assertEquals(list.get(0).getId(), raportServ.getId());
 
         //testare sugerare chirie
@@ -640,7 +640,7 @@ class MoneyCallingSpringApplicationTests {
         //testare deletebyid
         raportService.stergeRaportById(raportServ.getId());
 
-        List<Raport> lista2 = raportService.getAllRapoarteByIdDiagrama(diagServ);
+        List<Raport> lista2 = raportService.getAllRapoarteByDiagrama(diagServ);
         assertTrue(lista2.isEmpty());
     }
 

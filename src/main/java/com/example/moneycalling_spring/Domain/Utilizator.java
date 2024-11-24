@@ -33,7 +33,7 @@ public class Utilizator extends Entitate {
 
     }
 
-    public Utilizator(int id, String nume, String prenume, String parola, String email, Data dataNasterii,String sex, String numarTelefon ,ProfilFinanciar idProfil) {
+    public Utilizator(int id, String nume, String prenume, String parola, String email, Data dataNasterii,String sex, String numarTelefon ,ProfilFinanciar Profil) {
         super(id);
         this.nume = nume;
         this.prenume = prenume;
@@ -42,7 +42,7 @@ public class Utilizator extends Entitate {
         this.dataNasterii = dataNasterii;
         this.sex=sex;
         this.numarTelefon = numarTelefon;
-        this.profil=idProfil;
+        this.profil=Profil;
 
     }
 
