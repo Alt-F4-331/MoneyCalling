@@ -12,10 +12,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/utilizatori")
 public class UtilizatorController {
@@ -104,7 +109,19 @@ public class UtilizatorController {
             int userId = utilizator.get().getId();
             String token = jwtutil.generateToken(userId);
 
-            return ResponseEntity.ok(token);
+            // Crează un obiect Map cu token-ul
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("token", token);
+
+            // Serializare Map într-un String JSON
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonResponse = objectMapper.writeValueAsString(responseMap);
+                return ResponseEntity.ok(jsonResponse);  // Returnează JSON-ul ca String
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error serializing response", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            //return ResponseEntity.ok(token);
         } else {
             return new ResponseEntity<>("Email sau parolă incorectă", HttpStatus.UNAUTHORIZED);
         }
@@ -145,7 +162,7 @@ public class UtilizatorController {
             @RequestHeader("Authorization") String token,
             @RequestBody ProfilFinanciarDto profilFinanciarNou) {
 
-        System.out.println("Token primit: " + token); // Adaugă log pentru a verifica dacă token-ul este corect
+        System.out.println("Token primit: " + token); //Adaugă log pentru a verifica dacă token-ul este corect
 
         // Verifică dacă token-ul este valid
         if (token == null || !token.startsWith("Bearer ")) {
@@ -153,10 +170,9 @@ public class UtilizatorController {
         }
 
         String jwtToken = token.substring(7);  // Extrage token-ul fără "Bearer "
-//
-        // 1. Extrage userId din token
-        if(!jwtutil.validateToken(jwtToken))
-        {
+
+        // // 1. Extrage userId din token
+        if (!jwtutil.validateToken(jwtToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -166,25 +182,28 @@ public class UtilizatorController {
         if (utilizatorOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         Utilizator utilizator = utilizatorOptional.get();
+
 
         ProfilFinanciar profilExistent = utilizator.getProfil();
         if (profilExistent == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Dacă nu există profil, returnează 404
         }
 
+
         profilExistent.setVenit(profilFinanciarNou.getVenit());
         profilExistent.setDomiciliu(profilFinanciarNou.getDomiciliu());
         profilExistent.setContainerEconomii(profilFinanciarNou.getContainerEconomii());
         profilExistent.setDataSalar(profilFinanciarNou.getDataSalar());
 
+
         ProfilFinanciar profilSalvat = profilFinanciarService.saveProfilFinanciar(profilExistent);
 
         // 4. Returnează profilul actualizat
         return ResponseEntity.ok(profilSalvat);
-
-
     }
+
 
 
 }
