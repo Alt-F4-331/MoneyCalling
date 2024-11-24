@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\razva\\source\\repos\\MoneyCalling\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\Login.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MoneyCalling-main\\MoneyCalling-main\\src\\components\\Login.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\App.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MoneyCalling-main\\MoneyCalling-main\\src\\App.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\Register.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MoneyCalling-main\\MoneyCalling-main\\src\\components\\Register.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\FinancialProfile.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MoneyCalling-main\\MoneyCalling-main\\src\\components\\FinancialProfile.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\Login.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:MoneyCalling-main\\MoneyCalling-main\\src\\components\\Login.tsx||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,31 +22,57 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Register.tsx",
-              "DocumentMoniker": "C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\Register.tsx",
-              "RelativeDocumentMoniker": "MoneyCalling-main\\MoneyCalling-main\\src\\components\\Register.tsx",
-              "ToolTip": "C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\Register.tsx",
-              "RelativeToolTip": "MoneyCalling-main\\MoneyCalling-main\\src\\components\\Register.tsx",
+              "DocumentIndex": 0,
+              "Title": "App.tsx",
+              "DocumentMoniker": "C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\App.tsx",
+              "RelativeDocumentMoniker": "MoneyCalling-main\\MoneyCalling-main\\src\\App.tsx",
+              "ToolTip": "C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\App.tsx",
+              "RelativeToolTip": "MoneyCalling-main\\MoneyCalling-main\\src\\App.tsx",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2024-11-10T15:27:50.046Z"
+              "WhenOpened": "2024-11-24T03:47:32.189Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Login.tsx",
               "DocumentMoniker": "C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\Login.tsx",
               "RelativeDocumentMoniker": "MoneyCalling-main\\MoneyCalling-main\\src\\components\\Login.tsx",
               "ToolTip": "C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\Login.tsx",
               "RelativeToolTip": "MoneyCalling-main\\MoneyCalling-main\\src\\components\\Login.tsx",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABQAAABcAAAA",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAABIAAAAPAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2024-11-10T12:38:08.142Z",
+              "WhenOpened": "2024-11-23T23:48:54.579Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FinancialProfile.tsx",
+              "DocumentMoniker": "C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\FinancialProfile.tsx",
+              "RelativeDocumentMoniker": "MoneyCalling-main\\MoneyCalling-main\\src\\components\\FinancialProfile.tsx",
+              "ToolTip": "C:\\Users\\razva\\source\\repos\\MoneyCalling\\MoneyCalling-main\\MoneyCalling-main\\src\\components\\FinancialProfile.tsx",
+              "RelativeToolTip": "MoneyCalling-main\\MoneyCalling-main\\src\\components\\FinancialProfile.tsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAHAAAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2024-11-23T23:29:24.412Z",
               "EditorCaption": ""
             }
           ]

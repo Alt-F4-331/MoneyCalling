@@ -12,12 +12,6 @@ const Login: React.FC = () => {
 
 
   const handleLogin = async () => {
-    // Logic for login
-    //console.log('Username:', username);
-    //console.log('Password:', password);
-
-    //navigate('/homepage'); // Redirect to homepage after login
-
       try {
           const response = await axios.post('http://localhost:8080/api/utilizatori/login', {
             parola: password,  
@@ -26,6 +20,12 @@ const Login: React.FC = () => {
           });
           if (response.status === 200) {
               console.log('Login successful:', response.data);
+              const token = response.data.token; // Verific? dac? r?spunsul de la backend con?ine un câmp 'token'
+              if (token) {
+                localStorage.setItem('token', token);  // Salveaz? token-ul în localStorage
+              } else {
+                console.error("Token-ul nu a fost g?sit în r?spunsul serverului.");
+              }
               navigate('/homepage');
           }
       } catch (error) {
