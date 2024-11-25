@@ -95,7 +95,7 @@ public class CheltuialaService {
         return cheltuialaRepository.findByDiagrama(diagrama);
     }
 
-    public void adaugaCheltuieli(Diagrama diagrama) {
+   /* public void adaugaCheltuieli(Diagrama diagrama) {
 
         saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "locuinta", 0,30, diagrama));
         saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "alimentatie", 0,15, diagrama));
@@ -106,7 +106,7 @@ public class CheltuialaService {
         saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "educatie", 0,5, diagrama));
         saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "economii", 0,10, diagrama));
 
-    }
+    }*/
 
 
 

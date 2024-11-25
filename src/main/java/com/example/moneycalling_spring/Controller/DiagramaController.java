@@ -14,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -77,7 +79,7 @@ public class DiagramaController {
         diagrama.setUser(user);
         Diagrama savedDiagrama = diagramaService.saveDiagrama(diagrama);
         float venit = user.getProfil().getVenit();
-        cheltuialaService.adaugaCheltuieli(diagrama);
+       // cheltuialaService.adaugaCheltuieli(diagrama);
 
         return new ResponseEntity<>(savedDiagrama, HttpStatus.CREATED); // Răspuns cu 201 când e salvat
     }
@@ -127,6 +129,32 @@ public class DiagramaController {
 
         return new ResponseEntity<>(diagrame, HttpStatus.OK); // Returnăm diagramele cu status 200
     }
+
+    @GetMapping("/configurare")
+    public ResponseEntity<Map<Cheltuiala.TipCheltuiala, Float>> configurareDiagrama(@RequestHeader("Authorization") String token)
+    {
+        //functie care returneaza pentru fiecare tip,sumele respective.
+
+        int userId = jwtutil.getUserIdByToken(token);
+
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Utilizator utilizator = utilizatorOptional.get();
+
+        float venitTotal = utilizator.getProfil().getVenit();
+
+        Map<Cheltuiala.TipCheltuiala, Float> sumePeTip = new HashMap<>();
+
+        for (Cheltuiala.TipCheltuiala tip : Cheltuiala.TipCheltuiala.values()) {
+            float suma = venitTotal * (tip.getProcent() / 100); // Calculăm suma pentru fiecare tip
+            sumePeTip.put(tip, suma);
+        }
+
+        return new ResponseEntity<>(sumePeTip, HttpStatus.OK);
+    }
+
 
 
 }

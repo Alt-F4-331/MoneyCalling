@@ -82,7 +82,7 @@ public class CheltuialaController {
                         cheltuiala.getId(),
                         cheltuiala.getNume(),
                         cheltuiala.getSuma(),
-                        cheltuiala.getProcent(),
+                        cheltuiala.getTipCheltuiala(),
                         diagrama.getId() // sau cheltuiala.getIdDiagrama() dacă există direct
                 ))
                 .toList();

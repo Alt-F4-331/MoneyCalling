@@ -9,21 +9,30 @@ public class CheltuialaRequestDTO {
     private String nume;
     private float suma;
 
-    private float procent;
+    private Cheltuiala.TipCheltuiala tipCheltuiala;
     private int idDiagrama; // doar ID-ul diagramei, nu întregul obiect
 
     public CheltuialaRequestDTO() {
     }
 
-    public CheltuialaRequestDTO(int id, String nume, float suma,float procent, int idDiagrama) {
+    public CheltuialaRequestDTO(int id, String nume, float suma,Cheltuiala.TipCheltuiala tip, int idDiagrama) {
         this.id = id;
         this.nume = nume;
         this.suma = suma;
-        this.procent = procent;
+        this.tipCheltuiala = tip;
         this.idDiagrama = idDiagrama;
     }
 
     // Getters și setters
+
+
+    public Cheltuiala.TipCheltuiala getTipCheltuiala() {
+        return tipCheltuiala;
+    }
+
+    public void setTipCheltuiala(Cheltuiala.TipCheltuiala tipCheltuiala) {
+        this.tipCheltuiala = tipCheltuiala;
+    }
 
     public int getId() {
         return id;
@@ -63,7 +72,7 @@ public class CheltuialaRequestDTO {
                 this.id,
                 this.nume,
                 this.suma,
-                this.procent,
+                this.tipCheltuiala,
                 diagrama // Setăm obiectul Diagrama direct în entitate
         );
     }
@@ -74,7 +83,7 @@ public class CheltuialaRequestDTO {
                 cheltuiala.getId(),
                 cheltuiala.getNume(),
                 cheltuiala.getSuma(),
-                cheltuiala.getProcent(),
+                cheltuiala.getTipCheltuiala(),
                 cheltuiala.getDiagrama() != null ? cheltuiala.getDiagrama().getId() : 0
         );
     }
