@@ -29,7 +29,7 @@ class MoneyCallingSpringApplicationTests {
     private final Utilizator utilizator2 = new Utilizator(1, "Marinescu", "Stefan", "parola1235", "stef.mari@email.com", dataNasterii, "M", "0723456789", profil);
     private final Diagrama diag  = new Diagrama(1, dataC, utilizator);
     private final Diagrama diag2 = new Diagrama(2, dataC, utilizator);
-    private final Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, 15, diag);
+    private final Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diag);
     private final Raport raport = new Raport(1, diag);
     @Autowired
     private DiagramaService diagramaService;
@@ -177,8 +177,9 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(1, cheltuiala.getId(), "cheltuiala id must be 1");
         assertEquals("home", cheltuiala.getNume(), "cheltuiala nume must be home");
         assertEquals(50000.0F, cheltuiala.getSuma(), "cheltuiala suma must be 50000.0F");
-        assertEquals(15.0F, cheltuiala.getProcent(), "cheltuiala procent must be 15.0F" );
+        assertEquals(Cheltuiala.TipCheltuiala.LOCUINTA, cheltuiala.getTipCheltuiala(), "cheltuiala tip must be LOCUINTA" );
         assertEquals(diag, cheltuiala.getDiagrama(), "cheltuiala diagrama content must be same as diag content");
+        assertEquals(Cheltuiala.TipCheltuiala.LOCUINTA.getProcent(), cheltuiala.getTipCheltuiala().getProcent(), "cheltuiala tip procent must be same as 30.0F");
     }
 
     @Test
@@ -197,9 +198,13 @@ class MoneyCallingSpringApplicationTests {
         cheltuiala.setSuma(60000.0F);
         assertEquals(60000.0F, cheltuiala.getSuma(), "cheltuiala suma must be 60000.0F");
 
-        //Testarea functiei set pentru procent
-        cheltuiala.setProcent(20.0F);
-        assertEquals(20.0F, cheltuiala.getProcent(), "cheltuiala procent must be 20.0F");
+        //Testarea functiei set pentru tip cheltuiala
+        cheltuiala.setTipCheltuiala(Cheltuiala.TipCheltuiala.EDUCATIE);
+        assertEquals(Cheltuiala.TipCheltuiala.EDUCATIE, cheltuiala.getTipCheltuiala(), "cheltuiala tip must be EDUCATIE");
+
+        //testare procent tip cheltuiala EDUCATIE
+        Cheltuiala.TipCheltuiala.EDUCATIE.setProcent(10F);
+        assertEquals(Cheltuiala.TipCheltuiala.EDUCATIE.getProcent(), cheltuiala.getTipCheltuiala().getProcent(), "cheltuiala tip procent must be 10.0F");
 
         //Testarea functiei set pentru diagrama
         cheltuiala.setDiagrama(diag2);
@@ -272,7 +277,7 @@ class MoneyCallingSpringApplicationTests {
     private final ProfilFinanciar profilRepo = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
     private final Utilizator utilizatorRepo = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataRepo,"mascul","0777333222", profilRepo);
     private final Diagrama diagRepo  = new Diagrama(1, dataRepo,  utilizatorRepo);
-    private final Cheltuiala cheltuialaRepo = new Cheltuiala(1, "home", 50000.0F, 20, diagRepo);
+    private final Cheltuiala cheltuialaRepo = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagRepo);
     private final Raport raportRepo = new Raport(1, diagRepo);
 
     @Autowired
@@ -437,7 +442,7 @@ class MoneyCallingSpringApplicationTests {
     private final ProfilFinanciar profilServ = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
     private final Utilizator utilizatorServ = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataServ,"mascul","0777333222", profilServ);
     private final Diagrama diagServ  = new Diagrama(1, dataServ, utilizatorServ);
-    private final Cheltuiala cheltuialaServ = new Cheltuiala(1, "home", 50000.0F, 20, diagServ);
+    private final Cheltuiala cheltuialaServ = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagServ);
     private final Raport raportServ = new Raport(1, diagServ);
 
     @Autowired
@@ -474,6 +479,10 @@ class MoneyCallingSpringApplicationTests {
         //testare getbyid
         assertEquals(utilizatorServ.getId(), utilizatorService.getById(utilizatorServ.getId()).get().getId());
 
+        //testare firstavailable
+        int res = utilizatorService.getFirstAvailableId();
+        assertEquals(utilizatorServ.getId()+1 , res);
+
         //testare getbyemail
         assertEquals(utilizatorServ.getId(), utilizatorService.getByEmail(utilizatorServ.getEmail()).get().getId());
 
@@ -499,6 +508,10 @@ class MoneyCallingSpringApplicationTests {
 
         //Adaugarea in service a unui profil financiar
         profilFinanciarService.saveProfilFinanciar(profilServ);
+
+        //testare firstavailable
+        int res = profilFinanciarService.getFirstAvailableId();
+        assertEquals(profilServ.getId()+1, res);
 
         //testare getall
         List<ProfilFinanciar> lista = profilFinanciarService.getAllProfiluriFinanciare();
@@ -568,6 +581,10 @@ class MoneyCallingSpringApplicationTests {
         List<Cheltuiala> lista = cheltuialaService.getAllCheltuieli();
         assertEquals(lista.get(0).getId(), cheltuialaServ.getId());
 
+        //testare firstavailable
+        int res = cheltuialaService.getFirstAvailableId();
+        assertEquals(cheltuialaServ.getId()+1 , res);
+
         //testare getllallbydiagrama
         List<Cheltuiala> listad = cheltuialaService.getAllCheltuieliByIdDiagrama(diagServ);
         assertFalse(listad.isEmpty());
@@ -636,7 +653,14 @@ class MoneyCallingSpringApplicationTests {
 
         //testare getbyid
         assertEquals(raportServ.getId(), raportService.getById(raportServ.getId()).get().getId());
+/*
+        //testare deletebydiagrama
+        raportService.deleteAllRapoarteByDiagrama(diagServ);
+        List<Raport> lista2 = raportService.getAllRapoarteByDiagrama(diagServ);
+        assertTrue(lista2.isEmpty());
 
+        raportService.saveRaport(raportServ);
+*/
         //testare deletebyid
         raportService.stergeRaportById(raportServ.getId());
 
