@@ -65,6 +65,7 @@ public class CheltuialaController {
     @Operation(summary = "Obtine toate cheltuielile dintr-o diagrama")
     @GetMapping("/diagrama/{idDiagrama}")
     public ResponseEntity<List<CheltuialaRequestDTO>> getAllCheltuieliByIdDiagrama(@PathVariable int idDiagrama) {
+        //aceasta functie se foloseste pentru legenda de cheltuileli pentru o diagrama
         Optional<Diagrama> diagrama_opt = diagramaService.getById(idDiagrama);
         if (diagrama_opt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Dacă nu există, returnăm 404
