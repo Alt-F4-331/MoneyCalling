@@ -3,12 +3,13 @@ package com.example.moneycalling_spring;
 import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Repository.*;
 import com.example.moneycalling_spring.Service.*;
-import com.example.moneycalling_spring.dto.CheltuialaRequestDTO;
+import com.example.moneycalling_spring.dto.*;
 import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -137,7 +138,7 @@ class MoneyCallingSpringApplicationTests {
 
         //Testarea functiei set pentru data salariu
         profil.setDataSalar(20);
-        assertEquals(20, profil.getDataSalar(), "profil data salar must be 20");
+        assertEquals(20, profil.getDataSalar(), "profil data salariu must be 20");
     }
 
     @Test
@@ -303,16 +304,12 @@ class MoneyCallingSpringApplicationTests {
         List<Utilizator> list = utilizatorRepository.findAll();
         Optional<Utilizator> found = utilizatorRepository.findById(list.get(0).getId());
         assertEquals(utilizatorRepo.getNume(), found.get().getNume());
-    }
-
-    /*@Test
-    public void testFindByEmail() {
 
         //Cautarea utilizatorului dupa email
-        Optional<Utilizator> found = utilizatorRepository.findByEmail("ion.popescu@example.com");
-        assertTrue(found.isPresent());
-        assertEquals(utilizator.getPrenume(), found.get().getPrenume());
-    }*/
+        Optional<Utilizator> founde = utilizatorRepository.findByEmail("ion.popescu@example.com");
+        assertTrue(founde.isPresent());
+        assertEquals(utilizatorRepo.getPrenume(), founde.get().getPrenume());
+    }
 
 
     @Test
@@ -664,9 +661,215 @@ class MoneyCallingSpringApplicationTests {
         //testare deletebyid
         raportService.stergeRaportById(raportServ.getId());
 
-        List<Raport> lista2 = raportService.getAllRapoarteByDiagrama(diagServ);
-        assertTrue(lista2.isEmpty());
+        List<Raport> lista2a = raportService.getAllRapoarteByDiagrama(diagServ);
+        assertTrue(lista2a.isEmpty());
     }
 
+    // ==============================
+    //        Teste dto
+    // ==============================
+
+    private final Data datadto = new Data(15,10,2000);
+    private final ProfilFinanciar profildto = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
+    private final Utilizator utilizatordto = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",datadto,"mascul","0777333222", profildto);
+    private final Diagrama diagdto  = new Diagrama(1, datadto, utilizatordto);
+    private final Cheltuiala cheltuialadto = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagdto);
+    private final Raport raportdto = new Raport(1, diagdto);
+
+
+    @Order(29)
+    @Test
+    public void testLoginDTO() {
+        LoginRequestDTO logindto = new LoginRequestDTO();
+        //testare set get email
+        logindto.setEmail(utilizatordto.getEmail());
+        assertEquals(logindto.getEmail(), utilizatordto.getEmail(), "dto email must be same as utilizatordto email");
+
+        //testare set get parola
+        logindto.setParola(utilizatordto.getParola());
+        assertEquals(logindto.getParola(), utilizatordto.getParola(), "dto parola must be same as utilizatordto parola");
+    }
+
+    @Order(30)
+    @Test
+    public void testCreareContDTO(){
+        CreareContDto contdto = new CreareContDto();
+        CreareContDto cdto = new CreareContDto("Tudor", "Alex", "pass", "tst@email.com", datadto, "m", "00000");
+
+        //testare set get nume
+        contdto.setNume(utilizatordto.getNume());
+        assertEquals(contdto.getNume(), utilizatordto.getNume(), "dto nume must be same as utilizatordto nume");
+        assertEquals("Tudor", cdto.getNume(), "cdto nume must be Tudor");
+
+        //testare set get prenume
+        contdto.setPrenume(utilizatordto.getPrenume());
+        assertEquals(contdto.getPrenume(), utilizatordto.getPrenume(), "dto prenume must be same as utilizatordto prenume");
+        assertEquals("Alex", cdto.getPrenume(), "cdto prenume must be Alex");
+
+        //testare set get parola
+        contdto.setParola(utilizatordto.getParola());
+        assertEquals(contdto.getParola(), utilizatordto.getParola(), "dto parola must be same as utilizatordto parola");
+        assertEquals("pass", cdto.getParola(), "cdto parola must be pass");
+
+        //testare set get email
+        contdto.setEmail(utilizatordto.getEmail());
+        assertEquals(contdto.getEmail(), utilizatordto.getEmail(), "dto email must be same as utilizatordto email");
+        assertEquals("tst@email.com", cdto.getEmail(), "cdto email must be tst@email.com");
+
+        //testare set get datanasterii
+        contdto.setDataNasterii(utilizatordto.getDataNasterii());
+        assertEquals(contdto.getDataNasterii(), utilizatordto.getDataNasterii(), "dto dataNasterii must be same as utilizatordto dataNasterii");
+        assertEquals(datadto, cdto.getDataNasterii(), "cdto data must be same as datadto");
+
+        //testare set get sex
+        contdto.setSex(utilizatordto.getSex());
+        assertEquals(contdto.getSex(), utilizatordto.getSex(), "dto sex must be same as utilizatordto sex");
+        assertEquals("m", cdto.getSex(), "cdto sex must be m");
+
+        //testare set get nrtelefon
+        contdto.setNumarTelefon(utilizatordto.getNumarTelefon());
+        assertEquals(contdto.getNumarTelefon(), utilizatordto.getNumarTelefon(), "dto telefon must be same as utilizatordto nrtelefon");
+        assertEquals("00000", cdto.getNumarTelefon(), "cdto numar must be 00000");
+    }
+
+    @Order(31)
+    @Test
+    public void testDataDTO(){
+        DataDTO dto = new DataDTO();
+        DataDTO ddto = new DataDTO("1", "1", "2000");
+
+        //testare set get zi
+        dto.setZi("15");
+        assertEquals("15", dto.getZi(), "dto zi must be 15");
+        assertEquals("1", ddto.getZi(), "ddto zi must be 1");
+
+        //testare set get luna
+        dto.setLuna("10");
+        assertEquals("10", dto.getLuna(), "dto luna must be 10");
+        assertEquals("1", ddto.getLuna(), "ddto luna must be 1");
+
+        //testare set get an
+        dto.setAn("2000");
+        assertEquals("2000", dto.getAn(), "dto an must be 2000");
+        assertEquals("2000", ddto.getAn(), "ddto an must be 2000");
+
+        Data dt = dto.toData();
+        assertEquals(15, dt.getZi(), "dto zi must be 15");
+        assertEquals(10, dt.getLuna(), "dto luna must be 10");
+        assertEquals(2000, dt.getAn(), "dto an must be 2000");
+    }
+
+    @Order(32)
+    @Test
+    public void testDiagramaDTO(){
+        DiagramaRequestDTO dreqdto = new DiagramaRequestDTO();
+
+        //testare set get id
+        dreqdto.setId(diagdto.getId());
+        assertEquals(dreqdto.getId(), diagdto.getId(), "dto id must be same as diagdto id");
+
+        //testare set get data
+        dreqdto.setData(diagdto.getDataDiagrama());
+        assertEquals(dreqdto.getData(), diagdto.getDataDiagrama(), "dto data must be same as diagdto data");
+
+        //testare set det utilizator id
+        dreqdto.setUserId(utilizatordto.getId());
+        assertEquals(dreqdto.getUserId(), diagdto.getUser().getId(), "dto userId must be same as utilizatordto id");
+    }
+
+    @Order(33)
+    @Test
+    public void testProfilFinanciarDTO(){
+        ProfilFinanciarDto pfdto = new ProfilFinanciarDto(1600.0F, "Iasi", 13000.0F, 15);
+
+        //testare set get venit
+        assertEquals(1600.0F, pfdto.getVenit(), "dto venit must be 1600.0F");
+        pfdto.setVenit(profildto.getVenit());
+        assertEquals(profildto.getVenit(), pfdto.getVenit(), "dto venit must be same as profildto");
+
+        //testare set get domiciliu
+        assertEquals("Iasi", pfdto.getDomiciliu(), "dto domiciliu must be Iasi");
+        pfdto.setDomiciliu(profildto.getDomiciliu());
+        assertEquals(profildto.getDomiciliu(), pfdto.getDomiciliu(), "dto domiciliu must be same as profildto");
+
+        //testare set get container
+        assertEquals(13000.0F, pfdto.getContainerEconomii(), "dto domiciliu must be 13000.0F");
+        pfdto.setContainerEconomii(profildto.getContainerEconomii());
+        assertEquals(profildto.getContainerEconomii(), pfdto.getContainerEconomii(), "dto container must be same as profildto");
+
+        //testare set get datasalar
+        assertEquals(15, pfdto.getDataSalar(), "dto data salariu must be 15");
+        pfdto.setDataSalar(profildto.getDataSalar());
+        assertEquals(profildto.getDataSalar(), pfdto.getDataSalar(), "dto data salariu must be same as profildto");
+    }
+
+    @Order(34)
+    @Test
+    public void testRaportRequestDTO(){
+        RaportRequestDTO rdto = new RaportRequestDTO();
+        RaportRequestDTO rreqdto = new RaportRequestDTO(1, 1);
+
+        //testare set get id
+        rdto.setId(raportdto.getId());
+        assertEquals(rdto.getId(), raportdto.getId(), "dto id must be same as raportdto");
+        assertEquals(1, rreqdto.getId(), "rreqdto id must be 1");
+
+        //testare set get id diagrama
+        rdto.setIdDiagrama(raportdto.getDiagrama().getId());
+        assertEquals(rdto.getIdDiagrama(), raportdto.getDiagrama().getId(), "dto idDiagrama must be same as raportdto");
+        assertEquals(1, rreqdto.getIdDiagrama(), "rreqdto idDiagrama must be 1");
+
+        //testare map to entity
+        Raport r = RaportRequestDTO.mapToEntity(rdto, diagdto);
+        assertEquals(r.getId(), rdto.getId(), "r id must be same as rdto");
+        assertEquals(r.getDiagrama().getId(), diagdto.getId(), "r diag id must be same as diagdto id");
+
+        //testare map to dto
+        RaportRequestDTO dto = RaportRequestDTO.mapToDTO(r);
+        assertEquals(dto.getId(), r.getId(), "dto id must be same as rdto");
+        assertEquals(dto.getIdDiagrama(), r.getDiagrama().getId(), "dto id diaagrama must be same as r");
+    }
+
+    @Order(35)
+    @Test
+    public void testCheltuialaRequestDTO(){
+        CheltuialaRequestDTO cdto = new CheltuialaRequestDTO();
+        CheltuialaRequestDTO cheldto = new CheltuialaRequestDTO(1, "chirie", 300, Cheltuiala.TipCheltuiala.LOCUINTA, 1);
+
+        //testare set get id
+        cdto.setId(cheltuialadto.getId());
+        assertEquals(cdto.getId(), cheltuialadto.getId(), "dto id must be same as cheltuialadto");
+        assertEquals(1, cheldto.getId(), "cheldto id must be 1");
+
+        //testare set get nume
+        cdto.setNume(cheltuialadto.getNume());
+        assertEquals(cdto.getNume(), cheltuialadto.getNume(), "dto nume must be same as cheltuialadto");
+        assertEquals("chirie", cheldto.getNume(), "cheldto nume must be chirie");
+
+        //testare set get tip
+        cdto.setTipCheltuiala(cheltuialadto.getTipCheltuiala());
+        assertEquals(cdto.getTipCheltuiala(), cheltuialadto.getTipCheltuiala(), "dto tip cheltuiala must be same as cheltuialadto");
+        assertEquals(Cheltuiala.TipCheltuiala.LOCUINTA, cheldto.getTipCheltuiala(), "cheldto tip cheltuiala must be LOCUINTA");
+
+        //testare set get id diagrama
+        cdto.setIdDiagrama(cheltuialadto.getDiagrama().getId());
+        assertEquals(cdto.getId(), cheltuialadto.getDiagrama().getId(), "dto id diagrama must be same as cheltuialadto");
+        assertEquals(1, cheldto.getIdDiagrama(), "cheldto id diagrama must be 1");
+
+        //testare map to entity
+        Cheltuiala c = cdto.mapToEntity(diagdto);
+        assertEquals(c.getId(), cdto.getId(), "c id must be same as cdto");
+        assertEquals(c.getNume(), cdto.getNume(), "c nume must be same as cdto");
+        assertEquals(c.getTipCheltuiala(), cdto.getTipCheltuiala(), "c tip cheltuiala must be same as cdto");
+        assertEquals(c.getDiagrama().getId(), cdto.getIdDiagrama(), "c id diagrama must be same as cdto");
+
+        //testare map to dto
+        CheltuialaRequestDTO dto = CheltuialaRequestDTO.mapToDTO(c);
+        assertEquals(dto.getId(), c.getId(), "dto id must be same as c");
+        assertEquals(dto.getNume(), c.getNume(), "dto nume must be same as c");
+        assertEquals(dto.getTipCheltuiala(), c.getTipCheltuiala(), "dto tip cheltuiala must be same as c");
+        assertEquals(dto.getIdDiagrama(), c.getDiagrama().getId(), "dto id diagrama must be same as c ");
+
+    }
 
 }
