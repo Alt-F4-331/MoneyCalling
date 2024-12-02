@@ -1,7 +1,7 @@
 .dashboard-page {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
     background-color: #0D0B2D;
     color: #FFFFFF;
     font-family: "Jockey One", sans-serif;
@@ -56,8 +56,8 @@
   /* Conținut principal */
   .main-content {
     display: flex;
-    gap: 40px;
-    margin-top: 180px;
+    gap: 150px;
+    margin-top: 100px;
     padding: 20px;
     justify-content: center;
   }
@@ -68,7 +68,9 @@
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    width: 40%
+    width: 40%;
+    margin-top: 50px;
+    margin-bottom: 50px;
   }
   
   .calendar-section h1 {
@@ -80,6 +82,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    margin-top: 50px;
   }
   
   .months-grid button {
@@ -108,8 +111,8 @@
   }
   
   .pie-chart-dash {
-    width: 250px;
-    height: 250px;
+    width: 400px;
+    height: 400px;
     background: conic-gradient(
       #FF69B4 0% 33%,
       #FFD700 33% 66%,

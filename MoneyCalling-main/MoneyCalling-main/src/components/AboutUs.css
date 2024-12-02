@@ -1,15 +1,15 @@
 /* Containerul principal pentru secțiunea About Us */
 .about-us {
   position: absolute;
-  width: 85%; /* Lățimea containerului */
-  max-width: 4000px; /* Lățime maximă */
-  height: 100vh; /* Înălțime completă */
+  width: 80%; /* Lățimea containerului */
+  width: 65%; /* Lățimea containerului */
+  left: 50%;
+  transform: translate(-50%, 0%);
+  height: 85vh; /* Înălțime completă */
   padding: 40px 20px;
   background-color: #1A1A40; /* Fundal */
   color: #FFFFFF;
-  margin-left: 150px;
   margin-top: 100px;
-  margin-right: 150px;
   line-height: 1.8;
   overflow-y: auto; /* Scroll activat */
   border-radius: 12px;
@@ -52,19 +52,19 @@
 }
 
 .about-section h2 {
-  font-size: 50px;
+  font-size: 35px;
   color: #FFFFFF;
   text-align: left;
 }
 
 .about-section h3 {
-  font-size: 50px;
+  font-size: 40px;
   color: #FFFFFF;
   text-align: left;
 }
 
 .about-section p {
-  font-size: 40px;
+  font-size: 30px;
   color: #CBE3EF;
   text-align: left;
 }

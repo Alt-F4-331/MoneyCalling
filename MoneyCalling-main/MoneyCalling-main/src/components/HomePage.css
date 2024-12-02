@@ -10,7 +10,7 @@
 
 .home-page {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background-image: url('/public/fundal pc.png');
   background-size: cover;
   background-position: center;
@@ -230,26 +230,6 @@
   width: 15px;
   height: 15px;
   border-radius: 3px;
-}
-
-.history-button {
-  position: absolute;
-  left: 400px; /* Ajustează poziția în funcție de sidebar */
-  margin-top: 710px; /* Poziționare sub diagramă */
-  align-items: center;
-}
-
-.history-button button {
-  height: 60px;
-  width: 170px;
-  background-color: #14123B; /* Fundal similar cu sidebar */
-  color: #FFFFFF;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 25px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
 }
 
 .history-button button:hover {

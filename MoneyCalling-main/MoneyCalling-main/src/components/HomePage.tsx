@@ -15,7 +15,7 @@ const HomePage: React.FC = () => {
         </Link>
         <nav className='nav-links'>
           <Link to='/homepage' className="active">Home</Link> {/* Link către welcome page */}
-          <Link to='/dashboard'>Dashboard</Link>
+          <Link to='/dashboard'>History</Link>
           <Link to='/financial-profile'>Financial Profile</Link>
           <Link to='/help'>Help</Link>
           <Link to='/about-us'>About Us</Link>
@@ -44,9 +44,6 @@ const HomePage: React.FC = () => {
       <main className='main-contents'>
         <div className='diagram'>
           <PieChart />
-        </div>
-        <div className="history-button">
-          <button>History</button>
         </div>
       </main>
     </div>

@@ -1,15 +1,13 @@
-/* Stiluri generale pentru pagina Help */
 .help {
   position: absolute;
-  width: 85%; /* Lățimea containerului */
-  max-width: 4000px; /* Lățime maximă pentru ecrane mari */
-  height: 100vh; /* Înălțime relativă la ecran */
+  width: 65%; /* Lățimea containerului */
+  left: 50%;
+  transform: translate(-50%, 0%);
+  height: 85vh; /* Înălțime relativă la ecran */
   padding: 40px 20px;
   background-color: #1A1A40; /* Fundal pentru container */
   color: #FFFFFF;
-  margin-left: 150px;
   margin-top: 100px;
-  margin-right: 150px;
   line-height: 1.8; /* Spațiere între linii */
   overflow-y: auto; /* Activează scroll-ul intern */
   border-radius: 12px; /* Colțuri rotunjite */
@@ -52,19 +50,19 @@
 }
 
 .help-section h2 {
-  font-size: 50px;
+  font-size: 35px;
   color: #FFFFFF; 
   text-align: left;
 }
 
 .help-section h3 {
-  font-size: 50px;
+  font-size: 40px;
   color: #FFFFFF;
   text-align: left;
 }
 
 .help-section p {
-  font-size: 40px;
+  font-size: 30px;
   color: #CBE3EF;
   text-align: left;
 }
@@ -82,16 +80,16 @@
 
 
 /* Scroll personalizat pentru container */
-.about-us::-webkit-scrollbar {
+.help::-webkit-scrollbar {
   width: 10px;
 }
 
-.about-us::-webkit-scrollbar-thumb {
+.help::-webkit-scrollbar-thumb {
   background-color: #5AA8D6; /* Albastru pentru scrollbar */
   border-radius: 5px;
 }
 
-.about-us::-webkit-scrollbar-track {
+.help::-webkit-scrollbar-track {
   background: #1A1A40;
 }
 

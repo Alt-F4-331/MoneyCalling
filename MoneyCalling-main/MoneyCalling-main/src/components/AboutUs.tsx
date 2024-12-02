@@ -31,7 +31,7 @@ const AboutUs: React.FC = () => {
         </Link>
         <nav className="nav-links">
           <Link to="/homepage">Home</Link>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/dashboard">History</Link>
           <Link to="/financial-profile">Financial Profile</Link>
           <Link to="/help">Help</Link>
           <Link to="/about-us" className="active">About Us</Link>
@@ -47,23 +47,33 @@ const AboutUs: React.FC = () => {
         <section className="about-section">
           <h2>Empowering You to Take Control of your Financial Future</h2>
           <p>Welcome to Money Calling! Our mission is simple: to help you manage your money with ease and confidence.</p>
+          <p>We believe that good financial management should be accessible to everyone, regardless of background or income level. Whether you're budgeting for the first time, saving for a life goal, or simply looking to improve your spending habits, we're here to help.</p>
         </section>
 
         <section className="about-section">
           <h2>What We Offer</h2>
           <h3>Personalized Budgeting Tools</h3>
           <p>Set custom budgets, track spending, and get real-time insights.</p>
+          <h3>Insights and Analytics</h3>
+          <p>Understand your spending trends and get customized recommendations. Our easy-to- read reports break down your finances, helping you identify opportunities to save and grow.</p>
         </section>
 
         <section className="about-section">
           <h2>Our Values</h2>
-          <h3>Transparency:</h3>
+          <h3>Transparency</h3>
           <p>We provide clear, actionable information so you always know where you stand.</p>
+          <h3>Empowerment</h3>
+          <p>We're here to make money management simple, providing tools that help you confidently make financial decisions.</p>
+          <h3>Privacy and Security</h3>
+          <p>Your trust is important to us, and we prioritize data protection in everything we do.</p>
+          <h3>Continuous Improvement</h3>
+          <p>We're committed to evolving with your needs, constantly updating our tools to deliver the best financial solutions.</p>
         </section>
 
         <section className="about-section">
           <h2>Have Questions?</h2>
           <p>Visit our <a href="/help">Help Center</a>.</p>
+          <p>We're always here to help!</p>
         </section>
       </div>
     </div>

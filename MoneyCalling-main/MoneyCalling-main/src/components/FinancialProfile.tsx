@@ -64,7 +64,7 @@ const FinancialProfile: React.FC = () => {
         </Link>
         <nav className="nav-links">
           <Link to="/homepage">Home</Link>
-          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/dashboard">History</Link>
           <Link to="/financial-profile" className="active">Financial Profile</Link>
           <Link to="/help">Help</Link>
           <Link to="/about-us">About Us</Link>
@@ -110,7 +110,7 @@ const FinancialProfile: React.FC = () => {
             />
           </div>
           <div className="edit-button-container">
-            <button type="Edit" className="edit-button">Edit</button>
+            <button className="edit-button">Edit</button>
           </div>
         </form>
       </div>

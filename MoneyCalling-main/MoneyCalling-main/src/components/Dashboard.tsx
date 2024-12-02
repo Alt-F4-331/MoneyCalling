@@ -21,7 +21,7 @@ const Dashboard: React.FC = () => {
                 </Link>
                 <nav className="nav-links">
                     <Link to="/homepage">Home</Link>
-                    <Link to="/dashboard" className="active">Dashboard</Link>
+                    <Link to="/dashboard" className="active">History</Link>
                     <Link to="/financial-profile">Financial Profile</Link>
                     <Link to="/help">Help</Link>
                     <Link to="/about-us">About Us</Link>
