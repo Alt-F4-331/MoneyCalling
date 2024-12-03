@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './HomePage.css';
 import logo from "/public/logo.png";
 import profile_pic from "../assets/profile_pic.jpg";
@@ -6,6 +6,76 @@ import PieChart from './PieChart';
 import { Link } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
+
+  const [showRentPopup, setShowRentPopup] = useState(false);
+  const [showWarningPopup, setShowWarningPopup] = useState(false);
+  const [rentAmount, setRentAmount] = useState<number>(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [budgetRange, setBudgetRange] = useState({ min: 0, max: 10000 }); // valorile date sunt un exemplu; urmeaza sa fie legat cu backend-ul
+  const [amount, setAmount] = useState<number>(0); // State pentru Amount
+  const [category, setCategory] = useState<string>(""); // State pentru Category
+  const [showPopup, setShowPopup] = useState(false);
+  const [showHolidayPopup, setShowHolidayPopup] = useState(false);
+  const [holidayDays, setHolidayDays] = useState<number>(0);
+  const [holidaySum, setHolidaySum] = useState<number>(0);
+
+  // Funcții pentru deschiderea și închiderea pop-up-ului pentru Holiday Report
+const handleOpenHolidayPopup = () => {
+  setShowHolidayPopup(true);
+};
+
+const handleCloseHolidayPopup = () => {
+  setShowHolidayPopup(false);
+  setHolidayDays(0); // Resetare număr de zile
+  setHolidaySum(0); // Resetare sumă pentru vacanță
+};
+
+const handleHolidaySubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  alert("Holiday Report generated successfully!");
+  setShowHolidayPopup(false);
+};
+
+  // Deschidere și închidere popups
+  const handleOpenRentPopup = () => {
+    setShowRentPopup(true);
+  };
+
+  const handleCloseRentPopup = () => {
+    setShowRentPopup(false);
+    setRentAmount(0); // Resetare sumă
+  };
+
+  const handleCloseWarningPopup = () => {
+    setShowWarningPopup(false);
+  };
+
+  const handleRentSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (rentAmount < budgetRange.min || rentAmount > budgetRange.max) {
+      setShowWarningPopup(true);
+    } else {
+      alert("Rent amount is within the budget range!");
+      setShowRentPopup(false);
+    }
+  };
+
+  const handleOpenPopup = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Logica pentru a trimite datele introduse (de ex: adaugare expense)
+    console.log("Expense submitted!");
+    handleClosePopup();
+  };
+
   return (
     <div className='home-page'>
       {/* Bara de navigare */}
@@ -20,19 +90,18 @@ const HomePage: React.FC = () => {
           <Link to='/help'>Help</Link>
           <Link to='/about-us'>About Us</Link>
         </nav>
-        <a href='/my-account' className='profile-link'>
+        <Link to='/my-account' className='profile-link'>
           <img src={profile_pic} alt="Profile" className="profile-image" />
-        </a>
+        </Link>
       </header>
 
       {/* Meniu lateral */}
       <aside className='sidebar'>
-        <button>Generare Raport chirie</button>
-        <button>Generare Raport leasing/rata</button>
-        <button>Generare Raport investitii</button>
-        <button>Generare Raport cheltuieli personale</button>
-        <button>Generare Raport transport</button>
-        <button>Generare Raport divertisment</button>
+        <button onClick={handleOpenRentPopup}>Generate Rent Budget Report</button>
+        <button>Generate Installments Report</button>
+        <button>Generate Subscription Report</button>
+        <button>Generate Savings Report</button>
+        <button onClick={handleOpenHolidayPopup}>Generate Holiday Report</button>
         <button className='add-button'>+</button>
         <div className='savings'>
           <span>Savings:</span>
@@ -45,7 +114,107 @@ const HomePage: React.FC = () => {
         <div className='diagram'>
           <PieChart />
         </div>
+        <div className='expense-button'>
+          <button onClick={handleOpenPopup}>+ Expense</button>
+        </div>
       </main>
+
+      {/* Pop-up pentru Cheltuieli */}
+      {showPopup && (
+        <div className='popup-overlay' onClick={handleClosePopup}>
+          <div className='popup-container' onClick={(e) => e.stopPropagation()}>
+            <h2>Expense</h2>
+            <form onSubmit={handleSubmit}>
+              <div className='form-group'>
+                <label htmlFor='amount'>Amount:</label>
+                <input type='number' id='amount' name='amount' value={amount} onChange={(e) => setAmount(parseInt(e.target.value,10))} min="0" step="10" required />
+              </div>
+              <div className='form-group'>
+                <label htmlFor='category'>Category:</label>
+                <input type='text' id='category' name='category' value={category}
+                onChange={(e) => setCategory(e.target.value)} required />
+              </div>
+              <div className='form-actions'>
+                <button type='submit'>Add</button>
+                <button type='button' onClick={handleClosePopup}>Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Pop-up pentru Rent Budget */}
+      {showRentPopup && (
+        <div className='popup-overlay' onClick={handleCloseRentPopup}>
+          <div className='popup-container' onClick={(e) => e.stopPropagation()}>
+            <h2>Rent Budget Report</h2>
+            <form onSubmit={handleRentSubmit}>
+              <div className='budget-box'>Budget range: {budgetRange.min} - {budgetRange.max}</div>
+              <p>If you already are paying rent, please insert the amount:</p>
+              <input
+                type="number"
+                value={rentAmount}
+                onChange={(e) => setRentAmount(parseInt(e.target.value, 10))}
+                min="0"
+                required
+              />
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+       {/* Pop-up pentru avertizare */}
+       {showWarningPopup && (
+        <div className='popup-overlay' onClick={handleCloseWarningPopup}>
+          <div className='popup-container' onClick={(e) => e.stopPropagation()}>
+            <p>The amount you introduced is not in the budget range. Want to continue?</p>
+            <div className="popup-actions">
+              <button onClick={handleCloseWarningPopup}>No</button>
+              <button onClick={() => { setShowWarningPopup(false); setShowRentPopup(false); }}>Yes</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+{showHolidayPopup && (
+  <div className='popup-overlay-holiday' onClick={handleCloseHolidayPopup}>
+    <div className='popup-container-holiday' onClick={(e) => e.stopPropagation()}>
+      <h2>Holiday Report</h2>
+      <form onSubmit={handleHolidaySubmit}>
+        <div className='form-group-holiday'>
+          <label htmlFor='holidayDays'>Insert number of days:</label>
+          <input
+            type="number"
+            id="holidayDays"
+            name="holidayDays"
+            value={holidayDays}
+            onChange={(e) => setHolidayDays(parseInt(e.target.value, 10))}
+            min="0"
+            required
+          />
+        </div>
+        <div className='form-group-holiday'>
+          <label htmlFor='holidaySum'>Insert sum for holiday:</label>
+          <input
+            type="number"
+            id="holidaySum"
+            name="holidaySum"
+            value={holidaySum}
+            onChange={(e) => setHolidaySum(parseInt(e.target.value, 10))}
+            min="0"
+            required
+          />
+        </div>
+        <div className='form-actions'>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
+      
     </div>
   );
 };

@@ -9,6 +9,7 @@ import AboutUs from './components/AboutUs';
 import Help from './components/Help';
 import Dashboard from './components/Dashboard';
 import InfoPage from './components/InfoPage';
+import MyAccount from './components/MyAccount';
 
 const App: React.FC = () => {
   return (
@@ -24,6 +25,7 @@ const App: React.FC = () => {
         <Route path="/help" element={<Help />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/info-page" element={<InfoPage />} />
+        <Route path="/my-account" element={<MyAccount />} />
       </Routes>
     </Router>
     </div>
