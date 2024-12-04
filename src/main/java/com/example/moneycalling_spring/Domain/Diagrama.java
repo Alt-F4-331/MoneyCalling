@@ -1,8 +1,13 @@
 package com.example.moneycalling_spring.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "diagrama") //numele tabelului
@@ -10,25 +15,61 @@ public class Diagrama extends Entitate {
 
     @ManyToOne
     @JoinColumn(name = "id_user",referencedColumnName = "id")
+    @JsonBackReference
     private Utilizator user;
 
     @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Cheltuiala> listaCheltuieli ;
 
     @OneToMany(mappedBy = "diagrama", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Raport> listaRapoarte ;// legatura cu raportul
     @Embedded
     private Data dataDiagrama;
 
-    public Diagrama(int id, Data data, Utilizator User) {
+    @ElementCollection
+    @CollectionTable(name = "procente_diagrama", joinColumns = @JoinColumn(name = "id_diagrama"))
+    @MapKeyColumn(name = "tip_cheltuiala")
+    @Column(name = "procent_ramas")
+    @Enumerated(EnumType.STRING)
+    private Map<Cheltuiala.TipCheltuiala, Float> procenteCheltuieli = new HashMap<>();
+
+    @Column(name = "activa")
+    private Boolean activa; // Indică dacă diagrama este activă
+
+    public Diagrama(int id, Data data, Utilizator User, boolean activ) {
         super(id);
         this.dataDiagrama = data;
         this.user = User;
+        this.activa = activ;
     }
 
     public Diagrama()
     {
 
+    }
+
+    public boolean isActiva() {
+        return activa;
+    }
+
+    public void setActiva(boolean activa) {
+        this.activa = activa;
+    }
+
+    public Map<Cheltuiala.TipCheltuiala, Float> getProcenteCheltuieli() {
+        return procenteCheltuieli;
+    }
+
+    public void setProcenteCheltuieli(Map<Cheltuiala.TipCheltuiala, Float> procenteCheltuieli) {
+        this.procenteCheltuieli = procenteCheltuieli;
+    }
+
+    public void initializeProcente(Diagrama diagrama){
+        for (Cheltuiala.TipCheltuiala tip : Cheltuiala.TipCheltuiala.values()) {
+            diagrama.getProcenteCheltuieli().put(tip, tip.getProcent());
+        }
     }
 
     public void setUser(Utilizator user) {

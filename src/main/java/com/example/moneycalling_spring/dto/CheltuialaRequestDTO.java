@@ -5,22 +5,18 @@ import com.example.moneycalling_spring.Domain.Diagrama;
 
 public class CheltuialaRequestDTO {
 
-    private int id;
     private String nume;
     private float suma;
 
     private Cheltuiala.TipCheltuiala tipCheltuiala;
-    private int idDiagrama; // doar ID-ul diagramei, nu întregul obiect
 
     public CheltuialaRequestDTO() {
     }
 
     public CheltuialaRequestDTO(int id, String nume, float suma,Cheltuiala.TipCheltuiala tip, int idDiagrama) {
-        this.id = id;
         this.nume = nume;
         this.suma = suma;
         this.tipCheltuiala = tip;
-        this.idDiagrama = idDiagrama;
     }
 
     // Getters și setters
@@ -34,13 +30,6 @@ public class CheltuialaRequestDTO {
         this.tipCheltuiala = tipCheltuiala;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getNume() {
         return nume;
@@ -58,18 +47,12 @@ public class CheltuialaRequestDTO {
         this.suma = suma;
     }
 
-    public int getIdDiagrama() {
-        return idDiagrama;
-    }
 
-    public void setIdDiagrama(int idDiagrama) {
-        this.idDiagrama = idDiagrama;
-    }
 
     // Metodă pentru a mapa din DTO în Entity
-    public Cheltuiala mapToEntity(Diagrama diagrama) {
+    public Cheltuiala mapToEntity(int id ,Diagrama diagrama) {
         return new Cheltuiala(
-                this.id,
+                id,
                 this.nume,
                 this.suma,
                 this.tipCheltuiala,

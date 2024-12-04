@@ -8,6 +8,7 @@ import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.CheltuialaService;
 import com.example.moneycalling_spring.Service.DiagramaService;
 import com.example.moneycalling_spring.Service.UtilizatorService;
+import com.example.moneycalling_spring.dto.CheltuialaRequestDTO;
 import com.example.moneycalling_spring.dto.DiagramaRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -77,9 +78,14 @@ public class DiagramaController {
         diagrama.setId(diagramaRequestDTO.getId());
         diagrama.setDataDiagrama(data);
         diagrama.setUser(user);
+        diagrama.setActiva(true);
+        diagrama.initializeProcente(diagrama);
         Diagrama savedDiagrama = diagramaService.saveDiagrama(diagrama);
-        float venit = user.getProfil().getVenit();
-       // cheltuialaService.adaugaCheltuieli(diagrama);
+        diagramaService.seteazaDiagramaActiva(diagrama);
+
+
+
+        //atunci cand se creeaza o diagrama nou,diagrama creata devine activa,restul nu sunt active
 
         return new ResponseEntity<>(savedDiagrama, HttpStatus.CREATED); // Răspuns cu 201 când e salvat
     }
@@ -147,13 +153,24 @@ public class DiagramaController {
 
         Map<Cheltuiala.TipCheltuiala, Float> sumePeTip = new HashMap<>();
 
-        for (Cheltuiala.TipCheltuiala tip : Cheltuiala.TipCheltuiala.values()) {
-            float suma = venitTotal * (tip.getProcent() / 100); // Calculăm suma pentru fiecare tip
+        Map<Cheltuiala.TipCheltuiala , Float> procentePeTip = diagramaService.getDiagramaActivaByUtilizator(utilizator).get().getProcenteCheltuieli();
+
+
+        for (Map.Entry<Cheltuiala.TipCheltuiala, Float> entry : procentePeTip.entrySet()) {
+            Cheltuiala.TipCheltuiala tip = entry.getKey();
+            float procent = entry.getValue();
+
+            // Calculăm suma pentru fiecare tip de cheltuială
+            float suma = venitTotal * (procent / 100);
+
+            // Adăugăm suma în map-ul sumePeTip
             sumePeTip.put(tip, suma);
         }
 
         return new ResponseEntity<>(sumePeTip, HttpStatus.OK);
     }
+
+
 
 
 

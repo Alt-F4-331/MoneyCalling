@@ -1,5 +1,6 @@
 package com.example.moneycalling_spring.Domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,6 +18,7 @@ public class Cheltuiala extends Entitate {
 
      @ManyToOne
      @JoinColumn(name = "id_diagrama")//cheia straina
+     @JsonBackReference
      private Diagrama diagrama;
 
      public Diagrama getDiagrama() {

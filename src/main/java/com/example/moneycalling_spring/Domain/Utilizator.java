@@ -1,5 +1,6 @@
 package com.example.moneycalling_spring.Domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class Utilizator extends Entitate {
     private ProfilFinanciar profil;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Legătura cu Diagrama
+    @JsonIgnore
     private List<Diagrama> diagrame;
 
     public Utilizator(){

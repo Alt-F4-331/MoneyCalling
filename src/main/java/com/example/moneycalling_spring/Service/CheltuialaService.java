@@ -27,32 +27,7 @@ public class CheltuialaService {
     }
 
 
-    // Mapping from DTO to Entity
-    public Cheltuiala mapToEntity(CheltuialaRequestDTO dto) {
-        Cheltuiala cheltuiala = new Cheltuiala();
-        cheltuiala.setId(dto.getId());
-        cheltuiala.setNume(dto.getNume());
-        cheltuiala.setSuma(dto.getSuma());
 
-        // Fetch and set Diagrama
-        Diagrama diagrama = diagramaRepository.findById(dto.getIdDiagrama())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid Diagrama ID: " + dto.getIdDiagrama()));
-        cheltuiala.setDiagrama(diagrama);
-
-        return cheltuiala;
-    }
-
-    // Mapping from Entity to DTO
-    public CheltuialaRequestDTO mapToDTO(Cheltuiala cheltuiala) {
-        CheltuialaRequestDTO dto = new CheltuialaRequestDTO();
-        dto.setId(cheltuiala.getId());
-        dto.setNume(cheltuiala.getNume());
-        dto.setSuma(cheltuiala.getSuma());
-        if (cheltuiala.getDiagrama() != null) {
-            dto.setIdDiagrama(cheltuiala.getDiagrama().getId());
-        }
-        return dto;
-    }
 
 
     //Metoda care adauga o noua cheltuiala
@@ -95,18 +70,7 @@ public class CheltuialaService {
         return cheltuialaRepository.findByDiagrama(diagrama);
     }
 
-   /* public void adaugaCheltuieli(Diagrama diagrama) {
 
-        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "locuinta", 0,30, diagrama));
-        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "alimentatie", 0,15, diagrama));
-        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "transport", 0,15, diagrama));
-        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "sanatate", 0,10, diagrama));
-        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "imbracaminte-incaltaminte", 0,5, diagrama));
-        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "divertisment", 0,10, diagrama));
-        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "educatie", 0,5, diagrama));
-        saveCheltuiala(new Cheltuiala(getFirstAvailableId(), "economii", 0,10, diagrama));
-
-    }*/
 
 
 

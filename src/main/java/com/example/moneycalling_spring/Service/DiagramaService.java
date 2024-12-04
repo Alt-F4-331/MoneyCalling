@@ -51,4 +51,26 @@ public class DiagramaService {
     public List<Diagrama> getAllDiagrameByUtilizator(Utilizator utilizator) {
         return diagramarepo.findByUser(utilizator);
     }
+
+    public Optional<Diagrama> getDiagramaActivaByUtilizator(Utilizator utilizator) {
+        return diagramarepo.findByUserAndActiva(utilizator, true);
+    }
+
+
+    public void seteazaDiagramaActiva(Diagrama diagrama) {
+        // Obține toate diagramele utilizatorului
+        List<Diagrama> diagrameUtilizator = diagramarepo.findByUser(diagrama.getUser());
+
+        // Marchează toate diagramele ca inactive
+        for (Diagrama d : diagrameUtilizator) {
+            d.setActiva(false);
+        }
+
+        // Setează diagrama curentă ca activă
+        diagrama.setActiva(true);
+
+        // Salvează toate modificările
+        diagramarepo.saveAll(diagrameUtilizator); // Salvează diagramele inactivate
+        diagramarepo.save(diagrama); // Salvează diagrama activă
+    }
 }

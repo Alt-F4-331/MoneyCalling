@@ -1,8 +1,11 @@
 package com.example.moneycalling_spring.Controller;
 
 import com.example.moneycalling_spring.Domain.Cheltuiala;
+import com.example.moneycalling_spring.Domain.Utilizator;
+import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.CheltuialaService;
 import com.example.moneycalling_spring.Service.DiagramaService;
+import com.example.moneycalling_spring.Service.UtilizatorService;
 import com.example.moneycalling_spring.dto.CheltuialaRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
@@ -18,11 +21,16 @@ import java.util.Optional;
 public class CheltuialaController {
     private final CheltuialaService cheltuialaService;
     private final DiagramaService diagramaService;
+    private final UtilizatorService utilizatorService;
+
+    private final JwtUtil jwtUtil;
 
 
-    public CheltuialaController(CheltuialaService cheltuialaService, DiagramaService diagramaService) {
+    public CheltuialaController(CheltuialaService cheltuialaService, DiagramaService diagramaService, UtilizatorService utilizatorService, JwtUtil jwtUtil) {
         this.cheltuialaService = cheltuialaService;
         this.diagramaService= diagramaService;
+        this.utilizatorService = utilizatorService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "Obtine cheltuiala dupa id")
@@ -33,22 +41,55 @@ public class CheltuialaController {
         return cheltuiala.map(ResponseEntity::ok)
         .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    @Operation(summary = "Adauga o noua cheltuiala")
+    @Operation(summary = "Adauga o noua cheltuiala pentru diagrama")
     @PostMapping
-    public ResponseEntity<Cheltuiala> createCheltuiala(@RequestBody CheltuialaRequestDTO cheltuialaRequestDTO)
-    {
-        Optional<Diagrama> diagrama_opt = diagramaService.getById(cheltuialaRequestDTO.getIdDiagrama());
+    public ResponseEntity<?> createCheltuiala(@RequestHeader("Authorization") String token,
+                                              @RequestBody CheltuialaRequestDTO chDTO) {
+
+        int userId = jwtUtil.getUserIdByToken(token);
+
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Utilizator utilizator = utilizatorOptional.get();
+        Optional<Diagrama> diagrama_opt = diagramaService.getDiagramaActivaByUtilizator(utilizator);
 
         if (diagrama_opt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Dacă nu există, returnăm 404
         }
 
         Diagrama diagrama = diagrama_opt.get();
-        Cheltuiala ch = cheltuialaRequestDTO.mapToEntity(diagrama);
+        Cheltuiala ch = chDTO.mapToEntity(cheltuialaService.getFirstAvailableId(), diagrama);
 
         Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
-        return new ResponseEntity<>(savedCheltuiala, HttpStatus.CREATED);
+
+        Cheltuiala.TipCheltuiala tip = chDTO.getTipCheltuiala();
+        float suma = chDTO.getSuma();
+        float venitTotal = utilizator.getProfil().getVenit();
+
+
+        Float procentRamas = diagrama.getProcenteCheltuieli().get(tip);
+        if (procentRamas == null || procentRamas * venitTotal < suma) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Nu sunt suficiente procente rămase pentru acest tip de cheltuială.");
+        }
+
+        float procentNou= procentRamas - (suma/ venitTotal) *100;//se calculeaza procentul ramas,dupa cheltuiala
+
+        diagrama.getProcenteCheltuieli().put(tip, procentNou);
+        System.out.println(procentNou);
+        diagramaService.saveDiagrama(diagrama);
+
+        return ResponseEntity.ok("Cheltuiala adaugata cu succes");
     }
+    /*
+    functia e creare cheltuiala primeste din front id-ul diagramei in care
+    se adauga cheltuiala si datele cheltuielii.dupa ce este adaugata cheltuiala,
+    din procentul alocat tipului cheltuielii,se scade suma cheltuielii adaugate.
+    */
+
+
 
     @Operation(summary = "Sterge cheltuiala dupa id")
     @DeleteMapping("/{id}")

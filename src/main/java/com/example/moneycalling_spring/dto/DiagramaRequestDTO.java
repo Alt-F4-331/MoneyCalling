@@ -1,6 +1,9 @@
 package com.example.moneycalling_spring.dto;
 
+import com.example.moneycalling_spring.Domain.Cheltuiala;
 import com.example.moneycalling_spring.Domain.Data;
+
+import java.util.Map;
 
 public class DiagramaRequestDTO {
 
@@ -8,8 +11,6 @@ public class DiagramaRequestDTO {
 
     private Data data; // data la care a fost creata diagrama
     private int userId;  // ID-ul utilizatorului (nu va mai trebui să trimitem toate datele despre utilizator)
-
-    // Getters și Setters
     public int getId() {
         return id;
     }
@@ -32,5 +33,10 @@ public class DiagramaRequestDTO {
     public void setData(Data data) {
         this.data = data;
     }
+
+
+
 }
+
+
 
