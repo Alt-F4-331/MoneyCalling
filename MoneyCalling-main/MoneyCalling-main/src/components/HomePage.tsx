@@ -10,14 +10,21 @@ const HomePage: React.FC = () => {
   const [showRentPopup, setShowRentPopup] = useState(false);
   const [showWarningPopup, setShowWarningPopup] = useState(false);
   const [rentAmount, setRentAmount] = useState<number>(0);
+  const [installmentSum, setInstallmentSum] = useState<number>(0);
+  const [recommendedSum, setRecommendedSum] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [budgetRange, setBudgetRange] = useState({ min: 0, max: 10000 }); // valorile date sunt un exemplu; urmeaza sa fie legat cu backend-ul
   const [amount, setAmount] = useState<number>(0); // State pentru Amount
-  const [category, setCategory] = useState<string>(""); // State pentru Category
+  const [category, setCategory] = useState<string>(""); // State pentru Category; va trebui sa faca parte din lista de categorii din baza de date
   const [showPopup, setShowPopup] = useState(false);
   const [showHolidayPopup, setShowHolidayPopup] = useState(false);
   const [holidayDays, setHolidayDays] = useState<number>(0);
   const [holidaySum, setHolidaySum] = useState<number>(0);
+  const [showInstallmentsPopup, setShowInstallmentsPopup] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [installmentOptions, setInstallmentOptions] = useState([6, 12, 24, 36, 48]);
+  const [customInstallment, setCustomInstallment] = useState<number | ''>('');
+  const [selectedInstallment, setSelectedInstallment] = useState<number | null>(null);
 
   // Funcții pentru deschiderea și închiderea pop-up-ului pentru Holiday Report
 const handleOpenHolidayPopup = () => {
@@ -32,7 +39,7 @@ const handleCloseHolidayPopup = () => {
 
 const handleHolidaySubmit = (e: React.FormEvent) => {
   e.preventDefault();
-  alert("Holiday Report generated successfully!");
+  //alert("Holiday Report generated successfully!");
   setShowHolidayPopup(false);
 };
 
@@ -55,7 +62,7 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
     if (rentAmount < budgetRange.min || rentAmount > budgetRange.max) {
       setShowWarningPopup(true);
     } else {
-      alert("Rent amount is within the budget range!");
+      //alert("Rent amount is within the budget range!");
       setShowRentPopup(false);
     }
   };
@@ -68,6 +75,20 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
     setShowPopup(false);
   };
 
+  const handleOpenInstallmentsPopup = () => setShowInstallmentsPopup(true);
+  const handleCloseInstallmentsPopup = () => {
+  setRecommendedSum(0);
+  //setInstallmentSum(0);
+  setShowInstallmentsPopup(false);
+  setCustomInstallment('');
+  setSelectedInstallment(null);
+};
+
+  const handleInstallmentSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  console.log(`Selected Installment: ${selectedInstallment || customInstallment}`);
+  handleCloseInstallmentsPopup();
+};
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,7 +119,7 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
       {/* Meniu lateral */}
       <aside className='sidebar'>
         <button onClick={handleOpenRentPopup}>Generate Rent Budget Report</button>
-        <button>Generate Installments Report</button>
+        <button onClick={handleOpenInstallmentsPopup}>Generate Installments Report</button>
         <button>Generate Subscription Report</button>
         <button>Generate Savings Report</button>
         <button onClick={handleOpenHolidayPopup}>Generate Holiday Report</button>
@@ -209,6 +230,53 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
         <div className='form-actions'>
           <button type="submit">Submit</button>
         </div>
+      </form>
+    </div>
+  </div>
+)}
+
+    {/* Pop-up pentru Installments Report */}
+    {showInstallmentsPopup && (
+  <div className="popup-overlay" onClick={handleCloseInstallmentsPopup}>
+    <div className="popup-container installments-popup" onClick={(e) => e.stopPropagation()}>
+      <h2>Installments Report</h2>
+      <form onSubmit={handleInstallmentSubmit}>
+        <div className="installment-sum">
+        <input type='number' placeholder='Total: ' id='installment' name='installment' value={installmentSum} onChange={(e) => setInstallmentSum(parseInt(e.target.value,10))} min="0" step="10" required />
+        </div>
+
+        <div className="info-box">Budget range: {budgetRange.min} - {budgetRange.max}</div>
+        <p>Please choose one of the following payment options:</p>
+        <div className="installment-options">
+          {installmentOptions.map((option) => (
+            <button
+              type="button"
+              key={option}
+              value={installmentSum}
+              className={`installment-option ${selectedInstallment === option ? 'active' : ''}`}
+              onClick={() => {
+                setSelectedInstallment(option);
+                setCustomInstallment('');
+              }}
+            >
+              {option}
+            </button>
+          ))}
+          <div onClick={()=>setSelectedInstallment(null)}>
+            <input className='custom-option'
+              type="number"
+              placeholder="Insert a different option"
+              value={customInstallment}
+              onChange={(e) => {
+                setCustomInstallment(parseInt(e.target.value, 10) || '');
+                //setSelectedInstallment(null);
+              }}
+              min="1"
+            />
+          </div>
+        </div>
+        <div className="recommended-sum">Recommended sum: {recommendedSum}</div>
+        <button type="submit" className="submit-button">Submit</button>
       </form>
     </div>
   </div>
