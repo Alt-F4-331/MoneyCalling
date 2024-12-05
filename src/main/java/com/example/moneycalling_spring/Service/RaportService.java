@@ -1,5 +1,6 @@
 package com.example.moneycalling_spring.Service;
 
+import com.example.moneycalling_spring.Domain.Cheltuiala;
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Raport;
 import com.example.moneycalling_spring.Repository.ProfilFinanciarRepository;
@@ -16,6 +17,7 @@ public class RaportService {
     @Autowired
     private RaportRepository raportRepository;
     private ProfilFinanciarRepository profilFinanciarRepository;
+    private final Map<Integer, Float> chiriiPropuse = new ConcurrentHashMap<>();
 
     @Autowired
     public RaportService(RaportRepository rap, ProfilFinanciarRepository prof)
@@ -37,10 +39,10 @@ public class RaportService {
         //sterge raport dupa id
     }
 
-    public float sugereazaChirieByVenit(float venit)
-    {
-        float procent = 0.3f;
-        return procent * venit;
+    public float sugereazaChirieByVenit(float venit, Diagrama diagrama) {
+        float procent = diagrama.getProcenteCheltuieli().get(Cheltuiala.TipCheltuiala.LOCUINTA) - 5;
+        //aici vrem ca dupa plata chiriei,sa ramana 5% din venit alocat pentru alte lucruri in locuinta
+        return (procent * venit) / 100;
     }
 
     public float sugereazaRataByVenit(float suma, int ani)

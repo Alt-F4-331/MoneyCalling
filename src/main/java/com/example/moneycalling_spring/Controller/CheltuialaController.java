@@ -78,7 +78,6 @@ public class CheltuialaController {
         float procentNou= procentRamas - (suma/ venitTotal) *100;//se calculeaza procentul ramas,dupa cheltuiala
 
         diagrama.getProcenteCheltuieli().put(tip, procentNou);
-        System.out.println(procentNou);
         diagramaService.saveDiagrama(diagrama);
 
         return ResponseEntity.ok("Cheltuiala adaugata cu succes");
