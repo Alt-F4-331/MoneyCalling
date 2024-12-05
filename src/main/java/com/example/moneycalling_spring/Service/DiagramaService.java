@@ -2,6 +2,7 @@ package com.example.moneycalling_spring.Service;
 
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Utilizator;
+import com.example.moneycalling_spring.Exception.ResourceNotFoundException;
 import com.example.moneycalling_spring.Repository.DiagramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,14 @@ public class DiagramaService {
 
     public Diagrama saveDiagrama(Diagrama diagrama)
     {
+        Optional<Diagrama> diagrama1 = diagramarepo.findByDataAndUser(
+                diagrama.getDataDiagrama().getLuna(),
+                diagrama.getDataDiagrama().getAn(),
+                diagrama.getUser().getId()
+        );
+
+        //if(diagrama1.isPresent()){
+        //aici trebuie aruncata exceptie
         return diagramarepo.save(diagrama);
         // adauga sau actualizeaza diagrama cu id- ul dat
     }
@@ -73,4 +82,10 @@ public class DiagramaService {
         diagramarepo.saveAll(diagrameUtilizator); // Salvează diagramele inactivate
         diagramarepo.save(diagrama); // Salvează diagrama activă
     }
+
+    public Diagrama findDiagramaByDataAndUser(int luna, int an, int userId) {
+        return diagramarepo.findByDataAndUser(luna, an, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Diagrama nu a fost găsită pentru utilizatorul specificat și data: luna " + luna + ", anul " + an));
+    }
+
 }

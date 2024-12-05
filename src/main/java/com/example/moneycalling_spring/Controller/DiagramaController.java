@@ -117,16 +117,14 @@ public class DiagramaController {
     // Endpoint pentru obținerea tuturor diagramelor asociate unui utilizator
     @Operation(summary = "Obține toate diagramele pentru un utilizator")
     @GetMapping("/utilizator/{userId}")
-    public ResponseEntity<List<Diagrama>> getAllDiagrameByUtilizator(@PathVariable int userId) {
-        // Căutăm utilizatorul după ID
-        Optional<Utilizator> optionalUtilizator = utilizatorService.getById(userId);
+    public ResponseEntity<List<Diagrama>> getAllDiagrameByUtilizator(@RequestHeader("Authorization") String token) {
+        int userId = jwtutil.getUserIdByToken(token);
 
-        if (optionalUtilizator.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Returnăm 404 dacă utilizatorul nu există
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-        // Dacă utilizatorul există, obținem diagramele asociate
-        Utilizator utilizator = optionalUtilizator.get();
+        Utilizator utilizator = utilizatorOptional.get();
         List<Diagrama> diagrame = diagramaService.getAllDiagrameByUtilizator(utilizator);
 
         if (diagrame.isEmpty()) {
@@ -168,6 +166,19 @@ public class DiagramaController {
         }
 
         return new ResponseEntity<>(sumePeTip, HttpStatus.OK);
+    }
+
+    @GetMapping("/getByData")
+    public ResponseEntity<Diagrama> getDiagramaByDataAndUser(
+            @RequestParam int luna,
+            @RequestParam int an,
+            @RequestHeader("Authorization") String token) {
+
+        //primeste diagrama userului logat dupa luna si an
+
+        int userId = jwtutil.getUserIdByToken(token);
+        Diagrama diagrama = diagramaService.findDiagramaByDataAndUser(luna, an, userId);
+        return ResponseEntity.ok(diagrama);
     }
 
 

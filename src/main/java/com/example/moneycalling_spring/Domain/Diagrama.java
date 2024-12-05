@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
-@Table(name = "diagrama") //numele tabelului
+@Table(
+        name = "diagrama",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"id_user", "luna", "an"})
+)
 public class Diagrama extends Entitate {
 
     @ManyToOne
