@@ -9,8 +9,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,8 +29,8 @@ class MoneyCallingSpringApplicationTests {
     private final ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
     private final Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
     private final Utilizator utilizator2 = new Utilizator(1, "Marinescu", "Stefan", "parola1235", "stef.mari@email.com", dataNasterii, "M", "0723456789", profil);
-    private final Diagrama diag  = new Diagrama(1, dataC, utilizator);
-    private final Diagrama diag2 = new Diagrama(2, dataC, utilizator);
+    private final Diagrama diag  = new Diagrama(1, dataC, utilizator, true);
+    private final Diagrama diag2 = new Diagrama(2, dataC, utilizator, true);
     private final Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diag);
     private final Raport raport = new Raport(1, diag);
     @Autowired
@@ -224,6 +225,9 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(utilizator, diag.getUser(), "diag user must be utilizator");
         List<Cheltuiala> list = diag.getListaCheltuieli();
         assertEquals(list, diag.getListaCheltuieli());
+        assertEquals(true, diag.isActiva(), "diag status must be true");
+        Map<Cheltuiala.TipCheltuiala, Float> res = diag.getProcenteCheltuieli();
+        assertEquals(null, res.get(Cheltuiala.TipCheltuiala.LOCUINTA), "diag procentcheltuiala must be 30f");
     }
 
     @Test
@@ -246,6 +250,31 @@ class MoneyCallingSpringApplicationTests {
         //Testarea functiei set pentru utilizator
         diag.setUser(utilizator2);
         assertEquals(utilizator2, diag.getUser(), "diag user content must be same as utilizator2 content");
+
+        //Testarea functiei set active
+        diag.setActiva(false);
+        assertEquals(false, diag.isActiva(), "diag status must be false");
+
+        //Testarea functiei set pentru procente
+        Map<Cheltuiala.TipCheltuiala, Float> procente = new HashMap<>();
+        procente.put(Cheltuiala.TipCheltuiala.LOCUINTA, 45f);
+        diag.setProcenteCheltuieli(procente);
+        Map<Cheltuiala.TipCheltuiala, Float> res = diag.getProcenteCheltuieli();
+        assertEquals(45f, res.get(Cheltuiala.TipCheltuiala.LOCUINTA));
+
+        //Testarea functiei ini proc
+        Map<Cheltuiala.TipCheltuiala, Float> procenteini = new HashMap<>();
+        diag.setProcenteCheltuieli(procenteini);
+
+        Cheltuiala.TipCheltuiala[] tips = Cheltuiala.TipCheltuiala.values();
+        for(Cheltuiala.TipCheltuiala tip : tips){
+            procenteini.put(tip, 0f);
+        }
+        diag.initializeProcente(diag);
+
+        for(Cheltuiala.TipCheltuiala tip :tips){
+            assertNotNull(diag.getProcenteCheltuieli().get(tip), "diag procenteCheltuieli must not be null");
+        }
     }
 
     @Test
@@ -277,7 +306,7 @@ class MoneyCallingSpringApplicationTests {
     private final Data dataRepo = new Data(15,10,2000);
     private final ProfilFinanciar profilRepo = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
     private final Utilizator utilizatorRepo = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataRepo,"mascul","0777333222", profilRepo);
-    private final Diagrama diagRepo  = new Diagrama(1, dataRepo,  utilizatorRepo);
+    private final Diagrama diagRepo  = new Diagrama(1, dataRepo,  utilizatorRepo, true);
     private final Cheltuiala cheltuialaRepo = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagRepo);
     private final Raport raportRepo = new Raport(1, diagRepo);
 
@@ -392,6 +421,7 @@ class MoneyCallingSpringApplicationTests {
         Optional<Diagrama> found = diagramaRepository.findById(lista.get(0).getId());
         assertEquals(diagRepo.getId(), found.get().getId());
         assertEquals(diagRepo.getUser().getNume(), found.get().getUser().getNume());
+        assertEquals(diagRepo.isActiva(), found.get().isActiva());
     }
 
     @Test
@@ -438,7 +468,7 @@ class MoneyCallingSpringApplicationTests {
     private final Data dataServ = new Data(15,10,2000);
     private final ProfilFinanciar profilServ = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
     private final Utilizator utilizatorServ = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataServ,"mascul","0777333222", profilServ);
-    private final Diagrama diagServ  = new Diagrama(1, dataServ, utilizatorServ);
+    private final Diagrama diagServ  = new Diagrama(1, dataServ, utilizatorServ, true);
     private final Cheltuiala cheltuialaServ = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagServ);
     private final Raport raportServ = new Raport(1, diagServ);
 
@@ -547,6 +577,12 @@ class MoneyCallingSpringApplicationTests {
         //testare getbyid
         assertEquals(diagServ.getId(), diagService.getById(diagServ.getId()).get().getId());
 
+        //testare getbyuser
+        assertEquals(diagServ.getId(), diagService.getDiagramaActivaByUtilizator(utilizatorServ).get().getId());
+
+        //testare findby data and user
+        assertEquals(diagServ.getId(), diagService.findDiagramaByDataAndUser(10, 2000, 1).getId());
+
         //testare deletebyid
         diagramaService.stergeDiagramaById(diagServ.getId());
 
@@ -588,29 +624,6 @@ class MoneyCallingSpringApplicationTests {
 
         //testare getbyid
         assertEquals(cheltuialaServ.getId(), cheltuialaService.getById(cheltuialaServ.getId()).get().getId());
-
-        //testare dto to entity -- DE ADAUGAT
-        CheltuialaRequestDTO dto = new CheltuialaRequestDTO();
-        dto.setId(111);
-        dto.setNume("tst");
-        dto.setSuma(555.0F);
-        dto.setIdDiagrama(diagServ.getId());
-
-        Cheltuiala cheltu = cheltuialaService.mapToEntity(dto);
-        assertNotNull(cheltu);
-        assertEquals(111, cheltu.getId(), "cheltuiala id must be 111");
-        assertEquals(555.0F, cheltu.getSuma(), "cheltuiala suma must be 555.0F");
-        assertEquals("tst", cheltu.getNume(), "cheltuiala nume must be tst");
-
-        //testare entity to dto -- DE ADAUGAT
-        CheltuialaRequestDTO dto2 = cheltuialaService.mapToDTO(cheltu);
-
-        assertNotNull(dto2);
-        assertEquals(111, dto2.getId(), "cheltuiala id must be 111");
-        assertEquals("tst", dto2.getNume(), "cheltuiala nume must be tst");
-        assertEquals(555.0F, dto2.getSuma(), "cheltuiala suma must be 555.0F");
-        assertEquals(diagServ.getId(), dto2.getIdDiagrama(), "diagrama id must be 1");
-
 
         //testare deletebyid
         cheltuialaService.stergeCheltuialaById(cheltuialaServ.getId());
@@ -672,7 +685,7 @@ class MoneyCallingSpringApplicationTests {
     private final Data datadto = new Data(15,10,2000);
     private final ProfilFinanciar profildto = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
     private final Utilizator utilizatordto = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",datadto,"mascul","0777333222", profildto);
-    private final Diagrama diagdto  = new Diagrama(1, datadto, utilizatordto);
+    private final Diagrama diagdto  = new Diagrama(1, datadto, utilizatordto, true);
     private final Cheltuiala cheltuialadto = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagdto);
     private final Raport raportdto = new Raport(1, diagdto);
 
@@ -803,6 +816,27 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(profildto.getDataSalar(), pfdto.getDataSalar(), "dto data salariu must be same as profildto");
     }
 
+    @Order(36)
+    @Test
+    public void testCheltuialaDTO(){
+        CheltuialaDTO cdto = new CheltuialaDTO("fotbal", 1000.0f, Cheltuiala.TipCheltuiala.SANATATE);
+
+        //testare set get nume
+        assertEquals("fotbal", cdto.getNume(), "dto nume must be fotbal");
+        cdto.setNume(cheltuialadto.getNume());
+        assertEquals(cheltuialadto.getNume(), cdto.getNume(), "dto nume must be same as cheltuialadto");
+
+        //testare set get suma
+        assertEquals(1000.0f, cdto.getSuma(), "dto suma must be 1000.0f");
+        cdto.setSuma(cheltuialadto.getSuma());
+        assertEquals(cheltuialadto.getSuma(), cdto.getSuma(), "dto suma must be same as cheltuialadto");
+
+        //testare set get tip
+        assertEquals(Cheltuiala.TipCheltuiala.SANATATE, cdto.getTipCheltuiala(), "dto tip must be SANATATE");
+        cdto.setTipCheltuiala(cheltuialadto.getTipCheltuiala());
+        assertEquals(cheltuialadto.getTipCheltuiala(), cdto.getTipCheltuiala(), "dto tip must be same as cheltuialdto");
+    }
+
     @Order(34)
     @Test
     public void testRaportRequestDTO(){
@@ -834,12 +868,7 @@ class MoneyCallingSpringApplicationTests {
     @Test
     public void testCheltuialaRequestDTO(){
         CheltuialaRequestDTO cdto = new CheltuialaRequestDTO();
-        CheltuialaRequestDTO cheldto = new CheltuialaRequestDTO(1, "chirie", 300, Cheltuiala.TipCheltuiala.LOCUINTA, 1);
-
-        //testare set get id
-        cdto.setId(cheltuialadto.getId());
-        assertEquals(cdto.getId(), cheltuialadto.getId(), "dto id must be same as cheltuialadto");
-        assertEquals(1, cheldto.getId(), "cheldto id must be 1");
+        CheltuialaRequestDTO cheldto = new CheltuialaRequestDTO(1, "chirie", 300.0f, Cheltuiala.TipCheltuiala.LOCUINTA, 1);
 
         //testare set get nume
         cdto.setNume(cheltuialadto.getNume());
@@ -851,25 +880,22 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(cdto.getTipCheltuiala(), cheltuialadto.getTipCheltuiala(), "dto tip cheltuiala must be same as cheltuialadto");
         assertEquals(Cheltuiala.TipCheltuiala.LOCUINTA, cheldto.getTipCheltuiala(), "cheldto tip cheltuiala must be LOCUINTA");
 
-        //testare set get id diagrama
-        cdto.setIdDiagrama(cheltuialadto.getDiagrama().getId());
-        assertEquals(cdto.getId(), cheltuialadto.getDiagrama().getId(), "dto id diagrama must be same as cheltuialadto");
-        assertEquals(1, cheldto.getIdDiagrama(), "cheldto id diagrama must be 1");
+        //testare set get suma
+        cdto.setSuma(cheltuialadto.getSuma());
+        assertEquals(cdto.getSuma(), cheltuialadto.getSuma(), "dto suma must be same as cheltuialadto");
+        assertEquals(300.0f, cheldto.getSuma(), "cheldto suma must be 300.0f");
 
         //testare map to entity
-        Cheltuiala c = cdto.mapToEntity(diagdto);
-        assertEquals(c.getId(), cdto.getId(), "c id must be same as cdto");
+        Cheltuiala c = cdto.mapToEntity(1, diagdto);
         assertEquals(c.getNume(), cdto.getNume(), "c nume must be same as cdto");
         assertEquals(c.getTipCheltuiala(), cdto.getTipCheltuiala(), "c tip cheltuiala must be same as cdto");
-        assertEquals(c.getDiagrama().getId(), cdto.getIdDiagrama(), "c id diagrama must be same as cdto");
 
         //testare map to dto
         CheltuialaRequestDTO dto = CheltuialaRequestDTO.mapToDTO(c);
-        assertEquals(dto.getId(), c.getId(), "dto id must be same as c");
         assertEquals(dto.getNume(), c.getNume(), "dto nume must be same as c");
         assertEquals(dto.getTipCheltuiala(), c.getTipCheltuiala(), "dto tip cheltuiala must be same as c");
-        assertEquals(dto.getIdDiagrama(), c.getDiagrama().getId(), "dto id diagrama must be same as c ");
 
     }
+
 
 }
