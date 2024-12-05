@@ -649,7 +649,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(list.get(0).getId(), raportServ.getId());
 
         //testare sugerare chirie
-        float sc = raportService.sugereazaChirieByVenit(profilServ.getVenit());
+        float sc = raportService.sugereazaChirieByVenit(profilServ.getVenit(), diagServ);
         assertEquals(0.3F * profilServ.getVenit(), sc);
 
         //testare sugerare rata by venit
