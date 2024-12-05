@@ -25,6 +25,8 @@ const HomePage: React.FC = () => {
   const [installmentOptions, setInstallmentOptions] = useState([6, 12, 24, 36, 48]);
   const [customInstallment, setCustomInstallment] = useState<number | ''>('');
   const [selectedInstallment, setSelectedInstallment] = useState<number | null>(null);
+  const [recommendedTravelSum, setRecommendedTravelSum] = useState<number>(0);
+  const [recommendedAccommodationSum, setRecommendedAccommodationSum] = useState<number>(0);
 
   // Funcții pentru deschiderea și închiderea pop-up-ului pentru Holiday Report
 const handleOpenHolidayPopup = () => {
@@ -33,6 +35,8 @@ const handleOpenHolidayPopup = () => {
 
 const handleCloseHolidayPopup = () => {
   setShowHolidayPopup(false);
+  setRecommendedAccommodationSum(0);
+  setRecommendedTravelSum(0);
   setHolidayDays(0); // Resetare număr de zile
   setHolidaySum(0); // Resetare sumă pentru vacanță
 };
@@ -226,6 +230,16 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
             min="0"
             required
           />
+        </div>
+        {/* Recomandare pentru sumă travel */}
+        <div className="recommended-sum-holiday">
+          <label>Recommended sum for travel:</label>
+          <div className="recommended-value-holiday">{recommendedTravelSum}</div>
+        </div>
+        {/* Recomandare pentru sumă cazare */}
+        <div className="recommended-sum-holiday">
+          <label>Recommended sum for accommodation:</label>
+          <div className="recommended-value-holiday">{recommendedAccommodationSum}</div>
         </div>
         <div className='form-actions'>
           <button type="submit">Submit</button>

@@ -491,6 +491,36 @@
   text-align: center; /* Aliniere a textului în interiorul input-ului */
 }
 
+.recommended-sum-holiday {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centrare a textului */
+  margin-bottom: 15px; /* Spațiere față de următoarele elemente */
+  padding: 10px 15px; /* Spațiere internă */
+  border-radius: 5px;
+  color: #CBE3EF; /* Text deschis */
+  font-size: 20px;
+  text-align: center; /* Centrare a textului */
+}
+
+.recommended-sum-holiday label {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #FFFFFF; /* Albastru deschis */
+}
+
+.recommended-value-holiday {
+  display: inline-block;
+  font-size: 20px; /* Dimensiune mai mare */
+  font-weight: bold;
+  color: #B7B7B7;
+  background-color: #1F1E4C; /* Fundal ușor contrastant */
+  padding: 5px 10px; /* Spațiere internă */
+  border-radius: 5px;
+  width: 30%; /* Ajustare automată */
+  text-align: center; /* Text centrat */
+}
 .installments-popup {
   background-color: #191742;
   color: #fff;
