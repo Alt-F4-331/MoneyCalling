@@ -33,8 +33,6 @@ class MoneyCallingSpringApplicationTests {
     private final Diagrama diag2 = new Diagrama(2, dataC, utilizator, true);
     private final Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diag);
     private final Raport raport = new Raport(1, diag);
-    @Autowired
-    private DiagramaService diagramaService;
 
     @Test
     @Order(1)
@@ -499,7 +497,7 @@ class MoneyCallingSpringApplicationTests {
         //Adaugarea in service a unui utilizator
         utilizatorService.saveUtilizator(utilizatorServ);
         profilFinanciarService.saveProfilFinanciar(profilServ);
-        diagramaService.saveDiagrama(diagServ);
+        diagService.saveDiagrama(diagServ);
         cheltuialaService.saveCheltuiala(cheltuialaServ);
         raportService.saveRaport(raportServ);
 
@@ -555,23 +553,23 @@ class MoneyCallingSpringApplicationTests {
     @Order(20)
     public void testDiagramaService(){
         //testarea functiei deleteALL
-        diagramaService.deleteAll();
+        diagService.deleteAll();
         List<Diagrama> dlist = diagramaRepository.findAll();
         assertTrue(dlist.isEmpty());
 
         //Adaugarea in service a unei diagrame
         utilizatorService.saveUtilizator(utilizatorServ);
         profilFinanciarService.saveProfilFinanciar(profilServ);
-        diagramaService.saveDiagrama(diagServ);
+        diagService.saveDiagrama(diagServ);
         cheltuialaService.saveCheltuiala(cheltuialaServ);
         raportService.saveRaport(raportServ);
 
         //testare getall
-        List<Diagrama> list = diagramaService.getAllDiagrame();
+        List<Diagrama> list = diagService.getAllDiagrame();
         assertEquals(list.get(0).getId(), diagServ.getId());
 
         //testare getallbyutilizator
-        List<Diagrama> listu = diagramaService.getAllDiagrameByUtilizator(utilizatorServ);
+        List<Diagrama> listu = diagService.getAllDiagrameByUtilizator(utilizatorServ);
         assertFalse(listu.isEmpty());
 
         //testare getbyid
@@ -583,10 +581,15 @@ class MoneyCallingSpringApplicationTests {
         //testare findby data and user
         assertEquals(diagServ.getId(), diagService.findDiagramaByDataAndUser(10, 2000, 1).getId());
 
-        //testare deletebyid
-        diagramaService.stergeDiagramaById(diagServ.getId());
+        //testare diag activa
+        diagServ.setActiva(false);
+        diagService.seteazaDiagramaActiva(diagServ);
+        assertTrue(diagServ.isActiva(), "diagServ is active");
 
-        List<Diagrama> lista2 = diagramaService.getAllDiagrame();
+        //testare deletebyid
+        diagService.stergeDiagramaById(diagServ.getId());
+
+        List<Diagrama> lista2 = diagService.getAllDiagrame();
         assertTrue(lista2.isEmpty());
     }
 
@@ -606,7 +609,7 @@ class MoneyCallingSpringApplicationTests {
         //Adaugarea in service a unei cheltuieli
         utilizatorService.saveUtilizator(utilizatorServ);
         profilFinanciarService.saveProfilFinanciar(profilServ);
-        diagramaService.saveDiagrama(diagServ);
+        diagService.saveDiagrama(diagServ);
         cheltuialaService.saveCheltuiala(cheltuialaServ);
         raportService.saveRaport(raportServ);
 
@@ -640,7 +643,7 @@ class MoneyCallingSpringApplicationTests {
         //Adaugarea in service a unui raport
         utilizatorService.saveUtilizator(utilizatorServ);
         profilFinanciarService.saveProfilFinanciar(profilServ);
-        diagramaService.saveDiagrama(diagServ);
+        diagService.saveDiagrama(diagServ);
         cheltuialaService.saveCheltuiala(cheltuialaServ);
         raportService.saveRaport(raportServ);
 
@@ -649,8 +652,12 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(list.get(0).getId(), raportServ.getId());
 
         //testare sugerare chirie
-        //float sc = raportService.sugereazaChirieByVenit(profilServ.getVenit(), diagServ);
-        //assertEquals((25 * profilServ.getVenit())/100, sc);
+        Map<Cheltuiala.TipCheltuiala, Float> procente = new HashMap<>();
+        procente.put(Cheltuiala.TipCheltuiala.LOCUINTA, 45f);
+        diagServ.setProcenteCheltuieli(procente);
+        float sc = raportService.sugereazaChirieByVenit(profilServ.getVenit(), diagServ);
+        float procent = diagServ.getProcenteCheltuieli().get(Cheltuiala.TipCheltuiala.LOCUINTA) - 5;
+        assertEquals((procent * profilServ.getVenit())/100, sc);
 
         //testare sugerare rata by venit
         float rv = raportService.sugereazaRataByVenit(50000, 5);
@@ -663,14 +670,21 @@ class MoneyCallingSpringApplicationTests {
 
         //testare getbyid
         assertEquals(raportServ.getId(), raportService.getById(raportServ.getId()).get().getId());
-/*
-        //testare deletebydiagrama
-        raportService.deleteAllRapoarteByDiagrama(diagServ);
-        List<Raport> lista2 = raportService.getAllRapoarteByDiagrama(diagServ);
-        assertTrue(lista2.isEmpty());
 
-        raportService.saveRaport(raportServ);
-*/
+        //testare stockare get chirie propusa
+        raportService.stocheazaChiriePropusa(1, 750.0f);
+        Optional<Float> res = raportService.getChiriePropusa(1);
+        assertTrue(res.isPresent(), "the chiriePropusa is present");
+        assertEquals(750.0f, res.get(), "the value must be the same");
+
+        //testare elimina chirie propusa
+        raportService.eliminaChiriePropusa(1);
+        res = raportService.getChiriePropusa(1);
+        assertFalse(res.isPresent(), "the chiriePropusa must be deleted");
+
+        //testare deletebydiagrama
+
+
         //testare deletebyid
         raportService.stergeRaportById(raportServ.getId());
 
