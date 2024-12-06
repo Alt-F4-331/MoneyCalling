@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MyAccount.css';
 import { Link } from "react-router-dom";
-import logo from "/public/logo.png";
+import logo from  '../assets/logo.png';
 import profile_pic from "../assets/profile_pic.jpg";
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode'; 

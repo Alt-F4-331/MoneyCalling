@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './Help.css';
 import { Link } from "react-router-dom";
-import logo from "/public/logo.png";
+import logo from  '../assets/logo.png';
 import profile_pic from "../assets/profile_pic.jpg";
 
 const Help: React.FC = () => {

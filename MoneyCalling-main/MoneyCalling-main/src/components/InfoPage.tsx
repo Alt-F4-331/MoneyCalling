@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Importă useNavigate din react-router-dom
 import './InfoPage.css';
-import logo from '/public/logo.png'; 
+import logo from  '../assets/logo.png'; 
 
 const InfoPage: React.FC = () => {
     const navigate = useNavigate(); // Creează o instanță a funcției de navigare

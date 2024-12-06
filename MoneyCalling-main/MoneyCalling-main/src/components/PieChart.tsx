@@ -32,7 +32,7 @@ const PieChart: React.FC = () => {
       },
       title: {
         display: true,
-        text: 'Pie Chart Example',
+        text: ' ',
       },
     },
   };

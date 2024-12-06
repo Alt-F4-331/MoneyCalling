@@ -10,8 +10,8 @@
 
 .home-page {
   display: flex;
-  height: 100vh;
-  background-image: url('/public/fundal pc.png');
+  max-height: 100%;
+  background-image: url('/src/fundal-pc.png');
   background-size: cover;
   background-position: center;
   color: #FFFFFF;
@@ -112,6 +112,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.3s ease;
+  color: #ffffff;
 }
 
 .sidebar button:hover {
@@ -124,7 +125,6 @@
   color: #FFFFFF;
   font-size: 35px;
   font-weight: bold;
-  margin-bottom: 180px;
   width: auto;
   margin-top: 10px;
   height: auto;

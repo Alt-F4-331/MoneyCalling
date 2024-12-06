@@ -1,15 +1,26 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Importă useNavigate din react-router-dom
 import './WelcomePage.css';
-import logo from '/public/logo.png'; 
+import logo from '../assets/logo.png'; // Assuming you're in the src/components directory
+import fundalImage from '../assets/fundal_fp.png'; // Same for background image
+
 
 const WelcomePage: React.FC = () => {
     const navigate = useNavigate(); // Creează o instanță a funcției de navigare
 
+    // Inline style for background
+    const containerStyle = {
+        backgroundImage: `url(${fundalImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+    };
+
     return (
-        <div className="container">
+        <div className="container" style={containerStyle}>
             <div className="logo">
-                <img src={logo} alt="Logo" style={{ maxWidth: '120%', maxHeight: '120%' }} /> {/* Ajustează dimensiunea după necesități */}
+                <img src={logo} alt="Logo" style={{ maxWidth: '120%', maxHeight: '120%' }} />
             </div>
             <div className="text">
                 <h1>Where financial goals become reality</h1>

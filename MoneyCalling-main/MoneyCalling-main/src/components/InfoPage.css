@@ -1,6 +1,6 @@
 
 body {
-    background-color: #c9bef9;
+    background-image: url('../assets/fundal_fp.png'); /* Calea către imaginea ta */
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -38,7 +38,7 @@ body {
 }
 
 h1 {
-    font-size: 35px !important; /* Reduced font size for the header */
+    font-size: 50px !important; /* Reduced font size for the header */
     margin-bottom: 0; /* Remove bottom margin to eliminate gap */
     padding-right: 20px; /* Add space on the right to move it left */
     text-align: center; /* Center the header text */
@@ -47,19 +47,12 @@ h1 {
 }
 
 p {
-    font-size: 16px; /* Font size for paragraph */
+    font-size: 25px; /* Font size for paragraph */
     margin-top: 5px; /* Small margin above for separation from the header */
     margin-bottom: 40px; /* Margin below for spacing */
     text-align: center; /* Center text for the paragraph */
     margin-left: auto; /* Center paragraph */
     margin-right: auto; /* Center paragraph */
-}
-
-
-h1 {
-    background: linear-gradient(90deg, #3325b3, #bcaef8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 
@@ -75,8 +68,9 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #5a537d;
+    background-color: transparent;
     height: 50px;
+    color: #ffffff;
 }
 
 .home-button:hover {

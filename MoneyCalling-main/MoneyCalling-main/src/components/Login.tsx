@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import axios from 'axios';
-import logo from '/public/logo.png'; // Import logo
+import logo from  '../assets/logo.png'; // Import logo
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -20,11 +20,11 @@ const Login: React.FC = () => {
           });
           if (response.status === 200) {
               console.log('Login successful:', response.data);
-              const token = response.data.token; // Verific? dac? r?spunsul de la backend con?ine un câmp 'token'
+              const token = response.data.token; // Verific? dac? r?spunsul de la backend con?ine un cï¿½mp 'token'
               if (token) {
-                localStorage.setItem('token', token);  // Salveaz? token-ul în localStorage
+                localStorage.setItem('token', token);  // Salveaz? token-ul ï¿½n localStorage
               } else {
-                console.error("Token-ul nu a fost g?sit în r?spunsul serverului.");
+                console.error("Token-ul nu a fost g?sit ï¿½n r?spunsul serverului.");
               }
               navigate('/homepage');
           }

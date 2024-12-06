@@ -1,3 +1,4 @@
+
 .dashboard-page {
     display: flex;
     flex-direction: column;
@@ -5,6 +6,8 @@
     background-color: #0D0B2D;
     color: #FFFFFF;
     font-family: "Jockey One", sans-serif;
+    background-image: url('../assets/fundal_fp.png'); /* Calea către imaginea ta */
+
   }
   
   /* Bara de navigare */

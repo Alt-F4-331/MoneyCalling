@@ -1,11 +1,7 @@
-
 body {
     background-color: #c9bef9;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    color: white; /* Text color */
-    font-family: sans-serif !important; /* Change font to Jockey One */
+    color: white;
+    font-family: sans-serif !important;
     margin: 0;
     padding: 0;
     display: flex;
@@ -14,80 +10,81 @@ body {
 }
 
 .container {
-    display: flex; /* Split the container into two parts */
-    align-items: center; /* Center items vertically */
-    height: 100vh; /* Full height of the viewport */
-    position: relative; /* Allows absolute positioning for buttons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    width: 100%;
+    height: 100vh;
 }
 
 .logo {
-    flex: 1; /* Take half the space for the logo */
-    display: flex; /* Flexbox for centering */
-    justify-content: center; /* Center logo horizontally */
-    align-items: center; /* Center logo vertically */
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .text {
-    flex: 1; /* Take half the space for the text */
-    text-align: center; /* Center text in this container */
-    display: flex; /* Activează flexbox */
-    flex-direction: column; /* Direcția de organizare a elementelor */
-    justify-content: center; /* Centrează vertical textul */
-    height: 50%; /* Setează înălțimea secțiunii pentru a limita textul */
-    margin: auto; /* Centrează secțiunea */
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 50%;
+    margin: auto;
 }
 
 h1 {
-    font-size: 35px !important; /* Reduced font size for the header */
-    margin-bottom: 0; /* Remove bottom margin to eliminate gap */
-    padding-right: 20px; /* Add space on the right to move it left */
-    text-align: center; /* Center the header text */
-    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    font-size: 100px !important; /* Increased font size */
+    margin-bottom: 0;
+    padding-right: 50px;
+    text-align: center; /* Center the text */
+    white-space: nowrap; /* Prevent text from wrapping */
     line-height: 1.5;
+    background: linear-gradient(90deg, #3325b3, #bcaef8);
+    -webkit-background-clip: text; /* Use text clipping for webkit-based browsers */
+    background-clip: text; /* Standard property for background clip */
+    -webkit-text-fill-color: transparent; /* Makes text transparent to show background */
 }
 
 p {
-    font-size: 16px; /* Font size for paragraph */
-    margin-top: 5px; /* Small margin above for separation from the header */
-    margin-bottom: 40px; /* Margin below for spacing */
-    text-align: center; /* Center text for the paragraph */
-    margin-left: auto; /* Center paragraph */
-    margin-right: auto; /* Center paragraph */
+    font-size: 22px; /* Increased font size */
+    margin-top: 5px;
+    margin-bottom: 40px;
+    text-align: center;
+    margin-left: 20px;
+    margin-right: auto;
 }
 
 .buttons {
     display: flex;
-    gap: 10px; /* Space between buttons */
-    position: absolute; /* Position buttons in the top right corner */
-    top: 20px; /* Distance from the top */
-    right: 20px; /* Distance from the right */
+    gap: 10px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
 
 button {
-    padding: 6px 15px; /* Smaller vertical size and longer horizontal size */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Round corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 14px; /* Smaller text size */
-    min-width: 110px; /* Ensure minimum width for buttons */
-    height: 35px; /* Specify height to control vertical size */
+    padding: 6px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 110px;
+    height: 35px;
 }
 
 .login-button {
-    background-color: #3325b3; /* Color for login button */
-    color: white; /* Text color */
+    background-color: transparent;
+    color: white;
     margin-top: 10px;
 }
 
 .signup-button {
-    background-color: transparent; /* No background color */
-    color: #ffffff; /* Text color for sign-up button */
-}
-
-h1 {
-    background: linear-gradient(90deg, #3325b3, #bcaef8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background-color: transparent;
+    color: #ffffff;
 }
 
 button {
@@ -95,7 +92,6 @@ button {
 }
 
 button:hover {
-    transform: scale(1.05); /* Mărește butonul la hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adaugă umbră */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
-

@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import './HomePage.css';
-import logo from "/public/logo.png";
+import logo from  '../assets/logo.png';
 import profile_pic from "../assets/profile_pic.jpg";
 import PieChart from './PieChart';
 import { Link } from 'react-router-dom';
+
 
 const HomePage: React.FC = () => {
 
@@ -27,6 +28,49 @@ const HomePage: React.FC = () => {
   const [selectedInstallment, setSelectedInstallment] = useState<number | null>(null);
   const [recommendedTravelSum, setRecommendedTravelSum] = useState<number>(0);
   const [recommendedAccommodationSum, setRecommendedAccommodationSum] = useState<number>(0);
+
+  const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
+  const [subscriptions, setSubscriptions] = useState<{ name: string; price: number }[]>([]);
+  const [showAddSubscriptionPopup, setShowAddSubscriptionPopup] = useState(false);
+  const [newSubscriptionName, setNewSubscriptionName] = useState('');
+  const [newSubscriptionPrice, setNewSubscriptionPrice] = useState<number | ''>('');
+
+
+  const handleOpenSubscriptionPopup = () => {
+    setShowSubscriptionPopup(true);
+  };
+  
+  const handleCloseSubscriptionPopup = () => {
+    setShowSubscriptionPopup(false);
+  };
+
+   const handleOpenAddSubscriptionPopup = () => {
+    setShowAddSubscriptionPopup(true);
+  };
+
+  const handleCloseAddSubscriptionPopup = () => {
+    setShowAddSubscriptionPopup(false);
+    setNewSubscriptionName('');
+    setNewSubscriptionPrice('');
+  };
+
+  // Handle adding a new subscription
+const handleAddSubscription = (e: React.FormEvent) => {
+  e.preventDefault();
+  if (newSubscriptionName && newSubscriptionPrice) {
+    setSubscriptions([...subscriptions, { name: newSubscriptionName, price: newSubscriptionPrice }]);
+    setNewSubscriptionName('');
+    setNewSubscriptionPrice('');
+  }
+};
+
+// Handle deleting a subscription
+const handleDeleteSubscription = (index: number) => {
+  const updatedSubscriptions = subscriptions.filter((_, i) => i !== index);
+  setSubscriptions(updatedSubscriptions);
+};
+
+
 
   // Funcții pentru deschiderea și închiderea pop-up-ului pentru Holiday Report
 const handleOpenHolidayPopup = () => {
@@ -124,7 +168,7 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
       <aside className='sidebar'>
         <button onClick={handleOpenRentPopup}>Generate Rent Budget Report</button>
         <button onClick={handleOpenInstallmentsPopup}>Generate Installments Report</button>
-        <button>Generate Subscription Report</button>
+        <button onClick={handleOpenSubscriptionPopup}>Generate Subscription Report</button>
         <button>Generate Savings Report</button>
         <button onClick={handleOpenHolidayPopup}>Generate Holiday Report</button>
         <button className='add-button'>+</button>
@@ -296,6 +340,56 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
   </div>
 )}
 
+{showSubscriptionPopup && (
+  <div className='popup-overlay' onClick={handleCloseSubscriptionPopup}>
+    <div className='popup-container subscription-popup' onClick={(e) => e.stopPropagation()}>
+      <h2>Subscription Report</h2>
+
+      {/* Form for adding a new subscription */}
+      <form onSubmit={handleAddSubscription} className="add-subscription-form">
+        <div className="form-group">
+          <label htmlFor="serviceName">Service Name:</label>
+          <input
+            type="text"
+            id="serviceName"
+            value={newSubscriptionName}
+            onChange={(e) => setNewSubscriptionName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="servicePrice">Price per month:</label>
+          <input
+            type="number"
+            id="servicePrice"
+            value={newSubscriptionPrice}
+            onChange={(e) => setNewSubscriptionPrice(parseFloat(e.target.value))}
+            required
+          />
+        </div>
+        <button type="submit">Add Subscription</button>
+      </form>
+
+      {/* Display existing subscriptions */}
+      <div className="subscription-list">
+        {subscriptions.length === 0 ? (
+          <p>No subscriptions</p>
+        ) : (
+          subscriptions.map((subscription, index) => (
+            <div key={index} className="subscription-item">
+              <span>{subscription.name} - {subscription.price}€/m</span>
+              <button onClick={() => handleDeleteSubscription(index)} className="delete-submit-button">Delete</button>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="subscription-actions">
+        <button onClick={handleCloseSubscriptionPopup}>Close</button>
+      </div>
+    </div>
+  </div>
+)}
       
     </div>
   );
