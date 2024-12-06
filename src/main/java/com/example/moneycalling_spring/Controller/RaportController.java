@@ -15,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -168,4 +169,31 @@ public class RaportController {
             return new ResponseEntity<>("Chiria propusă a fost respinsă.", HttpStatus.OK);
         }
     }
+    @GetMapping("/sugereaza-vacanta")
+    @Operation(summary = "Sugerează alocarea bugetului pentru vacanță")
+    public ResponseEntity<Map<String, Float>> sugereazaBugetVacanta(@RequestParam int nrZile ,@RequestParam float bugetTotal) {
+        if (bugetTotal <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Buget invalid
+        }
+
+        // Distribuția procentuală
+        float procentTransport = 0.3f; // 30% transport
+        float procentCazare = 0.4f;    // 40% cazare
+        float procentAltele = 0.3f;    // 30% alte cheltuieli
+
+        // Calculul sumelor
+        float sumaTransport = bugetTotal * procentTransport;
+        float sumaCazare = bugetTotal * procentCazare/ nrZile;
+        float sumaAltele = bugetTotal * procentAltele;
+
+        // Crearea unui HashMap pentru rezultate
+        Map<String, Float> bugetDistribuit = new HashMap<>();
+        bugetDistribuit.put("Transport", sumaTransport);
+        bugetDistribuit.put("Cazare", sumaCazare);
+        bugetDistribuit.put("Altele", sumaAltele);
+
+        // Returnarea rezultatelor
+        return new ResponseEntity<>(bugetDistribuit, HttpStatus.OK);
+    }
+
 }

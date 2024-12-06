@@ -74,4 +74,3 @@ public class ProfilFinanciarController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-

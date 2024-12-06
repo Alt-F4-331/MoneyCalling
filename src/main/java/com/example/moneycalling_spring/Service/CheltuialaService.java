@@ -33,7 +33,7 @@ public class CheltuialaService {
 
 
     //Metoda care adauga o noua cheltuiala
-    public Cheltuiala saveCheltuiala(Cheltuiala cheltuiala) {
+    public Cheltuiala saveCheltuiala(@Valid Cheltuiala cheltuiala) {
         return cheltuialaRepository.save(cheltuiala);
         //aceasta metoda poate fi folosita si pentru update:
         //-daca este creata o noua cheltuiala cu un id nou il creeaza

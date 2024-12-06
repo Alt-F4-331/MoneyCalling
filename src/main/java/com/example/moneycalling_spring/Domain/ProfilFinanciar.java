@@ -2,15 +2,24 @@ package com.example.moneycalling_spring.Domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.*;
+
 
 @Entity
 @Table(name = "ProfilFinanciar")
-public class ProfilFinanciar extends Entitate{
+public class ProfilFinanciar extends Entitate {
 
+    @Min(value = 0, message = "Venitul trebuie să fie un număr pozitiv.")
     private float venit;
 
+    @NotBlank(message = "Domiciliul nu poate fi gol.")
     private String domiciliu;
+
+    @Min(value = 0, message = "Containerul de economii trebuie să fie un număr pozitiv.")
     private float containerEconomii;
+
+    @Min(value = 1, message = "Data salarului trebuie sa fie o zi.")
+    @Max(value = 28, message = "Data salarului trebuie sa fie o zi.")
     private int dataSalar;
 
     public ProfilFinanciar(int id, float venit, String domiciliu, float containerEconomii, int dataSalar) {

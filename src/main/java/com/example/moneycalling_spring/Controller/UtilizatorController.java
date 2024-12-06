@@ -14,7 +14,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +83,7 @@ public class UtilizatorController {
         Utilizator savedUtilizator = utilizatorService.saveUtilizator(utilizator);
         return new ResponseEntity<>(savedUtilizator, HttpStatus.CREATED);
     }//Metoda primeste datele utilizatorului in corpul solicitarii sub forma de JSON
-     //status HTTP  e 201
+    //status HTTP  e 201
 
     @Operation(summary = "Afiseaza toti utilizatorii")
     @GetMapping
