@@ -70,11 +70,14 @@ public class Diagrama extends Entitate {
         this.procenteCheltuieli = procenteCheltuieli;
     }
 
-    public void initializeProcente(Diagrama diagrama){
+    public void initializeProcente(Diagrama diagrama) {
         for (Cheltuiala.TipCheltuiala tip : Cheltuiala.TipCheltuiala.values()) {
-            diagrama.getProcenteCheltuieli().put(tip, tip.getProcent());
+            if (!tip.equals(Cheltuiala.TipCheltuiala.CONTAINER)) { // Exclude CONTAINER
+                diagrama.getProcenteCheltuieli().put(tip, tip.getProcent());
+            }
         }
     }
+
 
     public void setUser(Utilizator user) {
         this.user = user;

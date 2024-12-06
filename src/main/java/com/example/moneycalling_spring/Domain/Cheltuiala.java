@@ -3,10 +3,13 @@ package com.example.moneycalling_spring.Domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.hibernate.annotations.Check;
+
 import java.util.Objects;
 
 @Entity
 @Table(name = "cheltuiala")
+@Check(constraints = "tip_cheltuiala IN ('LOCUINTA', 'ALIMENTATIE', 'TRANSPORT', 'DIVERTISMENT', 'EDUCATIE', 'ECONOMII', 'SANATATE', 'IMBRACAMINTE', 'CONTAINER')")
 public class Cheltuiala extends Entitate {
 
      @NotBlank(message = "Numele cheltuielii nu poate fi gol.")
@@ -95,7 +98,9 @@ public class Cheltuiala extends Entitate {
           EDUCATIE(5f),
           ECONOMII(10f),
           SANATATE(10f),
-          IMBRACAMINTE(5f);
+          IMBRACAMINTE(5f),
+          CONTAINER(0f);
+
 
           private float procent; // Procentul asociat acestui tip
 

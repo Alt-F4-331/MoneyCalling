@@ -1,9 +1,6 @@
 package com.example.moneycalling_spring.Controller;
 
-import com.example.moneycalling_spring.Domain.Cheltuiala;
-import com.example.moneycalling_spring.Domain.Diagrama;
-import com.example.moneycalling_spring.Domain.Raport;
-import com.example.moneycalling_spring.Domain.Utilizator;
+import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.CheltuialaService;
 import com.example.moneycalling_spring.Service.DiagramaService;
@@ -171,9 +168,18 @@ public class RaportController {
     }
     @GetMapping("/sugereaza-vacanta")
     @Operation(summary = "Sugerează alocarea bugetului pentru vacanță")
-    public ResponseEntity<Map<String, Float>> sugereazaBugetVacanta(@RequestParam int nrZile ,@RequestParam float bugetTotal) {
+    public ResponseEntity<?> sugereazaBugetVacanta(@RequestHeader("Authorization") String token,@RequestParam int nrZile ,@RequestParam float bugetTotal) {
+
+
+        int userId = jwtutil.getUserIdByToken(token);
+        Utilizator utilizator = utilizatorService.getById(userId).get();
+        float containerEconomii = utilizator.getProfil().getContainerEconomii();
+
         if (bugetTotal <= 0) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Buget invalid
+            return new ResponseEntity<>("Bugetul este negativ",HttpStatus.BAD_REQUEST); // Buget invalid
+        }
+        if (bugetTotal > containerEconomii) {
+            return new ResponseEntity<>("Bugetul trebuie sa fie mai mic decat suma din containerul de economii",HttpStatus.BAD_REQUEST); // Buget invalid
         }
 
         // Distribuția procentuală
@@ -192,8 +198,40 @@ public class RaportController {
         bugetDistribuit.put("Cazare", sumaCazare);
         bugetDistribuit.put("Altele", sumaAltele);
 
+        raportService.stocheazaChiriePropusa(userId, bugetTotal);
+
         // Returnarea rezultatelor
         return new ResponseEntity<>(bugetDistribuit, HttpStatus.OK);
+    }
+
+    @PostMapping("/confirma-vacanta")
+    @Operation(summary = "confirma sau respinge sumele pentru vacanta")
+    public ResponseEntity<String> confirmaVacanta(@RequestHeader("Authorization") String token, @RequestParam boolean confirm) {
+        int userId = jwtutil.getUserIdByToken(token);
+        Utilizator utilizator = utilizatorService.getById(userId).get();  // No exception handling
+
+        Optional<Float> chiriePropusaOptional = raportService.getChiriePropusa(userId);
+        if (chiriePropusaOptional.isEmpty()) {
+            return new ResponseEntity<>("Nu există o chirie propusă în așteptare.", HttpStatus.BAD_REQUEST);
+        }
+        float bugetPropus = chiriePropusaOptional.get();
+
+        Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();  // No exception handling
+
+        if (confirm) {
+            Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "vacanta", bugetPropus, Cheltuiala.TipCheltuiala.CONTAINER, diagrama);
+            cheltuialaService.saveCheltuiala(ch);
+
+            ProfilFinanciar profilFinanciar = utilizator.getProfil();
+            profilFinanciar.setContainerEconomii(profilFinanciar.getContainerEconomii() - bugetPropus);
+            utilizator.setProfil(profilFinanciar);
+            utilizatorService.saveUtilizator(utilizator);
+
+            return new ResponseEntity<>("Suma propusă pentru vacanta a fost acceptată și adăugată.", HttpStatus.OK);
+        } else {
+            //raportService.removeChiriePropusa(userId);
+            return new ResponseEntity<>("Suma propusă pentru vacanta a fost respinsă.", HttpStatus.OK);
+        }
     }
 
 }
