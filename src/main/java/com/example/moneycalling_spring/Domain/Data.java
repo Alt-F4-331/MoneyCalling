@@ -3,6 +3,7 @@ package com.example.moneycalling_spring.Domain;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
+@ValidDate
 public class Data {
     private int zi;
     private int luna;

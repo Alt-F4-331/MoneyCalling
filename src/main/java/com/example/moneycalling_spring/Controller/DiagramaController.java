@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class DiagramaController {
 
     @Operation(summary = "Creeaza o noua diagrama")
     @PostMapping
-    public ResponseEntity<Diagrama> createDiagrama(@RequestBody DiagramaRequestDTO diagramaRequestDTO) {
+    public ResponseEntity<Diagrama> createDiagrama(@RequestBody @Valid DiagramaRequestDTO diagramaRequestDTO) {
         Optional<Utilizator> optionalUser = utilizatorService.getById(diagramaRequestDTO.getUserId()) ;
         // Verificăm dacă utilizatorul există
         if (optionalUser.isEmpty()) {

@@ -3,6 +3,9 @@ package com.example.moneycalling_spring.Domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
 import java.util.List;
 
 /*
@@ -12,19 +15,33 @@ import java.util.List;
 @Entity
 @Table(name="Utilizator")//Tabela din baza de date
 public class Utilizator extends Entitate {
+    @NotBlank(message = "Numele nu poate fi gol.")
+    @Size(max = 50, message = "Numele nu poate avea mai mult de 50 de caractere.")
     private String nume;
+    @NotBlank(message = "Prenumele nu poate fi gol.")
+    @Size(max = 50, message = "Prenumele nu poate avea mai mult de 50 de caractere.")
     private String prenume;
+
+    @NotBlank(message = "Parola nu poate fi goală.")
+    @Size(min = 8, message = "Parola trebuie să aibă cel puțin 8 caractere.")
     private String parola;
+
+    @NotBlank(message = "Email-ul nu poate fi gol.")
+    @Email(message = "Email-ul trebuie să fie valid.")
     private String email;
     @Embedded
+    @Valid
     private Data dataNasterii;
 
-
+    @NotBlank(message = "Sexul nu poate fi gol.")
+    @Pattern(regexp = "Male|Female", message = "Sexul trebuie să fie fie 'Male', fie 'Female'.")
     private String sex;
-
+    @NotBlank(message = "Numărul de telefon nu poate fi gol.")
+    @Pattern(regexp = "\\+?\\d{10,15}", message = "Numărul de telefon trebuie să fie valid și să conțină între 10 și 15 cifre.")
     private String numarTelefon;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profil_id", referencedColumnName = "id")
+    @Valid
     private ProfilFinanciar profil;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Legătura cu Diagrama
@@ -35,7 +52,7 @@ public class Utilizator extends Entitate {
 
     }
 
-    public Utilizator(int id, String nume, String prenume, String parola, String email, Data dataNasterii,String sex, String numarTelefon ,ProfilFinanciar Profil) {
+    public Utilizator(int id, String nume, String prenume, String parola, String email,Data dataNasterii, String sex, String numarTelefon ,ProfilFinanciar Profil) {
         super(id);
         this.nume = nume;
         this.prenume = prenume;

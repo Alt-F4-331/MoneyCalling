@@ -1,4 +1,4 @@
-package com.example.moneycalling_spring.Controller;
+package  com.example.moneycalling_spring.Controller;
 
 import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Domain.Utilizator;
@@ -10,6 +10,7 @@ import com.example.moneycalling_spring.dto.LoginRequestDTO;
 import com.example.moneycalling_spring.dto.ProfilFinanciarDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class UtilizatorController {
         Optional<Utilizator> utilizator=utilizatorService.getByEmail(email);
         return utilizator.map(ResponseEntity::ok).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    //permite cautarea unui user dupa emailk
+    //permite cautarea unui user dupa email
     //foloseste parametrul email di URL(ex:/api/utilizatori/email?email=test@example.com)
     //daca user-ul e gasit,returneaza ResponseEntity.ok(utilizator)(cod de status HTTP E 200)
     //daca nu e gasit,returneaza Https.Status.NOT_FOUND(400)
@@ -79,7 +80,7 @@ public class UtilizatorController {
 
     @Operation(summary = "Adauga un utilizator")
     @PostMapping
-    public ResponseEntity<Utilizator> createUtilizator(@RequestBody Utilizator utilizator) {
+    public ResponseEntity<Utilizator> createUtilizator(@Valid @RequestBody Utilizator utilizator) {
         Utilizator savedUtilizator = utilizatorService.saveUtilizator(utilizator);
         return new ResponseEntity<>(savedUtilizator, HttpStatus.CREATED);
     }//Metoda primeste datele utilizatorului in corpul solicitarii sub forma de JSON
@@ -158,7 +159,7 @@ public class UtilizatorController {
     @Operation(summary = "Actualizeaza profil financiar al utilizatorului logat")
     public ResponseEntity<ProfilFinanciar> updateProfilFinanciar(
             @RequestHeader("Authorization") String token,
-            @RequestBody ProfilFinanciarDto profilFinanciarNou) {
+            @RequestBody @Valid ProfilFinanciarDto profilFinanciarNou) {
 
         System.out.println("Token primit: " + token); // Adaugă log pentru a verifica dacă token-ul este corect
 
@@ -203,4 +204,3 @@ public class UtilizatorController {
 
 
 }
-

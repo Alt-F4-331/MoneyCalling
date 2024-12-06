@@ -111,6 +111,15 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.15.2</version> <!-- Sau ultima versiune disponibilă -->
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>3.0.2</version>
+        </dependency>
 
 
 

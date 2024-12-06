@@ -2,6 +2,7 @@ package com.example.moneycalling_spring.Service;
 
 import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Repository.UtilizatorRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class UtilizatorService {
         this.utilrepo=utilizatorRepository;
     }
 
-    public Utilizator saveUtilizator(Utilizator utilizator)
+    public Utilizator saveUtilizator(@Valid Utilizator utilizator)
     {
 
         return utilrepo.save(utilizator);

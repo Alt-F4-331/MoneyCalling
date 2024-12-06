@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,7 @@ public class Diagrama extends Entitate {
     @Column(name = "activa")
     private Boolean activa; // Indică dacă diagrama este activă
 
-    public Diagrama(int id, Data data, Utilizator User, boolean activ) {
+    public Diagrama(int id, @Valid Data data,@Valid Utilizator User, boolean activ) {
         super(id);
         this.dataDiagrama = data;
         this.user = User;

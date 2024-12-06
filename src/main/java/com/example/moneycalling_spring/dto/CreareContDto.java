@@ -13,7 +13,7 @@ public class CreareContDto {
     private String sex;
     private String numarTelefon;
 
-    public CreareContDto(String nume, String prenume, String parola, String email, Data dataNasterii, String sex, String numarTelefon) {
+    public CreareContDto(String nume, String prenume, String parola, String email, @Valid Data dataNasterii, String sex, String numarTelefon) {
         this.nume = nume;
         this.prenume = prenume;
         this.parola = parola;

@@ -27,16 +27,13 @@ public class RaportController {
     private final RaportService raportService;
     private final UtilizatorService utilizatorService;
     private final DiagramaService diagramaService;
-
     private final CheltuialaService cheltuialaService;
-
     private final JwtUtil jwtutil;
 
     @Autowired
     public RaportController(RaportService raportService, UtilizatorService utilizatorService, DiagramaService diagramaService, CheltuialaService cheltuialaService, JwtUtil jwtutil) {
         this.raportService = raportService;
         this.utilizatorService = utilizatorService;
-
         this.diagramaService = diagramaService;
         this.cheltuialaService = cheltuialaService;
         this.jwtutil = jwtutil;
@@ -46,9 +43,7 @@ public class RaportController {
     @PostMapping
     @Operation(summary = "adauga un nou raport")
     public ResponseEntity<RaportRequestDTO> saveRaport(@RequestBody RaportRequestDTO dto) {
-        Diagrama diagrama = diagramaService.getById(dto.getIdDiagrama())
-                .orElseThrow(() -> new IllegalArgumentException("ID Diagrama invalid: " + dto.getIdDiagrama()));
-
+        Diagrama diagrama = diagramaService.getById(dto.getIdDiagrama()).get();  // No exception handling
         Raport raport = RaportRequestDTO.mapToEntity(dto, diagrama);
         Raport savedRaport = raportService.saveRaport(raport);
 
@@ -68,9 +63,7 @@ public class RaportController {
     @GetMapping("/diagrama/{idDiagrama}")
     @Operation(summary = "returneaza toate rapoartele dupa diagrama")
     public ResponseEntity<List<RaportRequestDTO>> getAllRapoarteByIdDiagrama(@PathVariable int idDiagrama) {
-        Diagrama diagrama = diagramaService.getById(idDiagrama)
-                .orElseThrow(() -> new IllegalArgumentException("ID Diagrama invalid: " + idDiagrama));
-
+        Diagrama diagrama = diagramaService.getById(idDiagrama).get();  // No exception handling
         List<Raport> rapoarte = raportService.getAllRapoarteByDiagrama(diagrama);
 
         List<RaportRequestDTO> responseDtos = rapoarte.stream()
@@ -84,9 +77,7 @@ public class RaportController {
     @DeleteMapping("/diagrama/{idDiagrama}")
     @Operation(summary = "sterge toate rapoartele dupa diagrama")
     public ResponseEntity<Void> deleteAllRapoarteByIdDiagrama(@PathVariable int idDiagrama) {
-        Diagrama diagrama = diagramaService.getById(idDiagrama)
-                .orElseThrow(() -> new IllegalArgumentException("ID Diagrama invalid: " + idDiagrama));
-
+        Diagrama diagrama = diagramaService.getById(idDiagrama).get();  // No exception handling
         raportService.deleteAllRapoarteByDiagrama(diagrama);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -94,149 +85,87 @@ public class RaportController {
     // Endpoint pentru sugerarea chiriei pe baza venitului
     @GetMapping("/sugereaza-chirie")
     @Operation(summary = "Sugerează chiria pe baza venitului")
-    public ResponseEntity<Float> sugereazaChirie(@RequestHeader ("Authorization") String token) {
+    public ResponseEntity<Float> sugereazaChirie(@RequestHeader("Authorization") String token) {
         int userId = jwtutil.getUserIdByToken(token);
-        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
-        if (utilizatorOptional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        Utilizator utilizator = utilizatorOptional.get();
+        Utilizator utilizator = utilizatorService.getById(userId).get();  // No exception handling
         float venit = utilizator.getProfil().getVenit();
 
+        Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();  // No exception handling
 
-
-        Optional<Diagrama> diagramaOptional = diagramaService.getDiagramaActivaByUtilizator(utilizator);
-        if (diagramaOptional.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        Diagrama diagrama = diagramaOptional.get();
-
-        float chirieSugerata = raportService.sugereazaChirieByVenit(venit,diagrama);
+        float chirieSugerata = raportService.sugereazaChirieByVenit(venit, diagrama);
         return new ResponseEntity<>(chirieSugerata, HttpStatus.OK);
     }
-
-
 
     // Endpoint pentru sugerarea ratei pe baza sumei și numărului de ani
     @GetMapping("/sugerseaza-rata")
     @Operation(summary = "Sugerează rata pe baza sumei și numărului de ani")
-    public ResponseEntity<Float> sugereazaRata(
-            @RequestParam float suma,
-            @RequestParam int ani) {
+    public ResponseEntity<Float> sugereazaRata(@RequestParam float suma, @RequestParam int ani) {
         float rataSugerata = raportService.sugereazaRataByVenit(suma, ani);
         return new ResponseEntity<>(rataSugerata, HttpStatus.OK);
     }
 
-
     @PostMapping("/initiaza-chirie")
     @Operation(summary = "Inițiază procesul pentru adăugarea chiriei")
-    public ResponseEntity<String> initiazaChirie(
-            @RequestHeader("Authorization") String token,
-            @RequestBody float chiriePropusa) {
-
-        // Extrage ID-ul utilizatorului din token
+    public ResponseEntity<String> initiazaChirie(@RequestHeader("Authorization") String token, @RequestBody float chiriePropusa) {
         int userId = jwtutil.getUserIdByToken(token);
-        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
-        if (utilizatorOptional.isEmpty()) {
-            return new ResponseEntity<>("Utilizatorul nu a fost găsit.", HttpStatus.NOT_FOUND);
-        }
-        Utilizator utilizator = utilizatorOptional.get();
+        Utilizator utilizator = utilizatorService.getById(userId).get();  // No exception handling
         float venit = utilizator.getProfil().getVenit();
 
-        // Obține diagrama activă
-        Optional<Diagrama> diagramaOptional = diagramaService.getDiagramaActivaByUtilizator(utilizator);
-        if (diagramaOptional.isEmpty()) {
-            return new ResponseEntity<>("Diagrama activă nu a fost găsită.", HttpStatus.NOT_FOUND);
-        }
-        Diagrama diagrama = diagramaOptional.get();
+        Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();  // No exception handling
 
-        // Obține suma sugerată pentru chirie
         float chirieSugerata = raportService.sugereazaChirieByVenit(venit, diagrama);
 
-        // Obține procentul maxim permis pentru locuință
-        Float procentMaximLocuinta = diagrama.getProcenteCheltuieli()
-                .getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
+        // Verificare fără excepții, doar returnează mesaj
+        Float procentMaximLocuinta = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
         float sumaMaximaLocuinta = (venit * procentMaximLocuinta) / 100;
 
         if (chiriePropusa > sumaMaximaLocuinta) {
-            return new ResponseEntity<>(
-                    "Chiria propusă depășește limita maximă permisă pentru locuință! "
-                            + "Maxim permis: " + sumaMaximaLocuinta,
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Chiria propusă depășește limita maximă permisă pentru locuință! Maxim permis: " + sumaMaximaLocuinta, HttpStatus.BAD_REQUEST);
         }
 
         if (chiriePropusa > chirieSugerata) {
-            // Stocăm chiria propusă pentru utilizator în sesiune (poți folosi un cache sau o mapare simplă în memorie)
             raportService.stocheazaChiriePropusa(userId, chiriePropusa);
-            return new ResponseEntity<>(
-                    "Chiria propusă depășește suma sugerată de " + chirieSugerata
-                            + ". Continuați? Apelați endpoint-ul /confirma-chirie pentru a confirma sau refuza.",
-                    HttpStatus.OK);
+            return new ResponseEntity<>("Chiria propusă depășește suma sugerată de " + chirieSugerata + ". Continuați? Apelați endpoint-ul /confirma-chirie pentru a confirma sau refuza.", HttpStatus.OK);
         }
 
-        // Salvează chiria
-        Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(),
-                "chirie", chiriePropusa, Cheltuiala.TipCheltuiala.LOCUINTA, diagrama);
+        Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "chirie", chiriePropusa, Cheltuiala.TipCheltuiala.LOCUINTA, diagrama);
         cheltuialaService.saveCheltuiala(ch);
-        Float procentRamas = diagrama.getProcenteCheltuieli()
-                .getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
+        Float procentRamas = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
 
-
-        float procentNou= procentRamas - (chiriePropusa/ utilizator.getProfil().getVenit()) *100;//se calculeaza procentul ramas,dupa cheltuiala
+        float procentNou = procentRamas - (chiriePropusa / utilizator.getProfil().getVenit()) * 100;
 
         diagrama.getProcenteCheltuieli().put(Cheltuiala.TipCheltuiala.LOCUINTA, procentNou);
         diagramaService.saveDiagrama(diagrama);
         return new ResponseEntity<>("Chiria propusă este acceptată automat.", HttpStatus.OK);
     }
+
     @PostMapping("/confirma-chirie")
     @Operation(summary = "Confirmă sau respinge chiria propusă")
-    public ResponseEntity<String> confirmaChirie(
-            @RequestHeader("Authorization") String token,
-            @RequestParam boolean confirm) {
-
-        // Extrage ID-ul utilizatorului din token
+    public ResponseEntity<String> confirmaChirie(@RequestHeader("Authorization") String token, @RequestParam boolean confirm) {
         int userId = jwtutil.getUserIdByToken(token);
-        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
-        if (utilizatorOptional.isEmpty()) {
-            return new ResponseEntity<>("Utilizatorul nu a fost găsit.", HttpStatus.NOT_FOUND);
-        }
-        Utilizator utilizator = utilizatorOptional.get();
+        Utilizator utilizator = utilizatorService.getById(userId).get();  // No exception handling
 
-        // Recuperăm chiria propusă din context (stocată anterior)
         Optional<Float> chiriePropusaOptional = raportService.getChiriePropusa(userId);
         if (chiriePropusaOptional.isEmpty()) {
             return new ResponseEntity<>("Nu există o chirie propusă în așteptare.", HttpStatus.BAD_REQUEST);
         }
         float chiriePropusa = chiriePropusaOptional.get();
 
-        // Obține diagrama activă
-        Optional<Diagrama> diagramaOptional = diagramaService.getDiagramaActivaByUtilizator(utilizator);
-        if (diagramaOptional.isEmpty()) {
-            return new ResponseEntity<>("Diagrama activă nu a fost găsită.", HttpStatus.NOT_FOUND);
-        }
-        Diagrama diagrama = diagramaOptional.get();
+        Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();  // No exception handling
 
         if (confirm) {
-            // Salvează chiria dacă utilizatorul confirmă
-            Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(),
-                    "chirie", chiriePropusa, Cheltuiala.TipCheltuiala.LOCUINTA, diagrama);
+            Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "chirie", chiriePropusa, Cheltuiala.TipCheltuiala.LOCUINTA, diagrama);
             cheltuialaService.saveCheltuiala(ch);
-            Float procentRamas = diagrama.getProcenteCheltuieli()
-                    .getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
+            Float procentRamas = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
 
-
-            float procentNou= procentRamas - (chiriePropusa/ utilizator.getProfil().getVenit()) *100;//se calculeaza procentul ramas,dupa cheltuiala
+            float procentNou = procentRamas - (chiriePropusa / utilizator.getProfil().getVenit()) * 100;
 
             diagrama.getProcenteCheltuieli().put(Cheltuiala.TipCheltuiala.LOCUINTA, procentNou);
             diagramaService.saveDiagrama(diagrama);
-
-            // Ștergem contextul chiriei propuse
-            raportService.eliminaChiriePropusa(userId);
-            return new ResponseEntity<>("Chiria propusă a fost acceptată și salvată.", HttpStatus.OK);
+            return new ResponseEntity<>("Chiria propusă a fost acceptată și adăugată.", HttpStatus.OK);
         } else {
-            // Dacă utilizatorul refuză, ștergem contextul chiriei propuse
-            raportService.eliminaChiriePropusa(userId);
-            return new ResponseEntity<>("Chiria propusă a fost refuzată.", HttpStatus.OK);
+            //raportService.removeChiriePropusa(userId);
+            return new ResponseEntity<>("Chiria propusă a fost respinsă.", HttpStatus.OK);
         }
     }
 }

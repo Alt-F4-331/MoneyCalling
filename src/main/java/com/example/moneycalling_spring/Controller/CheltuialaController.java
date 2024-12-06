@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.moneycalling_spring.Domain.Diagrama;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,12 +40,12 @@ public class CheltuialaController {
     {
         Optional<Cheltuiala> cheltuiala = cheltuialaService.getById(id);
         return cheltuiala.map(ResponseEntity::ok)
-        .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     @Operation(summary = "Adauga o noua cheltuiala pentru diagrama")
     @PostMapping
     public ResponseEntity<?> createCheltuiala(@RequestHeader("Authorization") String token,
-                                              @RequestBody CheltuialaRequestDTO chDTO) {
+                                              @RequestBody @Valid CheltuialaRequestDTO chDTO) {
 
         int userId = jwtUtil.getUserIdByToken(token);
 

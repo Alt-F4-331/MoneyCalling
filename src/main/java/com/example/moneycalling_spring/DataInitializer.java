@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+/*
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -26,5 +27,5 @@ public class DataInitializer implements CommandLineRunner {
         utilizatorRepository.save(utilizator);
         //cheltuialaRepository.save(cheltuiala);
     }
-}
+}*/
 

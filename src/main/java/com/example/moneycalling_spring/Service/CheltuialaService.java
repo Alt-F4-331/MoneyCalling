@@ -7,6 +7,8 @@ import com.example.moneycalling_spring.dto.CheltuialaRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.moneycalling_spring.Domain.Diagrama;
+
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
