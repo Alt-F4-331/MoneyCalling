@@ -201,7 +201,7 @@ public class RaportController {
         raportService.stocheazaChiriePropusa(userId, bugetTotal);
 
         // Returnarea rezultatelor
-        return new ResponseEntity<>(bugetDistribuit, HttpStatus.OK);
+        return new ResponseEntity<>("Bugetul propus este:"+ bugetDistribuit+"Doriti sa continuati?Apelați endpoint-ul /confirma-vacanta pentru a confirma sau refuza.", HttpStatus.OK);
     }
 
     @PostMapping("/confirma-vacanta")
