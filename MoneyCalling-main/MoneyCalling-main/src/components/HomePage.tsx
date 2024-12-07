@@ -46,10 +46,6 @@ const HomePage: React.FC = () => {
     setShowSubscriptionPopup(false);
   };
 
-<<<<<<< HEAD
-  const handleOpenAddSubscriptionPopup = () => {
-=======
-   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const handleOpenAddSubscriptionPopup = () => {
 >>>>>>> 2caddafc76e7a0144ee00e05d91ddcbfdd6b402f
     setShowAddSubscriptionPopup(true);
