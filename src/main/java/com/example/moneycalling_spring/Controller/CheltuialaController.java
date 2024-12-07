@@ -61,9 +61,6 @@ public class CheltuialaController {
         }
 
         Diagrama diagrama = diagrama_opt.get();
-        Cheltuiala ch = chDTO.mapToEntity(cheltuialaService.getFirstAvailableId(), diagrama);
-
-        Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
 
         Cheltuiala.TipCheltuiala tip = chDTO.getTipCheltuiala();
         float suma = chDTO.getSuma();
@@ -71,10 +68,13 @@ public class CheltuialaController {
 
 
         Float procentRamas = diagrama.getProcenteCheltuieli().get(tip);
-        if (procentRamas == null || procentRamas * venitTotal < suma) {
+        if (procentRamas == null || (procentRamas * venitTotal)/100 < suma) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Nu sunt suficiente procente rămase pentru acest tip de cheltuială.");
         }
+        Cheltuiala ch = chDTO.mapToEntity(cheltuialaService.getFirstAvailableId(), diagrama);
+
+        Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
 
         float procentNou= procentRamas - (suma/ venitTotal) *100;//se calculeaza procentul ramas,dupa cheltuiala
 

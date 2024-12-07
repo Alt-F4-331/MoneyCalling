@@ -102,6 +102,7 @@ public class GlobalExceptionHandler {
     // Alte excepții neprevăzute
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
+        ex.printStackTrace();
         return new ResponseEntity<>("A apărut o eroare necunoscută.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

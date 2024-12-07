@@ -2,10 +2,7 @@ package com.example.moneycalling_spring.Controller;
 
 import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Security.JwtUtil;
-import com.example.moneycalling_spring.Service.CheltuialaService;
-import com.example.moneycalling_spring.Service.DiagramaService;
-import com.example.moneycalling_spring.Service.RaportService;
-import com.example.moneycalling_spring.Service.UtilizatorService;
+import com.example.moneycalling_spring.Service.*;
 import com.example.moneycalling_spring.dto.RaportRequestDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +25,16 @@ public class RaportController {
     private final CheltuialaService cheltuialaService;
     private final JwtUtil jwtutil;
 
+    private final AbonamentService abonamentService;
+
     @Autowired
-    public RaportController(RaportService raportService, UtilizatorService utilizatorService, DiagramaService diagramaService, CheltuialaService cheltuialaService, JwtUtil jwtutil) {
+    public RaportController(RaportService raportService, UtilizatorService utilizatorService, DiagramaService diagramaService, CheltuialaService cheltuialaService, JwtUtil jwtutil, AbonamentService abonamentService) {
         this.raportService = raportService;
         this.utilizatorService = utilizatorService;
         this.diagramaService = diagramaService;
         this.cheltuialaService = cheltuialaService;
         this.jwtutil = jwtutil;
+        this.abonamentService = abonamentService;
     }
 
     // Endpoint pentru salvarea sau actualizarea unui raport
@@ -233,5 +233,7 @@ public class RaportController {
             return new ResponseEntity<>("Suma propusă pentru vacanta a fost respinsă.", HttpStatus.OK);
         }
     }
+
+
 
 }

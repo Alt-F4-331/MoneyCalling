@@ -62,7 +62,7 @@ public class DiagramaService {
     }
 
     public Optional<Diagrama> getDiagramaActivaByUtilizator(Utilizator utilizator) {
-        return diagramarepo.findByUserAndActiva(utilizator, true);
+        return diagramarepo.findByUserAndActiva(utilizator);
     }
 
 

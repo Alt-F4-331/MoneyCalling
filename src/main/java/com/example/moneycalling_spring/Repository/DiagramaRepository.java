@@ -18,7 +18,8 @@ public interface DiagramaRepository extends JpaRepository<Diagrama, Integer> {
 
     List<Diagrama> findByUser(Utilizator utilizator);
 
-    Optional<Diagrama> findByUserAndActiva(Utilizator user, boolean activa);
+    @Query("SELECT d FROM Diagrama d LEFT JOIN FETCH d.procenteCheltuieli WHERE d.user = :user AND d.activa = true")
+    Optional<Diagrama> findByUserAndActiva(@Param("user") Utilizator user);
     @Query("SELECT d FROM Diagrama d WHERE d.dataDiagrama.luna = :luna AND d.dataDiagrama.an = :an AND d.user.id = :userId")
     Optional<Diagrama> findByDataAndUser(@Param("luna") int luna, @Param("an") int an, @Param("userId") int userId);
 
