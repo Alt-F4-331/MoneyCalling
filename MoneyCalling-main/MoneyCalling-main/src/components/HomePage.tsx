@@ -47,7 +47,6 @@ const HomePage: React.FC = () => {
   };
 
    const handleOpenAddSubscriptionPopup = () => {
->>>>>>> 2caddafc76e7a0144ee00e05d91ddcbfdd6b402f
     setShowAddSubscriptionPopup(true);
   };
 
