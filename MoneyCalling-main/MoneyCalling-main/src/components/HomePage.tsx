@@ -31,6 +31,7 @@ const HomePage: React.FC = () => {
 
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const [subscriptions, setSubscriptions] = useState<{ name: string; price: number }[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showAddSubscriptionPopup, setShowAddSubscriptionPopup] = useState(false);
   const [newSubscriptionName, setNewSubscriptionName] = useState('');
   const [newSubscriptionPrice, setNewSubscriptionPrice] = useState<number | ''>('');
@@ -44,10 +45,12 @@ const HomePage: React.FC = () => {
     setShowSubscriptionPopup(false);
   };
 
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const handleOpenAddSubscriptionPopup = () => {
     setShowAddSubscriptionPopup(true);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleCloseAddSubscriptionPopup = () => {
     setShowAddSubscriptionPopup(false);
     setNewSubscriptionName('');

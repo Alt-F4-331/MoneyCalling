@@ -95,3 +95,8 @@
 .edit-button:hover {
   background-color: #1f1e4c;
 }
+
+.subtitle {
+  text-align: left;
+  margin-left: 60px;
+}
