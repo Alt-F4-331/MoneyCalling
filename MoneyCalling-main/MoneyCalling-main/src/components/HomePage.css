@@ -8,6 +8,11 @@
   font-family: "Jockey One", sans-serif;
 }
 
+body {
+  overflow: hidden; /* Dezactivează scroll-ul */
+}
+
+
 .home-page {
   display: flex;
   max-height: 100%;
@@ -149,7 +154,8 @@
 .savings {
   background-color: #14123BD9; /* fundal albastru-închis pentru chenar */
   padding: 10px 20px;
-  width: 200px;
+  width: 140px;
+  margin-left: -155px;
   border-radius: 8px;
   text-align: center;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* umbră pentru chenar */
@@ -170,6 +176,36 @@
   font-size: 24px;
   color: #FFFFFF;
 }
+
+.expense-button {
+  position: fixed; /* Face ca butonul să fie fix pe ecran */
+  top: 100px; /* Ajustează poziția verticală pentru aliniere */
+  left: 295px; /* Ajustează poziția orizontală pentru aliniere */
+  bottom: 25px;
+  display: flex;
+  align-items: center;
+}
+
+.expense-button button {
+  margin-top: 532px;
+  margin-left: -100px;
+  height: 84px;
+  width: 140px;
+  background-color: #14123BD9;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.expense-button button:hover {
+  background-color: #1a2d61; /* Culoare hover */
+}
+
 
 /* Conținut principal */
 .main-contents {
@@ -201,7 +237,7 @@
   background-color: #14123BE5; /* Fundal închis */
   padding: 15px;
   margin-top: 200px;
-  margin-left: 150px;
+  margin-left: 100px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   color: #FFFFFF;
@@ -231,9 +267,11 @@
   border-radius: 3px;
 }
 
+<<<<<<< HEAD
+=======
 .expense-button button {
-  margin-top: 90px;
-  margin-left: -250px;
+  margin-top: 40px;
+  margin-left: -240px;
   height: 60px;
   width: 170px;
   background-color: #14123B; /* Fundal similar cu sidebar */
@@ -248,6 +286,7 @@
 .expense-button button:hover {
   background-color: #263663; /* Culoare hover */
 }
+>>>>>>> 2caddafc76e7a0144ee00e05d91ddcbfdd6b402f
 
 /* Fundal semi-transparent pentru pop-up */
 .popup-overlay {
@@ -337,6 +376,13 @@
 
 .form-actions button:hover {
   opacity: 0.9;
+}
+
+button.delete-button {
+  margin-left: 30px;
+  height: 26px; /* Înălțimea butonului */
+  font-size: 10px; /* Dimensiunea textului */
+  text-align: center;
 }
 
 .popup-overlay {

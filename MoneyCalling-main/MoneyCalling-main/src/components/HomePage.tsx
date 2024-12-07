@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './HomePage.css';
-import logo from  '../assets/logo.png';
+import logo from '../assets/logo.png';
 import profile_pic from "../assets/profile_pic.jpg";
 import PieChart from './PieChart';
 import { Link } from 'react-router-dom';
@@ -31,23 +31,31 @@ const HomePage: React.FC = () => {
 
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const [subscriptions, setSubscriptions] = useState<{ name: string; price: number }[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showAddSubscriptionPopup, setShowAddSubscriptionPopup] = useState(false);
   const [newSubscriptionName, setNewSubscriptionName] = useState('');
   const [newSubscriptionPrice, setNewSubscriptionPrice] = useState<number | ''>('');
+  const [name, setName] = useState<string>(""); // State pentru nume
 
 
   const handleOpenSubscriptionPopup = () => {
     setShowSubscriptionPopup(true);
   };
-  
+
   const handleCloseSubscriptionPopup = () => {
     setShowSubscriptionPopup(false);
   };
 
+<<<<<<< HEAD
+  const handleOpenAddSubscriptionPopup = () => {
+=======
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars
    const handleOpenAddSubscriptionPopup = () => {
+>>>>>>> 2caddafc76e7a0144ee00e05d91ddcbfdd6b402f
     setShowAddSubscriptionPopup(true);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleCloseAddSubscriptionPopup = () => {
     setShowAddSubscriptionPopup(false);
     setNewSubscriptionName('');
@@ -55,41 +63,41 @@ const HomePage: React.FC = () => {
   };
 
   // Handle adding a new subscription
-const handleAddSubscription = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (newSubscriptionName && newSubscriptionPrice) {
-    setSubscriptions([...subscriptions, { name: newSubscriptionName, price: newSubscriptionPrice }]);
-    setNewSubscriptionName('');
-    setNewSubscriptionPrice('');
-  }
-};
+  const handleAddSubscription = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newSubscriptionName && newSubscriptionPrice) {
+      setSubscriptions([...subscriptions, { name: newSubscriptionName, price: newSubscriptionPrice }]);
+      setNewSubscriptionName('');
+      setNewSubscriptionPrice('');
+    }
+  };
 
-// Handle deleting a subscription
-const handleDeleteSubscription = (index: number) => {
-  const updatedSubscriptions = subscriptions.filter((_, i) => i !== index);
-  setSubscriptions(updatedSubscriptions);
-};
+  // Handle deleting a subscription
+  const handleDeleteSubscription = (index: number) => {
+    const updatedSubscriptions = subscriptions.filter((_, i) => i !== index);
+    setSubscriptions(updatedSubscriptions);
+  };
 
 
 
   // Funcții pentru deschiderea și închiderea pop-up-ului pentru Holiday Report
-const handleOpenHolidayPopup = () => {
-  setShowHolidayPopup(true);
-};
+  const handleOpenHolidayPopup = () => {
+    setShowHolidayPopup(true);
+  };
 
-const handleCloseHolidayPopup = () => {
-  setShowHolidayPopup(false);
-  setRecommendedAccommodationSum(0);
-  setRecommendedTravelSum(0);
-  setHolidayDays(0); // Resetare număr de zile
-  setHolidaySum(0); // Resetare sumă pentru vacanță
-};
+  const handleCloseHolidayPopup = () => {
+    setShowHolidayPopup(false);
+    setRecommendedAccommodationSum(0);
+    setRecommendedTravelSum(0);
+    setHolidayDays(0); // Resetare număr de zile
+    setHolidaySum(0); // Resetare sumă pentru vacanță
+  };
 
-const handleHolidaySubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  //alert("Holiday Report generated successfully!");
-  setShowHolidayPopup(false);
-};
+  const handleHolidaySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    //alert("Holiday Report generated successfully!");
+    setShowHolidayPopup(false);
+  };
 
   // Deschidere și închidere popups
   const handleOpenRentPopup = () => {
@@ -125,24 +133,39 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
 
   const handleOpenInstallmentsPopup = () => setShowInstallmentsPopup(true);
   const handleCloseInstallmentsPopup = () => {
-  setRecommendedSum(0);
-  //setInstallmentSum(0);
-  setShowInstallmentsPopup(false);
-  setCustomInstallment('');
-  setSelectedInstallment(null);
-};
+    setRecommendedSum(0);
+    //setInstallmentSum(0);
+    setShowInstallmentsPopup(false);
+    setCustomInstallment('');
+    setSelectedInstallment(null);
+  };
 
   const handleInstallmentSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  console.log(`Selected Installment: ${selectedInstallment || customInstallment}`);
-  handleCloseInstallmentsPopup();
-};
+    e.preventDefault();
+    console.log(`Selected Installment: ${selectedInstallment || customInstallment}`);
+    handleCloseInstallmentsPopup();
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Logica pentru a trimite datele introduse (de ex: adaugare expense)
     console.log("Expense submitted!");
     handleClosePopup();
+  };
+
+  const handleExpenseSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Expense submitted!");
+    console.log(`Name: ${name}, Amount: ${amount}, Category: ${category}`);
+    handleClosePopup();
+  };
+
+
+  const handleExpenseClosePopup = () => {
+    setName(""); // Resetează numele
+    setAmount(0); // Resetează suma
+    setCategory(""); // Resetează categoria
+    setShowPopup(false);
   };
 
   return (
@@ -193,15 +216,19 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
         <div className='popup-overlay' onClick={handleClosePopup}>
           <div className='popup-container' onClick={(e) => e.stopPropagation()}>
             <h2>Expense</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleExpenseSubmit}>
+              <div className='form-group'>
+                <label htmlFor='name'>Name:</label>
+                <input type='text' id='name' name='name' value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter name" required />
+              </div>
               <div className='form-group'>
                 <label htmlFor='amount'>Amount:</label>
-                <input type='number' id='amount' name='amount' value={amount} onChange={(e) => setAmount(parseInt(e.target.value,10))} min="0" step="10" required />
+                <input type='number' id='amount' name='amount' value={amount} onChange={(e) => setAmount(parseInt(e.target.value, 10))} min="0" step="10" required />
               </div>
               <div className='form-group'>
                 <label htmlFor='category'>Category:</label>
                 <input type='text' id='category' name='category' value={category}
-                onChange={(e) => setCategory(e.target.value)} required />
+                  onChange={(e) => setCategory(e.target.value)} required />
               </div>
               <div className='form-actions'>
                 <button type='submit'>Add</button>
@@ -233,8 +260,8 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
         </div>
       )}
 
-       {/* Pop-up pentru avertizare */}
-       {showWarningPopup && (
+      {/* Pop-up pentru avertizare */}
+      {showWarningPopup && (
         <div className='popup-overlay' onClick={handleCloseWarningPopup}>
           <div className='popup-container' onClick={(e) => e.stopPropagation()}>
             <p>The amount you introduced is not in the budget range. Want to continue?</p>
@@ -246,151 +273,151 @@ const handleHolidaySubmit = (e: React.FormEvent) => {
         </div>
       )}
 
-{showHolidayPopup && (
-  <div className='popup-overlay-holiday' onClick={handleCloseHolidayPopup}>
-    <div className='popup-container-holiday' onClick={(e) => e.stopPropagation()}>
-      <h2>Holiday Report</h2>
-      <form onSubmit={handleHolidaySubmit}>
-        <div className='form-group-holiday'>
-          <label htmlFor='holidayDays'>Insert number of days:</label>
-          <input
-            type="number"
-            id="holidayDays"
-            name="holidayDays"
-            value={holidayDays}
-            onChange={(e) => setHolidayDays(parseInt(e.target.value, 10))}
-            min="0"
-            required
-          />
-        </div>
-        <div className='form-group-holiday'>
-          <label htmlFor='holidaySum'>Insert sum for holiday:</label>
-          <input
-            type="number"
-            id="holidaySum"
-            name="holidaySum"
-            value={holidaySum}
-            onChange={(e) => setHolidaySum(parseInt(e.target.value, 10))}
-            min="0"
-            required
-          />
-        </div>
-        {/* Recomandare pentru sumă travel */}
-        <div className="recommended-sum-holiday">
-          <label>Recommended sum for travel:</label>
-          <div className="recommended-value-holiday">{recommendedTravelSum}</div>
-        </div>
-        {/* Recomandare pentru sumă cazare */}
-        <div className="recommended-sum-holiday">
-          <label>Recommended sum for accommodation:</label>
-          <div className="recommended-value-holiday">{recommendedAccommodationSum}</div>
-        </div>
-        <div className='form-actions'>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
-
-    {/* Pop-up pentru Installments Report */}
-    {showInstallmentsPopup && (
-  <div className="popup-overlay" onClick={handleCloseInstallmentsPopup}>
-    <div className="popup-container installments-popup" onClick={(e) => e.stopPropagation()}>
-      <h2>Installments Report</h2>
-      <form onSubmit={handleInstallmentSubmit}>
-        <div className="installment-sum">
-        <input type='number' placeholder='Total: ' id='installment' name='installment' value={installmentSum} onChange={(e) => setInstallmentSum(parseInt(e.target.value,10))} min="0" step="10" required />
-        </div>
-
-        <div className="info-box">Budget range: {budgetRange.min} - {budgetRange.max}</div>
-        <p>Please choose one of the following payment options:</p>
-        <div className="installment-options">
-          {installmentOptions.map((option) => (
-            <button
-              type="button"
-              key={option}
-              value={installmentSum}
-              className={`installment-option ${selectedInstallment === option ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedInstallment(option);
-                setCustomInstallment('');
-              }}
-            >
-              {option}
-            </button>
-          ))}
-          <div onClick={()=>setSelectedInstallment(null)}>
-            <input className='custom-option'
-              type="number"
-              placeholder="Insert a different option"
-              value={customInstallment}
-              onChange={(e) => {
-                setCustomInstallment(parseInt(e.target.value, 10) || '');
-                //setSelectedInstallment(null);
-              }}
-              min="1"
-            />
+      {showHolidayPopup && (
+        <div className='popup-overlay-holiday' onClick={handleCloseHolidayPopup}>
+          <div className='popup-container-holiday' onClick={(e) => e.stopPropagation()}>
+            <h2>Holiday Report</h2>
+            <form onSubmit={handleHolidaySubmit}>
+              <div className='form-group-holiday'>
+                <label htmlFor='holidayDays'>Insert number of days:</label>
+                <input
+                  type="number"
+                  id="holidayDays"
+                  name="holidayDays"
+                  value={holidayDays}
+                  onChange={(e) => setHolidayDays(parseInt(e.target.value, 10))}
+                  min="0"
+                  required
+                />
+              </div>
+              <div className='form-group-holiday'>
+                <label htmlFor='holidaySum'>Insert sum for holiday:</label>
+                <input
+                  type="number"
+                  id="holidaySum"
+                  name="holidaySum"
+                  value={holidaySum}
+                  onChange={(e) => setHolidaySum(parseInt(e.target.value, 10))}
+                  min="0"
+                  required
+                />
+              </div>
+              {/* Recomandare pentru sumă travel */}
+              <div className="recommended-sum-holiday">
+                <label>Recommended sum for travel:</label>
+                <div className="recommended-value-holiday">{recommendedTravelSum}</div>
+              </div>
+              {/* Recomandare pentru sumă cazare */}
+              <div className="recommended-sum-holiday">
+                <label>Recommended sum for accommodation:</label>
+                <div className="recommended-value-holiday">{recommendedAccommodationSum}</div>
+              </div>
+              <div className='form-actions'>
+                <button type="submit">Submit</button>
+              </div>
+            </form>
           </div>
         </div>
-        <div className="recommended-sum">Recommended sum: {recommendedSum}</div>
-        <button type="submit" className="submit-button">Submit</button>
-      </form>
-    </div>
-  </div>
-)}
+      )}
 
-{showSubscriptionPopup && (
-  <div className='popup-overlay' onClick={handleCloseSubscriptionPopup}>
-    <div className='popup-container subscription-popup' onClick={(e) => e.stopPropagation()}>
-      <h2>Subscription Report</h2>
+      {/* Pop-up pentru Installments Report */}
+      {showInstallmentsPopup && (
+        <div className="popup-overlay" onClick={handleCloseInstallmentsPopup}>
+          <div className="popup-container installments-popup" onClick={(e) => e.stopPropagation()}>
+            <h2>Installments Report</h2>
+            <form onSubmit={handleInstallmentSubmit}>
+              <div className="installment-sum">
+                <input type='number' placeholder='Total: ' id='installment' name='installment' value={installmentSum} onChange={(e) => setInstallmentSum(parseInt(e.target.value, 10))} min="0" step="10" required />
+              </div>
 
-      {/* Form for adding a new subscription */}
-      <form onSubmit={handleAddSubscription} className="add-subscription-form">
-        <div className="form-group">
-          <label htmlFor="serviceName">Service Name:</label>
-          <input
-            type="text"
-            id="serviceName"
-            value={newSubscriptionName}
-            onChange={(e) => setNewSubscriptionName(e.target.value)}
-            required
-          />
+              <div className="info-box">Budget range: {budgetRange.min} - {budgetRange.max}</div>
+              <p>Please choose one of the following payment options:</p>
+              <div className="installment-options">
+                {installmentOptions.map((option) => (
+                  <button
+                    type="button"
+                    key={option}
+                    value={installmentSum}
+                    className={`installment-option ${selectedInstallment === option ? 'active' : ''}`}
+                    onClick={() => {
+                      setSelectedInstallment(option);
+                      setCustomInstallment('');
+                    }}
+                  >
+                    {option}
+                  </button>
+                ))}
+                <div onClick={() => setSelectedInstallment(null)}>
+                  <input className='custom-option'
+                    type="number"
+                    placeholder="Insert a different option"
+                    value={customInstallment}
+                    onChange={(e) => {
+                      setCustomInstallment(parseInt(e.target.value, 10) || '');
+                      //setSelectedInstallment(null);
+                    }}
+                    min="1"
+                  />
+                </div>
+              </div>
+              <div className="recommended-sum">Recommended sum: {recommendedSum}</div>
+              <button type="submit" className="submit-button">Submit</button>
+            </form>
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="servicePrice">Price per month:</label>
-          <input
-            type="number"
-            id="servicePrice"
-            value={newSubscriptionPrice}
-            onChange={(e) => setNewSubscriptionPrice(parseFloat(e.target.value))}
-            required
-          />
-        </div>
-        <button type="submit">Add Subscription</button>
-      </form>
+      )}
 
-      {/* Display existing subscriptions */}
-      <div className="subscription-list">
-        {subscriptions.length === 0 ? (
-          <p>No subscriptions</p>
-        ) : (
-          subscriptions.map((subscription, index) => (
-            <div key={index} className="subscription-item">
-              <span>{subscription.name} - {subscription.price}€/m</span>
-              <button onClick={() => handleDeleteSubscription(index)} className="delete-submit-button">Delete</button>
+      {showSubscriptionPopup && (
+        <div className='popup-overlay' onClick={handleCloseSubscriptionPopup}>
+          <div className='popup-container subscription-popup' onClick={(e) => e.stopPropagation()}>
+            <h2>Subscription Report</h2>
+
+            {/* Form for adding a new subscription */}
+            <form onSubmit={handleAddSubscription} className="add-subscription-form">
+              <div className="form-group">
+                <label htmlFor="serviceName">Service Name:</label>
+                <input
+                  type="text"
+                  id="serviceName"
+                  value={newSubscriptionName}
+                  onChange={(e) => setNewSubscriptionName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="servicePrice">Price per month:</label>
+                <input
+                  type="number"
+                  id="servicePrice"
+                  value={newSubscriptionPrice}
+                  onChange={(e) => setNewSubscriptionPrice(parseFloat(e.target.value))}
+                  required
+                />
+              </div>
+              <button type="submit">Add Subscription</button>
+            </form>
+
+            {/* Display existing subscriptions */}
+            <div className="subscription-list">
+              {subscriptions.length === 0 ? (
+                <p>No subscriptions</p>
+              ) : (
+                subscriptions.map((subscription, index) => (
+                  <div key={index} className="subscription-item">
+                    <span>{subscription.name} - {subscription.price}€/m</span>
+                    <button onClick={() => handleDeleteSubscription(index)} className="delete-button">Delete</button>
+                  </div>
+                ))
+              )}
             </div>
-          ))
-        )}
-      </div>
 
-      <div className="subscription-actions">
-        <button onClick={handleCloseSubscriptionPopup}>Close</button>
-      </div>
-    </div>
-  </div>
-)}
-      
+            <div className="subscription-actions">
+              <button onClick={handleCloseSubscriptionPopup}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

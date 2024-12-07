@@ -14,11 +14,12 @@ interface DecodedToken {
 
 const FinancialProfile: React.FC = () => {
   const [financialData, setFinancialData] = useState({
-    venit: '',
+    venit: 0,
     domiciliu: '',
-    economii: '',
-    dataSalar: ''
+    containerEconomii: 0,
+    dataSalar: 0
   });
+  const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -53,15 +54,13 @@ const FinancialProfile: React.FC = () => {
 
         if (response.status === 200) {
           const profil = response.data.profil;
-          console.log(profil);
           setFinancialData({
             ...response.data.profil,
-            venit: profil.venit,
-            domiciliu: profil.domiciliu,
-            economii: profil.containerEconomii,
-            dataSalar: profil.dataSalar,
+            venit: profil.venit || 0,
+            domiciliu: profil.domiciliu || '-',
+            containerEconomii: profil.containerEconomii || 0,
+            dataSalar: profil.dataSalar || 0,
         });
-          console.log(response.data.profil.venit);
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -77,10 +76,45 @@ const FinancialProfile: React.FC = () => {
 
   };
 
+  const updateFinancialData = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const userId = getUserIdFromToken(token);
+    if (!userId) return;
+
+    try {
+      const response = await axios.put(
+        'http://localhost:8080/api/utilizatori/profil-financiar',
+        financialData, // Trimitem noul profil
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.status === 200) {
+        alert('Profile updated successfully!');
+        setIsEditing(false); // Ieșim din modul de editare
+      }
+    } catch (error) {
+      console.error('Error updating user data:', error);
+      alert('Failed to update profile');
+    }
+
+  };
+
   // Folosim useEffect pentru a obține datele financiare la montarea componentei
   useEffect(() => {;
     fetchFinancialData();
   }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFinancialData({ ...financialData, [name]: value });
+  };
 
   return (
     <div className="financial-profile-container">
@@ -106,40 +140,56 @@ const FinancialProfile: React.FC = () => {
           <p>Loading...</p>
         ) : (
           <div className="financial-profile-info">
+            <h3 className='subtitle'>Income:</h3>
             <div className="form-group">
               <input
-                type="text"
-                placeholder="Income:"
-                value={financialData.venit}
-                readOnly
+                 type="text"
+                 name="venit"
+                 placeholder="Income:"
+                 value={financialData.venit}
+                 onChange={handleInputChange}
+                 readOnly={!isEditing}
               />
             </div>
+            <h3 className='subtitle'>Home Address:</h3>
             <div className="form-group">
               <input
-                type="text"
-                placeholder="Home Address:"
-                value={financialData.domiciliu}
-                readOnly
+                 type="text"
+                 name="domiciliu"
+                 placeholder="Home Address:"
+                 value={financialData.domiciliu}
+                 onChange={handleInputChange}
+                 readOnly={!isEditing}
               />
             </div>
+            <h3 className='subtitle'>Savings:</h3>
             <div className="form-group">
               <input
                 type="text"
+                name="containerEconomii"
                 placeholder="Savings:"
-                value={financialData.economii}
-                readOnly
+                value={financialData.containerEconomii}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
               />
             </div>
+            <h3 className='subtitle'>Payment Date:</h3>
             <div className="form-group">
               <input
                 type="text"
+                name="dataSalar"
                 placeholder="Payment date:"
                 value={financialData.dataSalar}
-                readOnly
+                onChange={handleInputChange}
+                readOnly={!isEditing}
               />
             </div>
             <div className="edit-button-container">
-            <button className="edit-button">Edit</button>
+            {isEditing ? (
+                <button className="edit-button" onClick={updateFinancialData}>Save</button>
+              ) : (
+                <button className="edit-button" onClick={() => setIsEditing(true)}>Edit</button>
+              )}
           </div>
           </div>
         )}
