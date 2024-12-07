@@ -48,6 +48,10 @@ public class Utilizator extends Entitate {
     @JsonIgnore
     private List<Diagrama> diagrame;
 
+    @OneToMany(mappedBy = "utilizator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Abonament> abonamente;
+
     public Utilizator(){
 
     }
@@ -129,5 +133,12 @@ public class Utilizator extends Entitate {
         this.numarTelefon = numarTelefon;
     }
 
+    public List<Abonament> getAbonamente() {
+        return abonamente;
+    }
+
+    public void setAbonamente(List<Abonament> abonamente) {
+        this.abonamente = abonamente;
+    }
 
 }
