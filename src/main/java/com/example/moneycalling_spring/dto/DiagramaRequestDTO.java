@@ -15,7 +15,7 @@ public class DiagramaRequestDTO {
 
 
 
-    public DiagramaRequestDTO(int id, @Valid Data data, int userId) {
+    public DiagramaRequestDTO(int id, @Valid Data data) {
         this.id = id;
         this.data = data;
     }
