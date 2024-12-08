@@ -87,7 +87,6 @@ public class AbonamentService {
                 .forEach(this::procesareAbonamentAnual);
     }
 
-    //@Transactional
     private void procesareAbonamentLunar(Abonament abonament) {
         Utilizator utilizator = abonament.getUtilizator();
         Optional<Diagrama> optionalDiagrama = diagramaRepository.findByUserAndActiva(utilizator);
@@ -127,7 +126,6 @@ public class AbonamentService {
         System.out.println("Abonamentul lunar procesat cu succes: " + abonament.getNume());
     }
 
-    //@Transactional
     private void procesareAbonamentAnual(Abonament abonament) {
         Utilizator utilizator = abonament.getUtilizator();
         Optional<Diagrama> optionalDiagrama = diagramaRepository.findByUserAndActiva(utilizator);

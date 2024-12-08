@@ -25,6 +25,7 @@ public class CreareContDto {
     @Email(message = "Adresa de email nu este validă.")
     private String email;
 
+    @Valid
     private Data dataNasterii;
 
     @NotBlank(message = "Sexul este obligatoriu.")
@@ -35,7 +36,7 @@ public class CreareContDto {
     @Pattern(regexp = "^\\+?\\d{10,15}$", message = "Numărul de telefon nu este valid.")
     private String numarTelefon;
 
-    public CreareContDto(String nume, String prenume, String parola, String email, @Valid Data dataNasterii, String sex, String numarTelefon) {
+    public CreareContDto(String nume, String prenume, String parola, String email, Data dataNasterii, String sex, String numarTelefon) {
         this.nume = nume;
         this.prenume = prenume;
         this.parola = parola;

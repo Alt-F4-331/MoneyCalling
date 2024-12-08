@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/api/rapoarte")
@@ -232,6 +233,30 @@ public class RaportController {
             //raportService.removeChiriePropusa(userId);
             return new ResponseEntity<>("Suma propusă pentru vacanta a fost respinsă.", HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/economii")
+    @Operation(summary = "Arata progresul economiilor de la o luna data")
+    public ResponseEntity<Map<String , Float>> getProgres(@RequestHeader("Authorization") String token,
+                                                          @RequestParam("luni") int luni)
+    {
+        int userId = jwtutil.getUserIdByToken(token);
+        Utilizator utilizator = utilizatorService.getById(userId).get();
+
+        // Obține ultimele diagrame
+        List<Diagrama> diagrame = diagramaService.getUltimeleDiagrame(utilizator, luni);
+
+        // Creează Map-ul rezultat
+        Map<String, Float> rezultat = diagrame.stream()
+                .collect(Collectors.toMap(
+                        diagrama -> diagrama.getDataDiagrama().getLuna() + " " + diagrama.getDataDiagrama().getAn(), // Cheia: Luna și anul
+                        diagrama -> diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.CONTAINER, 0f), // Valoarea: procentul CONTAINER
+                        (v1, v2) -> v1, // În caz de duplicate (nu ar trebui să fie), ia primul
+                        LinkedHashMap::new // Păstrează ordinea originală
+                ));
+
+        return ResponseEntity.ok(rezultat);
+
     }
 
 

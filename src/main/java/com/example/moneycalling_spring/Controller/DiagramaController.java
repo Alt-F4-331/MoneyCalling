@@ -63,24 +63,27 @@ public class DiagramaController {
 
     @Operation(summary = "Creeaza o noua diagrama")
     @PostMapping
-    public ResponseEntity<Diagrama> createDiagrama(@RequestBody @Valid DiagramaRequestDTO diagramaRequestDTO) {
-        Optional<Utilizator> optionalUser = utilizatorService.getById(diagramaRequestDTO.getUserId()) ;
-        // Verificăm dacă utilizatorul există
-        if (optionalUser.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Dacă nu există, returnăm 404
+    public ResponseEntity<Diagrama> createDiagrama(@RequestHeader("Authorization") String token,
+                                                   @RequestBody @Valid DiagramaRequestDTO diagramaRequestDTO) {
+        int userId = jwtutil.getUserIdByToken(token);
+
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        Utilizator utilizator = utilizatorOptional.get();
 
         Diagrama diagrama = new Diagrama();
 
         // Dacă utilizatorul există, îl asociem diagramei
-        Utilizator user = optionalUser.get();
+
         // Obținem utilizatorul din Optional
         Data data = new Data(diagramaRequestDTO.getData().getZi(),diagramaRequestDTO.getData().getLuna(),diagramaRequestDTO.getData().getAn());
         diagrama.setId(diagramaRequestDTO.getId());
         diagrama.setDataDiagrama(data);
-        diagrama.setUser(user);
+        diagrama.setUser(utilizator);
         diagrama.setActiva(true);
-        diagrama.initializeProcente(diagrama);
+        diagrama.initializeProcente(diagrama,utilizator.getProfil().getContainerEconomii());
         Diagrama savedDiagrama = diagramaService.saveDiagrama(diagrama);
         diagramaService.seteazaDiagramaActiva(diagrama);
 

@@ -1,5 +1,6 @@
 package com.example.moneycalling_spring.Service;
 
+import com.example.moneycalling_spring.Domain.Data;
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Exception.ResourceNotFoundException;
@@ -7,8 +8,10 @@ import com.example.moneycalling_spring.Repository.DiagramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DiagramaService {
@@ -87,5 +90,30 @@ public class DiagramaService {
         return diagramarepo.findByDataAndUser(luna, an, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Diagrama nu a fost găsită pentru utilizatorul specificat și data: luna " + luna + ", anul " + an));
     }
+
+    public List<Diagrama> getUltimeleDiagrame(Utilizator utilizator, int numarLuni) {
+        // Obține toate diagramele utilizatorului
+        List<Diagrama> diagrameUtilizator = diagramarepo.findByUser(utilizator);
+
+        // Determină data minimă pentru numărul de luni specificat
+        LocalDate dataLimita = LocalDate.now().minusMonths(numarLuni);
+
+        // Filtrare diagrame după dată
+        return diagrameUtilizator.stream()
+                .filter(diagrama -> {
+                    Data dataDiagrama = diagrama.getDataDiagrama();
+                    LocalDate dataDiagramaLocalDate = LocalDate.of(dataDiagrama.getAn(), dataDiagrama.getLuna(), 1);
+                    return dataDiagramaLocalDate.isAfter(dataLimita) || dataDiagramaLocalDate.isEqual(dataLimita);
+                })
+                .sorted((d1, d2) -> {
+                    // Sortare descrescătoare după dată
+                    Data data1 = d1.getDataDiagrama();
+                    Data data2 = d2.getDataDiagrama();
+                    return LocalDate.of(data2.getAn(), data2.getLuna(), 1)
+                            .compareTo(LocalDate.of(data1.getAn(), data1.getLuna(), 1));
+                })
+                .collect(Collectors.toList());
+    }
+
 
 }

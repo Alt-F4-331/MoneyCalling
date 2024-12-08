@@ -70,11 +70,16 @@ public class Diagrama extends Entitate {
         this.procenteCheltuieli = procenteCheltuieli;
     }
 
-    public void initializeProcente(Diagrama diagrama) {
+    public void initializeProcente(Diagrama diagrama , float sumaEconomii) {
         for (Cheltuiala.TipCheltuiala tip : Cheltuiala.TipCheltuiala.values()) {
             if (!tip.equals(Cheltuiala.TipCheltuiala.CONTAINER)) { // Exclude CONTAINER
                 diagrama.getProcenteCheltuieli().put(tip, tip.getProcent());
             }
+            else
+                diagrama.getProcenteCheltuieli().put(tip,sumaEconomii);
+
+            //pt tipul container,salvam suma pentru raportul de economii
+
         }
     }
 

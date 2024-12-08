@@ -13,14 +13,11 @@ public class DiagramaRequestDTO {
     @NotNull(message = "Data nu poate fi nulă.")
     private Data data; // data la care a fost creata diagrama
 
-    @Min(value = 1, message = "User ID-ul trebuie să fie un număr pozitiv.")
-    private int userId;  // ID-ul utilizatorului
 
 
     public DiagramaRequestDTO(int id, @Valid Data data, int userId) {
         this.id = id;
         this.data = data;
-        this.userId = userId;
     }
 
     // Getters și setters
@@ -32,13 +29,6 @@ public class DiagramaRequestDTO {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     public Data getData() {
         return data;
