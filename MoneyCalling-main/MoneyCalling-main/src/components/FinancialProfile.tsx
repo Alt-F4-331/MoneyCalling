@@ -61,6 +61,8 @@ const FinancialProfile: React.FC = () => {
             containerEconomii: profil.containerEconomii || 0,
             dataSalar: profil.dataSalar || 0,
         });
+          const savings = response.data.profil.containerEconomii;
+          localStorage.setItem('savings', savings); // Stocăm savings în localStorage
           }
         } catch (error) {
           console.error('Error fetching user data:', error);

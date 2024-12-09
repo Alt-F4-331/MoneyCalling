@@ -15,6 +15,9 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const HomePage: React.FC = () => {
 
+  const [categories, setCategories] = useState<string[]>([]);
+  const memorizedCategories = React.useMemo(() => categories, [categories]);
+
   const [showRentPopup, setShowRentPopup] = useState(false);
   const [showWarningPopup, setShowWarningPopup] = useState(false);
   const [rentAmount, setRentAmount] = useState<number>(0);
@@ -123,9 +126,9 @@ const HomePage: React.FC = () => {
     drawArrow(ctx, canvasWidth - margin, centerY, 10, 0); // X-axis positive arrow
     drawArrow(ctx, centerX, margin, 0, -10); // Y-axis positive arrow (pointing up)
 
-  
 
- 
+
+
     ctx.strokeStyle = 'white'; // White line for the graph
     ctx.lineWidth = 2;
     ctx.stroke();
@@ -159,7 +162,7 @@ const HomePage: React.FC = () => {
 
 
 
-  
+
   const handleOpenSubscriptionPopup = () => {
     setShowSubscriptionPopup(true);
   };
@@ -193,7 +196,7 @@ const HomePage: React.FC = () => {
     setPaymentDay('');
   };
 
- 
+
 
 
   // Handle deleting a subscription
@@ -292,6 +295,15 @@ const HomePage: React.FC = () => {
     setShowPopup(false);
   };
 
+
+  useEffect(() => {
+    const savedSavings = localStorage.getItem('savings');
+    if (savedSavings) {
+      setSavingsSum(Number(savedSavings)); // Setează savings din localStorage
+    }
+  }, []);
+
+
   return (
     <div className='home-page'>
       {/* Bara de navigare */}
@@ -360,16 +372,15 @@ const HomePage: React.FC = () => {
                   className="category-select"
                 >
                   <option value="" disabled>Select a category</option>
-                  <option value="locuinta">Rent</option>
-                  <option value="transport">Transport</option>
-                  <option value="alimentatie">Food</option>
-                  <option value="sanatate">Health</option>
-                  <option value="imbracaminte">Clothing</option>
-                  <option value="divertisment">Entertainment</option>
-                  <option value="educatie">Education</option>
-                  <option value="economii">Savings</option>
+                  {memorizedCategories.map((cat) => (
+                    <option key={cat} value={cat}> {
+                      cat.charAt(0).toUpperCase() + cat.slice(1)
+                    }
+                    </option>
+                  ))}
                 </select>
               </div>
+
               <div className='form-actions'>
                 <button type='submit'>Add</button>
                 <button type='button' onClick={handleClosePopup}>Cancel</button>
@@ -504,14 +515,14 @@ const HomePage: React.FC = () => {
                 </div>
               </div>
               <div className="recommended-sum">Recommended sum: {recommendedSum}</div>
-               <button type="submit" className="submit-button">Submit</button>
-              
+              <button type="submit" className="submit-button">Submit</button>
+
             </form>
           </div>
         </div>
       )}
 
-{showSavingsPopup && (
+      {showSavingsPopup && (
         <div className="popup-overlay" onClick={handleCloseSavingsPopup}>
           <div
             className="popup-container-savings"
@@ -569,138 +580,138 @@ const HomePage: React.FC = () => {
       )}
 
 
-{showSubscriptionPopup && (
-  <div className="popup-overlay" onClick={handleCloseSubscriptionPopup}>
-    <div className="popup-container-subscription" onClick={(e) => e.stopPropagation()}>
-      <h2>Subscription Report</h2>
+      {showSubscriptionPopup && (
+        <div className="popup-overlay" onClick={handleCloseSubscriptionPopup}>
+          <div className="popup-container-subscription" onClick={(e) => e.stopPropagation()}>
+            <h2>Subscription Report</h2>
 
-      <form onSubmit={handleAddSubscription} className="add-subscription-form">
-        <div className="form-group">
-          <input
-            type="text"
-            id="serviceName"
-            value={newSubscriptionName}
-            onChange={(e) => setNewSubscriptionName(e.target.value)}
-            placeholder="Subscription Name"
-            required
-          />
+            <form onSubmit={handleAddSubscription} className="add-subscription-form">
+              <div className="form-group">
+                <input
+                  type="text"
+                  id="serviceName"
+                  value={newSubscriptionName}
+                  onChange={(e) => setNewSubscriptionName(e.target.value)}
+                  placeholder="Subscription Name"
+                  required
+                />
+              </div>
+
+              <div className="yearmonth-options">
+                <button
+                  type="button"
+                  onClick={() => setPaymentFrequency('monthly')}
+                  className={`payment-frequency-btn ${paymentFrequency === 'monthly' ? 'active' : ''}`}
+                >
+                  Monthly
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentFrequency('yearly')}
+                  className={`payment-frequency-btn ${paymentFrequency === 'yearly' ? 'active' : ''}`}
+                >
+                  Yearly
+                </button>
+              </div>
+
+              {paymentFrequency === 'monthly' && (
+                <>
+                  <div className="form-group">
+                    <input
+                      type="number"
+                      id="servicePriceMonthly"
+                      value={newSubscriptionPrice}
+                      onChange={(e) => setNewSubscriptionPrice(e.target.value)}
+                      placeholder="Subscription Value (€/month)"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      id="paymentDueDate"
+                      value={paymentDueDate}
+                      onChange={(e) => setPaymentDueDate(e.target.value)}
+                      placeholder="(DD)"
+                      required
+                    />
+                  </div>
+                </>
+              )}
+
+              {paymentFrequency === 'yearly' && (
+                <>
+                  <div className="form-group">
+                    <input
+                      type="number"
+                      id="servicePriceYearly"
+                      value={newSubscriptionPrice}
+                      onChange={(e) => setNewSubscriptionPrice(e.target.value)}
+                      placeholder="Subscription Value (€/year)"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      id="paymentMonthDay"
+                      value={paymentMonthDayInput} // Using the local state to display the value
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Only update month and day if the input is not empty
+                        if (value) {
+                          const [day, month] = value.split('/');
+                          if (day && month) {
+                            setPaymentMonth(day);  // Set day as month
+                            setPaymentDay(month);  // Set month as day
+                          }
+                        } else {
+                          setPaymentMonth('');  // Reset month if input is cleared
+                          setPaymentDay('');    // Reset day if input is cleared
+                        }
+                        setPaymentMonthDayInput(value);  // Update the input value
+                      }}
+                      placeholder="DD/MM"  // Placeholder text
+                      pattern="\d{2}/\d{2}"  // Enforces DD/MM format
+                      required
+                    />
+                  </div>
+                </>
+              )}
+              <div className='parent-container'>
+                <button type="submit" className="submit-sub-button">Add Subscription</button>
+              </div>
+
+            </form>
+
+            <div className="subscription-list">
+              {subscriptions.length === 0 ? (
+                <p>No subscriptions added yet.</p>
+              ) : (
+                subscriptions.map((subscription, index) => (
+                  <div key={index} className="subscription-item">
+                    <span>
+                      <strong>{subscription.name}</strong> - {subscription.price}€ / {subscription.frequency}
+                    </span>
+                    <p>
+                      {subscription.frequency === 'monthly'
+                        ? `Payment Due Day: ${subscription.paymentDueDate}th`
+                        : `Payment Due Day: ${subscription.paymentDueDate.split(' ').join('/')}`}
+                    </p>
+                    <button onClick={() => handleDeleteSubscription(index)} className="delete-sub-button">
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <div className="subscription-actions">
+              <button className="close-sub-button" onClick={handleCloseSubscriptionPopup}>Close</button>
+            </div>
+          </div>
         </div>
-
-        <div className="yearmonth-options">
-          <button
-            type="button"
-            onClick={() => setPaymentFrequency('monthly')}
-            className={`payment-frequency-btn ${paymentFrequency === 'monthly' ? 'active' : ''}`}
-          >
-            Monthly
-          </button>
-          <button
-            type="button"
-            onClick={() => setPaymentFrequency('yearly')}
-            className={`payment-frequency-btn ${paymentFrequency === 'yearly' ? 'active' : ''}`}
-          >
-            Yearly
-          </button>
-        </div>
-
-        {paymentFrequency === 'monthly' && (
-          <>
-            <div className="form-group">
-              <input
-                type="number"
-                id="servicePriceMonthly"
-                value={newSubscriptionPrice}
-                onChange={(e) => setNewSubscriptionPrice(e.target.value)}
-                placeholder="Subscription Value (€/month)"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="text"
-                id="paymentDueDate"
-                value={paymentDueDate}
-                onChange={(e) => setPaymentDueDate(e.target.value)}
-                placeholder="(DD)"
-                required
-              />
-            </div>
-          </>
-        )}
-
-        {paymentFrequency === 'yearly' && (
-          <>
-            <div className="form-group">
-              <input
-                type="number"
-                id="servicePriceYearly"
-                value={newSubscriptionPrice}
-                onChange={(e) => setNewSubscriptionPrice(e.target.value)}
-                placeholder="Subscription Value (€/year)"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <input
-                type="text"
-                id="paymentMonthDay"
-                value={paymentMonthDayInput} // Using the local state to display the value
-                onChange={(e) => {
-                  const value = e.target.value;
-                  // Only update month and day if the input is not empty
-                  if (value) {
-                    const [day, month] = value.split('/');
-                    if (day && month) {
-                      setPaymentMonth(day);  // Set day as month
-                      setPaymentDay(month);  // Set month as day
-                    }
-                  } else {
-                    setPaymentMonth('');  // Reset month if input is cleared
-                    setPaymentDay('');    // Reset day if input is cleared
-                  }
-                  setPaymentMonthDayInput(value);  // Update the input value
-                }}
-                placeholder="DD/MM"  // Placeholder text
-                pattern="\d{2}/\d{2}"  // Enforces DD/MM format
-                required
-              />
-            </div>
-          </>
-        )}
-        <div className='parent-container'>
-        <button type="submit" className="submit-sub-button">Add Subscription</button>
-        </div>
-        
-      </form>
-
-      <div className="subscription-list">
-        {subscriptions.length === 0 ? (
-          <p>No subscriptions added yet.</p>
-        ) : (
-          subscriptions.map((subscription, index) => (
-            <div key={index} className="subscription-item">
-              <span>
-                <strong>{subscription.name}</strong> - {subscription.price}€ / {subscription.frequency}
-              </span>
-              <p>
-                {subscription.frequency === 'monthly'
-                  ? `Payment Due Day: ${subscription.paymentDueDate}th`
-                  : `Payment Due Day: ${subscription.paymentDueDate.split(' ').join('/')}`}
-              </p>
-              <button onClick={() => handleDeleteSubscription(index)} className="delete-sub-button">
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-
-      <div className="subscription-actions">
-        <button className="close-sub-button" onClick={handleCloseSubscriptionPopup}>Close</button>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
 
 

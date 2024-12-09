@@ -1,88 +1,110 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import axios from 'axios';
 
 // Înregistrează componentele necesare Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const PieChart: React.FC = () => {
-  // Datele pentru Pie Chart
-  const data = {
-    labels: [
-      'Rent', 
-      'Transport', 
-      'Food', 
-      'Health', 
-      'Clothing', 
-      'Entertainment', 
-      'Education', 
-      'Savings'
-    ], // Etichetele pentru fiecare secțiune
+interface PieChartProps {
+  onCategoriesFetched: (categories: string[]) => void; // Callback pentru a transmite categoriile
+}
+
+const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched }) => {
+  // State-uri pentru datele din grafic și categorie
+  const [data, setData] = useState({
+    labels: [] as string[],
     datasets: [
       {
         label: 'Spendings',
-        data: [30, 20, 25, 10, 15, 10, 5, 5], // Exemplu de valori pentru fiecare categorie
-        backgroundColor: [
-          '#DE80F2', // Locuință
-          '#EFDA89', // Transport
-          '#3BAEE1', // Alimentație
-          '#F28B82', // Sănătate
-          '#A7F28B', // Îmbrăcăminte
-          '#F3A683', // Divertisment
-          '#CAB6F2', // Educație
-          '#E0E0E0', // Economii
-        ],
+        data: [] as number[],
+        backgroundColor: [] as string[],
         borderWidth: 0,
       },
     ],
-  };
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          console.error('Token-ul nu este disponibil');
+          return;
+        }
+
+        const response = await axios.get('http://localhost:8080/api/diagrame/configurare', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Folosim interpolare corectă
+          },
+        });
+
+        const backendData = response.data;
+
+        // Configurare date și culori pentru grafic
+        const labels = Object.keys(backendData);
+        const values = Object.values(backendData) as number[];
+        const backgroundColors = [
+          '#DE80F2', '#EFDA89', '#3BAEE1', '#F28B82', '#A7F28B', '#F3A683', '#CAB6F2', '#E0E0E0',
+        ];
+
+        setData({
+          labels,
+          datasets: [
+            {
+              label: 'Spendings',
+              data: values,
+              backgroundColor: backgroundColors.slice(0, labels.length),
+              borderWidth: 0,
+            },
+          ],
+        });
+
+        // Transmite categoriile către părinte prin callback
+        onCategoriesFetched(labels);
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Eroare la preluarea datelor:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [onCategoriesFetched]);
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        //position: 'top' as const,
         display: false,
       },
       title: {
-        display: false
-      }
+        display: false,
+      },
     },
   };
 
   return (
     <div className="diagram-container">
-  <div className="pie-chart">
-    <Pie data={data} options={options} />
-  </div>
-  <div className="categories-card">
-    <h4>Categories</h4>
-    <div className="category">
-          <span style={{ backgroundColor: '#DE80F2' }}></span>Rent
-        </div>
-        <div className="category">
-          <span style={{ backgroundColor: '#EFDA89' }}></span>Transport
-        </div>
-        <div className="category">
-          <span style={{ backgroundColor: '#3BAEE1' }}></span>Food
-        </div>
-        <div className="category">
-          <span style={{ backgroundColor: '#F28B82' }}></span>Health
-        </div>
-        <div className="category">
-          <span style={{ backgroundColor: '#A7F28B' }}></span>Clothing
-        </div>
-        <div className="category">
-          <span style={{ backgroundColor: '#F3A683' }}></span>Entertainment
-        </div>
-        <div className="category">
-          <span style={{ backgroundColor: '#CAB6F2' }}></span>Education
-        </div>
-        <div className="category">
-          <span style={{ backgroundColor: '#E0E0E0' }}></span>Savings
-        </div>
-  </div>
-</div>
+      <div className="pie-chart">
+        {loading ? (
+          <p>Se încarcă graficul...</p>
+        ) : (
+          <Pie data={data} options={options} />
+        )}
+      </div>
+      <div className="categories-card">
+        <h4>Categories</h4>
+        {data.labels.map((label, index) => (
+          <div className="category" key={label}>
+            <span style={{ backgroundColor: data.datasets[0].backgroundColor[index] }}></span>
+            {label}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
