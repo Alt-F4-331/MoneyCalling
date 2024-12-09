@@ -142,8 +142,7 @@ public class UtilizatorController {
         utilizator.setSex(cont.getSex());
         utilizator.setNumarTelefon(cont.getNumarTelefon());
 
-        ProfilFinanciar profilFinanciarGol = new ProfilFinanciar();
-        profilFinanciarGol.setId(profilFinanciarService.getFirstAvailableId());
+        ProfilFinanciar profilFinanciarGol = new ProfilFinanciar(profilFinanciarService.getFirstAvailableId());
 
         // Setează profilul financiar gol pentru utilizatorul nou
         utilizator.setProfil(profilFinanciarGol);
