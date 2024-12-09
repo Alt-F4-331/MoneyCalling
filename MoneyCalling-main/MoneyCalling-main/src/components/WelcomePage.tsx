@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Importă useNavigate din react-router-dom
 import './WelcomePage.css';
 import logo from '../assets/logo.png'; // Assuming you're in the src/components directory
-import fundalImage from '../assets/preview.svg'; // Same for background image
+import fundalImage from '../assets/Untitled_Artwork-_1_.svg'; // Same for background image
 
 
 const WelcomePage: React.FC = () => {

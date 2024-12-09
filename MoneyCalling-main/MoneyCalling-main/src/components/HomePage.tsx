@@ -12,6 +12,7 @@ const HomePage: React.FC = () => {
   const [showRentPopup, setShowRentPopup] = useState(false);
   const [showWarningPopup, setShowWarningPopup] = useState(false);
   const [rentAmount, setRentAmount] = useState<number>(0);
+  const [savingsSum, setSavingsSum] = useState<number>(0);
   const [installmentSum, setInstallmentSum] = useState<number>(0);
   const [recommendedSum, setRecommendedSum] = useState<number>(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -193,7 +194,7 @@ const HomePage: React.FC = () => {
         <button className='add-button'>+</button>
         <div className='savings'>
           <span>Savings:</span>
-          <span>0</span>
+          <span>{savingsSum}</span>
         </div>
       </aside>
 
@@ -219,13 +220,29 @@ const HomePage: React.FC = () => {
               </div>
               <div className='form-group'>
                 <label htmlFor='amount'>Amount:</label>
-                <input type='number' id='amount' name='amount' value={amount} onChange={(e) => setAmount(parseInt(e.target.value, 10))} min="0" step="10" required />
+                <input type='number' id='amount' name='amount' value={amount} onChange={(e) => setAmount(parseFloat(e.target.value))} min="0" step = "any" required />
               </div>
               <div className='form-group'>
-                <label htmlFor='category'>Category:</label>
-                <input type='text' id='category' name='category' value={category}
-                  onChange={(e) => setCategory(e.target.value)} required />
-              </div>
+          <label htmlFor='category'>Category:</label>
+          <select
+            id='category'
+            name='category'
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+            className="category-select"
+            >
+            <option value="" disabled>Select a category</option>
+            <option value="locuinta">Rent</option>
+            <option value="transport">Transport</option>
+            <option value="alimentatie">Food</option>
+            <option value="sanatate">Health</option>
+            <option value="imbracaminte">Clothing</option>
+            <option value="divertisment">Entertainment</option>
+            <option value="educatie">Education</option>
+            <option value="economii">Savings</option>
+          </select>
+        </div>
               <div className='form-actions'>
                 <button type='submit'>Add</button>
                 <button type='button' onClick={handleClosePopup}>Cancel</button>
@@ -246,8 +263,9 @@ const HomePage: React.FC = () => {
               <input
                 type="number"
                 value={rentAmount}
-                onChange={(e) => setRentAmount(parseInt(e.target.value, 10))}
+                onChange={(e) => setRentAmount(parseFloat(e.target.value))}
                 min="0"
+                step="any"
                 required
               />
               <button type="submit">Submit</button>
@@ -281,8 +299,9 @@ const HomePage: React.FC = () => {
                   id="holidayDays"
                   name="holidayDays"
                   value={holidayDays}
-                  onChange={(e) => setHolidayDays(parseInt(e.target.value, 10))}
+                  onChange={(e) => setHolidayDays(parseFloat(e.target.value))}
                   min="0"
+                  step="any"
                   required
                 />
               </div>
@@ -293,8 +312,9 @@ const HomePage: React.FC = () => {
                   id="holidaySum"
                   name="holidaySum"
                   value={holidaySum}
-                  onChange={(e) => setHolidaySum(parseInt(e.target.value, 10))}
+                  onChange={(e) => setHolidaySum(parseFloat(e.target.value))}
                   min="0"
+                  step="any"
                   required
                 />
               </div>
@@ -323,7 +343,7 @@ const HomePage: React.FC = () => {
             <h2>Installments Report</h2>
             <form onSubmit={handleInstallmentSubmit}>
               <div className="installment-sum">
-                <input type='number' placeholder='Total: ' id='installment' name='installment' value={installmentSum} onChange={(e) => setInstallmentSum(parseInt(e.target.value, 10))} min="0" step="10" required />
+                <input type='number' placeholder='Total: ' id='installment' name='installment' value={installmentSum} onChange={(e) => setInstallmentSum(parseFloat(e.target.value))} min="0" step="10" required />
               </div>
 
               <div className="info-box">Budget range: {budgetRange.min} - {budgetRange.max}</div>
@@ -349,7 +369,7 @@ const HomePage: React.FC = () => {
                     placeholder="Insert a different option"
                     value={customInstallment}
                     onChange={(e) => {
-                      setCustomInstallment(parseInt(e.target.value, 10) || '');
+                      setCustomInstallment(parseInt(e.target.value) || 0);
                       //setSelectedInstallment(null);
                     }}
                     min="1"

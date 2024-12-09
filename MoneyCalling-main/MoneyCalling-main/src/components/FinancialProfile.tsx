@@ -143,7 +143,7 @@ const FinancialProfile: React.FC = () => {
             <h3 className='subtitle'>Income:</h3>
             <div className="form-group">
               <input
-                 type="text"
+                 type="number"
                  name="venit"
                  placeholder="Income:"
                  value={financialData.venit}
@@ -165,7 +165,7 @@ const FinancialProfile: React.FC = () => {
             <h3 className='subtitle'>Savings:</h3>
             <div className="form-group">
               <input
-                type="text"
+                type="number"
                 name="containerEconomii"
                 placeholder="Savings:"
                 value={financialData.containerEconomii}
@@ -176,7 +176,7 @@ const FinancialProfile: React.FC = () => {
             <h3 className='subtitle'>Payment Date:</h3>
             <div className="form-group">
               <input
-                type="text"
+                type="number"
                 name="dataSalar"
                 placeholder="Payment date:"
                 value={financialData.dataSalar}

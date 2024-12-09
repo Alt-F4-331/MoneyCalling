@@ -1,8 +1,8 @@
 
 body {
     background-image: url('../assets/Untitled_Artwork-_1_.svg'); /* Calea către imaginea ta */
-  background-size: cover;
-  background-position: center;
+    background-size: cover;
+    background-position: center;
     color: white; /* Text color */
     font-family: sans-serif !important; /* Change font to Jockey One */
     margin: 0;

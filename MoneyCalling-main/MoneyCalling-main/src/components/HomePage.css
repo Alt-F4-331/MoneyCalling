@@ -10,16 +10,17 @@
 
 body {
   overflow: hidden; /* Dezactivează scroll-ul */
+  background-image: url('../assets/Untitled_Artwork-_1_.svg'); /* Calea către imaginea ta */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 
 .home-page {
   display: flex;
   max-height: 100%;
-  background-image: url('../assets/Untitled_Artwork-_1_.svg'); /* Calea către imaginea ta */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  max-height: 100%;
 }
 
 /* Bara de navigare */
@@ -176,10 +177,10 @@ body {
   font-size: 24px;
   color: #FFFFFF;
 }
-
+ 
 .expense-button {
   position: fixed; /* Face ca butonul să fie fix pe ecran */
-  top: 100px; /* Ajustează poziția verticală pentru aliniere */
+  top:-25px;/* Ajustează poziția verticală pentru aliniere */
   left: 295px; /* Ajustează poziția orizontală pentru aliniere */
   bottom: 25px;
   display: flex;
@@ -209,6 +210,7 @@ body {
 
 /* Conținut principal */
 .main-contents {
+  
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -236,7 +238,7 @@ body {
 .categories-card {
   background-color: #14123BE5; /* Fundal închis */
   padding: 15px;
-  margin-top: 200px;
+  margin-top: 150px;
   margin-left: 100px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -267,27 +269,6 @@ body {
   border-radius: 3px;
 }
 
-/* <<<<<<< HEAD
-======= */
-.expense-button button {
-  margin-top: 40px;
-  margin-left: -240px;
-  height: 60px;
-  width: 170px;
-  background-color: #14123B; /* Fundal similar cu sidebar */
-  color: #FFFFFF;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 25px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-.expense-button button:hover {
-  background-color: #263663; /* Culoare hover */
- }
- /*
->>>>>>> 2caddafc76e7a0144ee00e05d91ddcbfdd6b402f */
 
 /* Fundal semi-transparent pentru pop-up */
 .popup-overlay {
@@ -684,4 +665,17 @@ p {
 
 ::placeholder {
   color: #BBC7D3;
+}
+
+.category-select {
+  max-width: 50%; /* Ensures full width inside the form */
+  padding: 8px;
+  background-color: #1e1d4b;
+  font-size: 16px;
+  max-height: 150px; /* Limit the height */
+  overflow-y: auto; /* Adds scroll if content exceeds height */
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin-left: 25px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }

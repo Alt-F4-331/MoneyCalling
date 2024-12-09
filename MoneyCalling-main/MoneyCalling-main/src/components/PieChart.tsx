@@ -8,15 +8,29 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const PieChart: React.FC = () => {
   // Datele pentru Pie Chart
   const data = {
-    labels: ['Category 1', 'Category 2', 'Category 3'], // Etichetele pentru fiecare secțiune
+    labels: [
+      'Rent', 
+      'Transport', 
+      'Food', 
+      'Health', 
+      'Clothing', 
+      'Entertainment', 
+      'Education', 
+      'Savings'
+    ], // Etichetele pentru fiecare secțiune
     datasets: [
       {
-        label: 'My First Dataset',
-        data: [300, 50, 100], // Valorile pentru fiecare secțiune
+        label: 'Spendings',
+        data: [30, 20, 25, 10, 15, 10, 5, 5], // Exemplu de valori pentru fiecare categorie
         backgroundColor: [
-          '#DE80F2',
-          '#EFDA89',
-          '#3BAEE1',
+          '#DE80F2', // Locuință
+          '#EFDA89', // Transport
+          '#3BAEE1', // Alimentație
+          '#F28B82', // Sănătate
+          '#A7F28B', // Îmbrăcăminte
+          '#F3A683', // Divertisment
+          '#CAB6F2', // Educație
+          '#E0E0E0', // Economii
         ],
         borderWidth: 0,
       },
@@ -31,9 +45,8 @@ const PieChart: React.FC = () => {
         display: false,
       },
       title: {
-        display: true,
-        text: ' ',
-      },
+        display: false
+      }
     },
   };
 
@@ -45,14 +58,29 @@ const PieChart: React.FC = () => {
   <div className="categories-card">
     <h4>Categories</h4>
     <div className="category">
-      <span style={{ backgroundColor: '#DE80F2' }}></span>Category 1
-    </div>
-    <div className="category">
-      <span style={{ backgroundColor: '#EFDA89' }}></span>Category 2
-    </div>
-    <div className="category">
-      <span style={{ backgroundColor: '#3BAEE1' }}></span>Category 3
-    </div>
+          <span style={{ backgroundColor: '#DE80F2' }}></span>Rent
+        </div>
+        <div className="category">
+          <span style={{ backgroundColor: '#EFDA89' }}></span>Transport
+        </div>
+        <div className="category">
+          <span style={{ backgroundColor: '#3BAEE1' }}></span>Food
+        </div>
+        <div className="category">
+          <span style={{ backgroundColor: '#F28B82' }}></span>Health
+        </div>
+        <div className="category">
+          <span style={{ backgroundColor: '#A7F28B' }}></span>Clothing
+        </div>
+        <div className="category">
+          <span style={{ backgroundColor: '#F3A683' }}></span>Entertainment
+        </div>
+        <div className="category">
+          <span style={{ backgroundColor: '#CAB6F2' }}></span>Education
+        </div>
+        <div className="category">
+          <span style={{ backgroundColor: '#E0E0E0' }}></span>Savings
+        </div>
   </div>
 </div>
   );
