@@ -5,9 +5,8 @@
   align-items: center; /* Centrare pe verticală */
   height: 100vh; /* Înalțime completă a ferestrei */
   width: 100vw; /* Lățime completă a ferestrei */
-  background-image: url('../src/assets/fundal_fp.png'); /* Asigură-te că calea este corectă */
+  background-image: url('../assets/Untitled_Artwork-_1_.svg'); /* Calea către imaginea ta */
   background-size: cover;
-  background-repeat: no-repeat;
   background-position: center;
   margin: 0; /* Elimină marginile implicite */
 }

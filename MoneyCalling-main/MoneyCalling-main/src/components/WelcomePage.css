@@ -1,5 +1,7 @@
 body {
-    background-color: #c9bef9;
+    background-image: url('../assets/Untitled_Artwork-_1_.svg'); /* Calea către imaginea ta */
+  background-size: cover;
+  background-position: center;
     color: white;
     font-family: sans-serif !important;
     margin: 0;

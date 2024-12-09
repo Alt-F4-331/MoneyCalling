@@ -49,10 +49,12 @@ const Register: React.FC = () => {
     try {
       // Trimite cererea POST cu Axios
       const response = await axios.post('http://localhost:8080/api/utilizatori/createAccount', contData, {
+         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // Specifică tipul de conținut
         },
       });
+      console.log(response.data.nume);
 
       if (response.status === 201) {
         console.log("Răspunsul API-ului:", response);
@@ -60,6 +62,7 @@ const Register: React.FC = () => {
         navigate('/homepage')
       } else {
         // Dacă răspunsul nu este OK, afișează eroarea
+        console.log(response.data.nume);
         console.error("Eroare la crearea contului:", response.data);
         setError('Eroare la crearea contului. Încearcă din nou.');
       }
@@ -130,8 +133,8 @@ const Register: React.FC = () => {
                 <option value="">
                   Select Gender
                 </option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
               </select>
             </div>
 

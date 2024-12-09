@@ -16,10 +16,10 @@ body {
 .home-page {
   display: flex;
   max-height: 100%;
-  background-image: url('/src/fundal-pc.png');
+  background-image: url('../assets/Untitled_Artwork-_1_.svg'); /* Calea către imaginea ta */
   background-size: cover;
   background-position: center;
-  color: #FFFFFF;
+  background-repeat: no-repeat;
 }
 
 /* Bara de navigare */
@@ -267,8 +267,8 @@ body {
   border-radius: 3px;
 }
 
-<<<<<<< HEAD
-=======
+/* <<<<<<< HEAD
+======= */
 .expense-button button {
   margin-top: 40px;
   margin-left: -240px;
@@ -285,8 +285,9 @@ body {
 }
 .expense-button button:hover {
   background-color: #263663; /* Culoare hover */
-}
->>>>>>> 2caddafc76e7a0144ee00e05d91ddcbfdd6b402f
+ }
+ /*
+>>>>>>> 2caddafc76e7a0144ee00e05d91ddcbfdd6b402f */
 
 /* Fundal semi-transparent pentru pop-up */
 .popup-overlay {

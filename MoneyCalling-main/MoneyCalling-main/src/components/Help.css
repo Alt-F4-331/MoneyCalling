@@ -6,6 +6,9 @@
   height: 85vh; /* Înălțime relativă la ecran */
   padding: 40px 20px;
   background-color: #1A1A40; /* Fundal pentru container */
+  background-image: url('../assets/Untitled_Artwork-_1_.svg'); /* Calea către imaginea ta */
+  background-size: cover;
+  background-position: center;
   color: #FFFFFF;
   margin-top: 100px;
   line-height: 1.8; /* Spațiere între linii */

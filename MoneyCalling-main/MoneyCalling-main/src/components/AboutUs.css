@@ -8,6 +8,9 @@
   transform: translate(-50%, 0%);
   height: 85vh; /* Înălțime completă */
   padding: 40px 20px;
+  background-image: url('../assets/Untitled_Artwork-_1_.svg'); /* Calea către imaginea ta */
+  background-size: cover;
+  background-position: center;
   background-color: #1A1A40; /* Fundal */
   color: #FFFFFF;
   margin-top: 100px;

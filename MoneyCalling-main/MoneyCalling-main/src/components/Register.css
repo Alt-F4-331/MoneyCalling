@@ -8,10 +8,9 @@
   align-items: center; /* Centrare pe verticală */
   height: 100vh; /* Înălțime completă a ferestrei */
   width: 100vw; /* Lățime completă a ferestrei */
-  background-image: url('public/fundal pc.png'); /* Asigură-te că calea este corectă */
-  background-size: cover; /* Acoperă întreaga fereastră */
-  background-repeat: no-repeat; /* Nu repeta fundalul */
-  background-position: center; /* Centrare a fundalului */
+  background-image: url('../assets/Untitled_Artwork-_1_.svg'); /* Calea către imaginea ta */
+  background-size: cover;
+  background-position: center;
   margin: 0; /* Elimină marginile implicite */
 }
 
