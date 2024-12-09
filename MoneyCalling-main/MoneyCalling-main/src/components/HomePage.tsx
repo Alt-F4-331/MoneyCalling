@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './HomePage.css';
 import logo from '../assets/logo.png';
 import profile_pic from "../assets/profile_pic.jpg";
 import PieChart from './PieChart';
 import { Link } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
+
+
 
 
 const HomePage: React.FC = () => {
@@ -34,14 +38,128 @@ const HomePage: React.FC = () => {
   const [recommendedAccommodationSum, setRecommendedAccommodationSum] = useState<number>(0);
 
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
-  const [subscriptions, setSubscriptions] = useState<{ name: string; price: number }[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [showAddSubscriptionPopup, setShowAddSubscriptionPopup] = useState(false);
   const [newSubscriptionName, setNewSubscriptionName] = useState('');
-  const [newSubscriptionPrice, setNewSubscriptionPrice] = useState<number | ''>('');
-  const [name, setName] = useState<string>(""); // State pentru nume
+  const [newSubscriptionPrice, setNewSubscriptionPrice] = useState('');
+  const [paymentFrequency, setPaymentFrequency] = useState<'monthly' | 'yearly'>('monthly');
+  const [paymentDueDate, setPaymentDueDate] = useState('');
+  const [paymentMonth, setPaymentMonth] = useState('');
+  const [paymentDay, setPaymentDay] = useState('');
+  const [subscriptions, setSubscriptions] = useState<{ name: string, price: number, frequency: string, paymentDueDate: string }[]>([]);
+  const [paymentMonthDayInput, setPaymentMonthDayInput] = useState('');  // State to handle the input value
 
 
+  const [showSavingsPopup, setShowSavingsPopup] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [selectedMonths, setSelectedMonths] = useState('');
+
+  const [name, setName] = useState<string>("");
+
+
+  const handleOpenSavingsPopup = () => {
+    setShowSavingsPopup(true);
+  }
+
+  const handleCloseSavingsPopup = () => {
+    setShowSavingsPopup(false);
+  };
+
+  const handleMonthSelection = (months: string) => {
+    setSelectedMonths(months); // Update the selected months
+  };
+
+
+  useEffect(() => {
+    if (showSavingsPopup && canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d');
+      if (ctx) {
+        // Dummy data for chart (X: months, Y: savings)
+        const selectedMonths = 3;
+        const data = {
+          months: Array.from({ length: selectedMonths }, (_, i) => i - Math.floor(selectedMonths / 2)), // To include negative X values
+          savings: Array.from({ length: selectedMonths }, () => Math.floor(Math.random() * 2000) - 1000), // Random savings, including negative values
+        };
+
+        // Draw the chart on canvas
+        drawChart(ctx, data);
+      }
+    }
+  }, [showSavingsPopup]);
+
+  const drawChart = (ctx: CanvasRenderingContext2D, data: { months: number[]; savings: number[] }) => {
+    const canvasWidth = ctx.canvas.width;
+    const canvasHeight = ctx.canvas.height;
+
+    // Clear the previous canvas
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+    // Set the margins and center origin
+    const margin = 20;
+    const centerX = canvasWidth / 2;
+    const centerY = canvasHeight / 2;
+
+    // Adjusting scale
+    const xMin = Math.min(...data.months);
+    const xMax = Math.max(...data.months);
+    const yMin = Math.min(...data.savings);
+    const yMax = Math.max(...data.savings);
+
+    const xRange = xMax - xMin;
+    const yRange = yMax - yMin;
+
+    const xScale = (canvasWidth - 2 * margin) / xRange;
+    const yScale = (canvasHeight - 2 * margin) / yRange;
+
+    // Draw X and Y axis
+    ctx.beginPath();
+    ctx.moveTo(margin, centerY); // X-axis start
+    ctx.lineTo(canvasWidth - margin, centerY); // X-axis end
+    ctx.moveTo(centerX, margin); // Y-axis start
+    ctx.lineTo(centerX, canvasHeight - margin); // Y-axis end
+    ctx.strokeStyle = '#fff'; // White color for the axes
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Draw arrows at the end of the axes
+    drawArrow(ctx, canvasWidth - margin, centerY, 10, 0); // X-axis positive arrow
+    drawArrow(ctx, centerX, margin, 0, -10); // Y-axis positive arrow (pointing up)
+
+  
+
+ 
+    ctx.strokeStyle = 'white'; // White line for the graph
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  };
+
+  // Function to draw an arrow at the end of an axis
+  const drawArrow = (
+    ctx: CanvasRenderingContext2D,
+    startX: number,
+    startY: number,
+    angleX: number,
+    angleY: number
+  ) => {
+    const arrowSize = 10;
+    const angle = Math.atan2(angleY, angleX);
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(
+      startX - arrowSize * Math.cos(angle - Math.PI / 6),
+      startY - arrowSize * Math.sin(angle - Math.PI / 6)
+    );
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(
+      startX - arrowSize * Math.cos(angle + Math.PI / 6),
+      startY - arrowSize * Math.sin(angle + Math.PI / 6)
+    );
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  };
+
+
+
+  
   const handleOpenSubscriptionPopup = () => {
     setShowSubscriptionPopup(true);
   };
@@ -50,26 +168,33 @@ const HomePage: React.FC = () => {
     setShowSubscriptionPopup(false);
   };
 
-  const handleOpenAddSubscriptionPopup = () => {
-    setShowAddSubscriptionPopup(true);
-  };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleCloseAddSubscriptionPopup = () => {
-    setShowAddSubscriptionPopup(false);
-    setNewSubscriptionName('');
-    setNewSubscriptionPrice('');
-  };
 
-  // Handle adding a new subscription
+
   const handleAddSubscription = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newSubscriptionName && newSubscriptionPrice) {
-      setSubscriptions([...subscriptions, { name: newSubscriptionName, price: newSubscriptionPrice }]);
-      setNewSubscriptionName('');
-      setNewSubscriptionPrice('');
-    }
+
+    // Prepare the subscription data based on the form state
+    const newSubscription = {
+      name: newSubscriptionName,
+      price: parseFloat(newSubscriptionPrice),
+      frequency: paymentFrequency,
+      paymentDueDate: paymentFrequency === 'monthly' ? paymentDueDate : `${paymentMonth} ${paymentDay}`,
+    };
+
+    // Add the new subscription to the subscriptions array
+    setSubscriptions([...subscriptions, newSubscription]);
+
+    // Reset form fields after adding
+    setNewSubscriptionName('');
+    setNewSubscriptionPrice('');
+    setPaymentDueDate('');
+    setPaymentMonth('');
+    setPaymentDay('');
   };
+
+ 
+
 
   // Handle deleting a subscription
   const handleDeleteSubscription = (index: number) => {
@@ -191,7 +316,7 @@ const HomePage: React.FC = () => {
         <button onClick={handleOpenRentPopup}>Generate Rent Budget Report</button>
         <button onClick={handleOpenInstallmentsPopup}>Generate Installments Report</button>
         <button onClick={handleOpenSubscriptionPopup}>Generate Subscription Report</button>
-        <button>Generate Savings Report</button>
+        <button onClick={handleOpenSavingsPopup}>Generate Savings Report</button>
         <button onClick={handleOpenHolidayPopup}>Generate Holiday Report</button>
         {/*<button className='add-button'>+</button>*/}
         <div className='savings'>
@@ -379,64 +504,206 @@ const HomePage: React.FC = () => {
                 </div>
               </div>
               <div className="recommended-sum">Recommended sum: {recommendedSum}</div>
-              <button type="submit" className="submit-button">Submit</button>
+               <button type="submit" className="submit-button">Submit</button>
+              
             </form>
           </div>
         </div>
       )}
 
-      {showSubscriptionPopup && (
-        <div className='popup-overlay' onClick={handleCloseSubscriptionPopup}>
-          <div className='popup-container subscription-popup' onClick={(e) => e.stopPropagation()}>
-            <h2>Subscription Report</h2>
+{showSavingsPopup && (
+        <div className="popup-overlay" onClick={handleCloseSavingsPopup}>
+          <div
+            className="popup-container-savings"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2>Report - Savings</h2>
 
-            {/* Form for adding a new subscription */}
-            <form onSubmit={handleAddSubscription} className="add-subscription-form">
-              <div className="form-group">
-                <label htmlFor="serviceName">Service Name:</label>
-                <input
-                  type="text"
-                  id="serviceName"
-                  value={newSubscriptionName}
-                  onChange={(e) => setNewSubscriptionName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="servicePrice">Price per month:</label>
-                <input
-                  type="number"
-                  id="servicePrice"
-                  value={newSubscriptionPrice}
-                  onChange={(e) => setNewSubscriptionPrice(parseFloat(e.target.value))}
-                  required
-                />
-              </div>
-              <button type="submit" className="submit-sub-button">Add Subscription</button>
-            </form>
-
-            {/* Display existing subscriptions */}
-            <div className="subscription-list">
-              {subscriptions.length === 0 ? (
-                <p>No subscriptions</p>
-              ) : (
-                subscriptions.map((subscription, index) => (
-                  <div key={index} className="subscription-item">
-                    <span>{subscription.name} - {subscription.price}€/m</span>
-                    <button onClick={() => handleDeleteSubscription(index)} className="delete-sub-button">
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                ))
-              )}
+            {/* Canvas Area */}
+            <div className="canvas-container">
+              <canvas
+                ref={canvasRef}
+                width="350"
+                height="300"
+                style={{ border: "1px solid black" }}
+              ></canvas>
             </div>
 
-            <div className="subscription-actions">
-              <button className="close-sub-button" onClick={handleCloseSubscriptionPopup}>Close</button>
+            {/* Instruction Text */}
+            <div className="select-months-display">
+              Select the amount of months:
+            </div>
+
+            {/* Month Selector */}
+            <div className="installment-options">
+              {[3, 6, 12, 24, 60, "All"].map((months) => (
+                <button
+                  key={months}
+                  className="month-option"
+                  onClick={() =>
+                    handleMonthSelection(months === "All" ? "" : String(months))
+                  }
+                >
+                  {months}
+                </button>
+              ))}
+            </div>
+
+            {/* Percentage Display */}
+            <div className="percentage-display">
+              Your savings have changed by: <strong>15%</strong>{" "}
+              {selectedMonths && `in the last ${selectedMonths} months`}
+            </div>
+
+            {/* Close Button */}
+            <div className="parent-container">
+              <button
+                className="month-close"
+                onClick={handleCloseSavingsPopup}
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
       )}
+
+
+{showSubscriptionPopup && (
+  <div className="popup-overlay" onClick={handleCloseSubscriptionPopup}>
+    <div className="popup-container-subscription" onClick={(e) => e.stopPropagation()}>
+      <h2>Subscription Report</h2>
+
+      <form onSubmit={handleAddSubscription} className="add-subscription-form">
+        <div className="form-group">
+          <input
+            type="text"
+            id="serviceName"
+            value={newSubscriptionName}
+            onChange={(e) => setNewSubscriptionName(e.target.value)}
+            placeholder="Subscription Name"
+            required
+          />
+        </div>
+
+        <div className="yearmonth-options">
+          <button
+            type="button"
+            onClick={() => setPaymentFrequency('monthly')}
+            className={`payment-frequency-btn ${paymentFrequency === 'monthly' ? 'active' : ''}`}
+          >
+            Monthly
+          </button>
+          <button
+            type="button"
+            onClick={() => setPaymentFrequency('yearly')}
+            className={`payment-frequency-btn ${paymentFrequency === 'yearly' ? 'active' : ''}`}
+          >
+            Yearly
+          </button>
+        </div>
+
+        {paymentFrequency === 'monthly' && (
+          <>
+            <div className="form-group">
+              <input
+                type="number"
+                id="servicePriceMonthly"
+                value={newSubscriptionPrice}
+                onChange={(e) => setNewSubscriptionPrice(e.target.value)}
+                placeholder="Subscription Value (€/month)"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <input
+                type="text"
+                id="paymentDueDate"
+                value={paymentDueDate}
+                onChange={(e) => setPaymentDueDate(e.target.value)}
+                placeholder="(DD)"
+                required
+              />
+            </div>
+          </>
+        )}
+
+        {paymentFrequency === 'yearly' && (
+          <>
+            <div className="form-group">
+              <input
+                type="number"
+                id="servicePriceYearly"
+                value={newSubscriptionPrice}
+                onChange={(e) => setNewSubscriptionPrice(e.target.value)}
+                placeholder="Subscription Value (€/year)"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <input
+                type="text"
+                id="paymentMonthDay"
+                value={paymentMonthDayInput} // Using the local state to display the value
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Only update month and day if the input is not empty
+                  if (value) {
+                    const [day, month] = value.split('/');
+                    if (day && month) {
+                      setPaymentMonth(day);  // Set day as month
+                      setPaymentDay(month);  // Set month as day
+                    }
+                  } else {
+                    setPaymentMonth('');  // Reset month if input is cleared
+                    setPaymentDay('');    // Reset day if input is cleared
+                  }
+                  setPaymentMonthDayInput(value);  // Update the input value
+                }}
+                placeholder="DD/MM"  // Placeholder text
+                pattern="\d{2}/\d{2}"  // Enforces DD/MM format
+                required
+              />
+            </div>
+          </>
+        )}
+        <div className='parent-container'>
+        <button type="submit" className="submit-sub-button">Add Subscription</button>
+        </div>
+        
+      </form>
+
+      <div className="subscription-list">
+        {subscriptions.length === 0 ? (
+          <p>No subscriptions added yet.</p>
+        ) : (
+          subscriptions.map((subscription, index) => (
+            <div key={index} className="subscription-item">
+              <span>
+                <strong>{subscription.name}</strong> - {subscription.price}€ / {subscription.frequency}
+              </span>
+              <p>
+                {subscription.frequency === 'monthly'
+                  ? `Payment Due Day: ${subscription.paymentDueDate}th`
+                  : `Payment Due Day: ${subscription.paymentDueDate.split(' ').join('/')}`}
+              </p>
+              <button onClick={() => handleDeleteSubscription(index)} className="delete-sub-button">
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="subscription-actions">
+        <button className="close-sub-button" onClick={handleCloseSubscriptionPopup}>Close</button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
 
     </div>
   );
