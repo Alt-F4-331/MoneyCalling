@@ -154,9 +154,12 @@ body {
 
 .savings {
   background-color: #14123BD9; /* fundal albastru-închis pentru chenar */
+  position: fixed;
   padding: 10px 20px;
   width: 140px;
-  margin-left: -155px;
+  height: 85px;
+  bottom: 25px;
+  left: 25px;
   border-radius: 8px;
   text-align: center;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* umbră pentru chenar */
@@ -180,17 +183,15 @@ body {
  
 .expense-button {
   position: fixed; /* Face ca butonul să fie fix pe ecran */
-  top:-25px;/* Ajustează poziția verticală pentru aliniere */
-  left: 295px; /* Ajustează poziția orizontală pentru aliniere */
+  left: 200px; /* Ajustează poziția orizontală pentru aliniere */
   bottom: 25px;
   display: flex;
   align-items: center;
 }
 
 .expense-button button {
-  margin-top: 532px;
-  margin-left: -100px;
-  height: 84px;
+  padding: 10px, 20px;
+  height: 85px;
   width: 140px;
   background-color: #14123BD9;
   color: #FFFFFF;
@@ -203,7 +204,7 @@ body {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
-.expense-button button:hover {
+.expense-button:hover {
   background-color: #1a2d61; /* Culoare hover */
 }
 
@@ -224,7 +225,7 @@ body {
   justify-content: center; /* Centrare orizontală */
   align-items: flex-start; /* Aliniere sus */
   gap: 20px; /* Spațiu între diagramă și chenar */
-  margin-top: 10px;
+  margin-top: -10px;
   margin-left: 40px;
   position: relative;
 }
@@ -360,11 +361,19 @@ body {
   opacity: 0.9;
 }
 
-button.delete-button {
-  margin-left: 30px;
-  height: 26px; /* Înălțimea butonului */
-  font-size: 10px; /* Dimensiunea textului */
-  text-align: center;
+.delete-sub-button {
+  background: none; /* Elimină fundalul */
+  border: none; /* Elimină chenarul */
+  cursor: pointer; /* Arată cursorul de mână */
+  font-size: 18px; /* Ajustează dimensiunea pictogramei */
+  outline: none; /* Elimină chenarul pe focus */
+}
+
+.delete-sub-button:hover {
+  background: none; /* Previne orice evidențiere de fundal */
+  box-shadow: none; /* Elimină orice efect de hover */
+  outline: none; /* Elimină orice contur */
+  color: red;
 }
 
 .popup-overlay {
@@ -431,31 +440,36 @@ button.delete-button {
 }
 
 
-.popup-container button {
+.submit-sub-button {
   padding: 1px 16px;
   background-color: #1F1E70;
   color: #ffffff;
   border: none;
   margin-bottom: 5px;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.popup-container button:hover {
+.submit-sub-button:hover {
   background-color: #263663;
 }
 
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
+.close-sub-button {
+  padding: 1px 16px;
+  background-color: #222164;
   color: #ffffff;
-  font-size: 18px;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 20px;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.close-sub-button:hover {
+  background-color: transparent;
 }
 
 .popup-actions {

@@ -5,6 +5,8 @@ import logo from '../assets/logo.png';
 import profile_pic from "../assets/profile_pic.jpg";
 import PieChart from './PieChart';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 
 const HomePage: React.FC = () => {
@@ -48,7 +50,7 @@ const HomePage: React.FC = () => {
     setShowSubscriptionPopup(false);
   };
 
-   const handleOpenAddSubscriptionPopup = () => {
+  const handleOpenAddSubscriptionPopup = () => {
     setShowAddSubscriptionPopup(true);
   };
 
@@ -191,7 +193,7 @@ const HomePage: React.FC = () => {
         <button onClick={handleOpenSubscriptionPopup}>Generate Subscription Report</button>
         <button>Generate Savings Report</button>
         <button onClick={handleOpenHolidayPopup}>Generate Holiday Report</button>
-        <button className='add-button'>+</button>
+        {/*<button className='add-button'>+</button>*/}
         <div className='savings'>
           <span>Savings:</span>
           <span>{savingsSum}</span>
@@ -220,29 +222,29 @@ const HomePage: React.FC = () => {
               </div>
               <div className='form-group'>
                 <label htmlFor='amount'>Amount:</label>
-                <input type='number' id='amount' name='amount' value={amount} onChange={(e) => setAmount(parseFloat(e.target.value))} min="0" step = "any" required />
+                <input type='number' id='amount' name='amount' value={amount} onChange={(e) => setAmount(parseFloat(e.target.value))} min="0" step="any" required />
               </div>
               <div className='form-group'>
-          <label htmlFor='category'>Category:</label>
-          <select
-            id='category'
-            name='category'
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-            className="category-select"
-            >
-            <option value="" disabled>Select a category</option>
-            <option value="locuinta">Rent</option>
-            <option value="transport">Transport</option>
-            <option value="alimentatie">Food</option>
-            <option value="sanatate">Health</option>
-            <option value="imbracaminte">Clothing</option>
-            <option value="divertisment">Entertainment</option>
-            <option value="educatie">Education</option>
-            <option value="economii">Savings</option>
-          </select>
-        </div>
+                <label htmlFor='category'>Category:</label>
+                <select
+                  id='category'
+                  name='category'
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  required
+                  className="category-select"
+                >
+                  <option value="" disabled>Select a category</option>
+                  <option value="locuinta">Rent</option>
+                  <option value="transport">Transport</option>
+                  <option value="alimentatie">Food</option>
+                  <option value="sanatate">Health</option>
+                  <option value="imbracaminte">Clothing</option>
+                  <option value="divertisment">Entertainment</option>
+                  <option value="educatie">Education</option>
+                  <option value="economii">Savings</option>
+                </select>
+              </div>
               <div className='form-actions'>
                 <button type='submit'>Add</button>
                 <button type='button' onClick={handleClosePopup}>Cancel</button>
@@ -410,7 +412,7 @@ const HomePage: React.FC = () => {
                   required
                 />
               </div>
-              <button type="submit">Add Subscription</button>
+              <button type="submit" className="submit-sub-button">Add Subscription</button>
             </form>
 
             {/* Display existing subscriptions */}
@@ -421,14 +423,16 @@ const HomePage: React.FC = () => {
                 subscriptions.map((subscription, index) => (
                   <div key={index} className="subscription-item">
                     <span>{subscription.name} - {subscription.price}€/m</span>
-                    <button onClick={() => handleDeleteSubscription(index)} className="delete-button">Delete</button>
+                    <button onClick={() => handleDeleteSubscription(index)} className="delete-sub-button">
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </div>
                 ))
               )}
             </div>
 
             <div className="subscription-actions">
-              <button onClick={handleCloseSubscriptionPopup}>Close</button>
+              <button className="close-sub-button" onClick={handleCloseSubscriptionPopup}>Close</button>
             </div>
           </div>
         </div>
