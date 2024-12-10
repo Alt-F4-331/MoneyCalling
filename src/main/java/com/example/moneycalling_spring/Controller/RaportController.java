@@ -169,18 +169,20 @@ public class RaportController {
     }
     @GetMapping("/sugereaza-vacanta")
     @Operation(summary = "Sugerează alocarea bugetului pentru vacanță")
-    public ResponseEntity<?> sugereazaBugetVacanta(@RequestHeader("Authorization") String token,@RequestParam int nrZile ,@RequestParam float bugetTotal) {
+    public ResponseEntity<?> sugereazaBugetVacanta(@RequestHeader("Authorization") String token, @RequestParam int nrZile, @RequestParam float bugetTotal) {
 
+
+        System.out.println(nrZile);
 
         int userId = jwtutil.getUserIdByToken(token);
         Utilizator utilizator = utilizatorService.getById(userId).get();
         float containerEconomii = utilizator.getProfil().getContainerEconomii();
 
         if (bugetTotal <= 0) {
-            return new ResponseEntity<>("Bugetul este negativ",HttpStatus.BAD_REQUEST); // Buget invalid
+            return new ResponseEntity<>(Map.of("message", "Bugetul este negativ"), HttpStatus.BAD_REQUEST); // Buget invalid
         }
         if (bugetTotal > containerEconomii) {
-            return new ResponseEntity<>("Bugetul trebuie sa fie mai mic decat suma din containerul de economii",HttpStatus.BAD_REQUEST); // Buget invalid
+            return new ResponseEntity<>(Map.of("message", "Bugetul trebuie sa fie mai mic decat suma din containerul de economii"), HttpStatus.BAD_REQUEST); // Buget invalid
         }
 
         // Distribuția procentuală
@@ -190,7 +192,7 @@ public class RaportController {
 
         // Calculul sumelor
         float sumaTransport = bugetTotal * procentTransport;
-        float sumaCazare = bugetTotal * procentCazare/ nrZile;
+        float sumaCazare = bugetTotal * procentCazare / nrZile;
         float sumaAltele = bugetTotal * procentAltele;
 
         // Crearea unui HashMap pentru rezultate
@@ -199,11 +201,16 @@ public class RaportController {
         bugetDistribuit.put("Cazare", sumaCazare);
         bugetDistribuit.put("Altele", sumaAltele);
 
+        // Stocarea chiriei propuse
         raportService.stocheazaChiriePropusa(userId, bugetTotal);
 
-        // Returnarea rezultatelor
-        return new ResponseEntity<>("Bugetul propus este:"+ bugetDistribuit+"Doriti sa continuati?Apelați endpoint-ul /confirma-vacanta pentru a confirma sau refuza.", HttpStatus.OK);
+        // Returnează un obiect JSON cu datele relevante
+        return new ResponseEntity<>(Map.of(
+                "bugetDistribuit", bugetDistribuit,
+                "message", "Bugetul propus este: " + bugetDistribuit + " Doriti sa continuati? Apelați endpoint-ul /confirma-vacanta pentru a confirma sau refuza."
+        ), HttpStatus.OK);
     }
+
 
     @PostMapping("/confirma-vacanta")
     @Operation(summary = "confirma sau respinge sumele pentru vacanta")

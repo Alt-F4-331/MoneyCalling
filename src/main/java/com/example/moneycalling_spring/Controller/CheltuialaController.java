@@ -1,6 +1,7 @@
 package com.example.moneycalling_spring.Controller;
 
 import com.example.moneycalling_spring.Domain.Cheltuiala;
+import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.CheltuialaService;
@@ -63,25 +64,49 @@ public class CheltuialaController {
         Diagrama diagrama = diagrama_opt.get();
 
         Cheltuiala.TipCheltuiala tip = chDTO.getTipCheltuiala();
-        float suma = chDTO.getSuma();
+        float suma = chDTO.getSuma() / 2 ;
         float venitTotal = utilizator.getProfil().getVenit();
 
 
+
+
+        if(tip == Cheltuiala.TipCheltuiala.CONTAINER)
+        {
+            Float economii = diagrama.getProcenteCheltuieli().get(tip);
+            if(economii == null || suma > economii)
+                return ResponseEntity.ok("nu mai ai suficienti bani in containerul de economii");
+
+
+
+
+            diagrama.getProcenteCheltuieli().put(tip, economii - suma);
+
+            ProfilFinanciar pf = utilizator.getProfil();
+            pf.setContainerEconomii(diagrama.getProcenteCheltuieli().get(Cheltuiala.TipCheltuiala.CONTAINER));
+            utilizator.setProfil(pf);
+            utilizatorService.saveUtilizator(utilizator);
+            diagramaService.saveDiagrama(diagrama);
+            return ResponseEntity.ok("Cheltuiala adaugata cu succes");
+
+
+        }
+        else
+        {
         Float procentRamas = diagrama.getProcenteCheltuieli().get(tip);
         if (procentRamas == null || (procentRamas * venitTotal)/100 < suma) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Nu sunt suficiente procente rămase pentru acest tip de cheltuială.");
+            return ResponseEntity.ok("Nu mai ai suficienti bani pentru tipul asta de cheltuiala");
         }
-        Cheltuiala ch = chDTO.mapToEntity(cheltuialaService.getFirstAvailableId(), diagrama);
-
-        Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
 
         float procentNou= procentRamas - (suma/ venitTotal) *100;//se calculeaza procentul ramas,dupa cheltuiala
 
         diagrama.getProcenteCheltuieli().put(tip, procentNou);
-        diagramaService.saveDiagrama(diagrama);
+        diagramaService.saveDiagrama(diagrama);}
+        Cheltuiala ch = chDTO.mapToEntity(cheltuialaService.getFirstAvailableId(), diagrama);
+
+        Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
 
         return ResponseEntity.ok("Cheltuiala adaugata cu succes");
+
     }
     /*
     functia e creare cheltuiala primeste din front id-ul diagramei in care
