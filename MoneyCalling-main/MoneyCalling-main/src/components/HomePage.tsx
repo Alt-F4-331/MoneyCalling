@@ -11,11 +11,19 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 
 
-
-
 const HomePage: React.FC = () => {
-
-  const [categories, setCategories] = useState<string[]>([]);
+  //categorii pentru expense
+  const [categories, setCategories] = useState<string[]>([
+    'ALIMENTATIE',
+    'LOCUINTA',
+    'EDUCATIE',
+    'SANATATE',
+    'DIVERTISMENT',
+    'TRANSPORT',
+    'IMBRACAMINTE',
+    'ECONOMII'
+  ]);
+  
   const memorizedCategories = React.useMemo(() => categories, [categories]);
 
   const [showRentPopup, setShowRentPopup] = useState(false);
@@ -29,6 +37,8 @@ const HomePage: React.FC = () => {
   const [amount, setAmount] = useState<number>(0); // State pentru Amount
   const [category, setCategory] = useState<string>(""); // State pentru Category; va trebui sa faca parte din lista de categorii din baza de date
   const [showPopup, setShowPopup] = useState(false);
+  const [updateTrigger, setUpdateTrigger] = useState(0); // Adăugăm updateTrigger pentru reîncărcarea graficului
+  //Holiday
   const [showHolidayPopup, setShowHolidayPopup] = useState(false);
   const [holidayDays, setHolidayDays] = useState<number>(0);
   const [holidaySum, setHolidaySum] = useState<number>(0);
@@ -220,11 +230,57 @@ const HomePage: React.FC = () => {
     setHolidaySum(0); // Resetare sumă pentru vacanță
   };
 
-  const handleHolidaySubmit = (e: React.FormEvent) => {
+  const handleHolidaySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    //alert("Holiday Report generated successfully!");
-    setShowHolidayPopup(false);
-  };
+
+    
+
+
+    const token = localStorage.getItem("token");
+    const nrZile = holidayDays; // Numărul de zile din formular
+    const bugetTotal = holidaySum; // Suma totală din formular
+    if (!nrZile || !bugetTotal) {
+      console.error("Please provide both number of days and total budget");
+      return;
+    }
+    if (!token) {
+      alert("Token-ul nu este disponibil. Vă rugăm să vă autentificați.");
+      return;
+    }
+
+    try {
+      
+      console.log("n-am ajuns");
+
+      // Apelul către endpoint-ul /sugereaza-vacanta pentru a obține bugetul propus
+      const response = await fetch(`http://localhost:8080/api/rapoarte/sugereaza-vacanta?nrZile=${nrZile}&bugetTotal=${bugetTotal}`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const contentType = response.headers.get("Content-Type");
+
+    if (contentType && contentType.includes("application/json")) {
+      // Dacă răspunsul este JSON, îl parsează
+      const data = await response.json();
+      console.log("Răspuns JSON:", data);
+
+      // Afișează sumele recomandate
+      setRecommendedTravelSum(data.bugetDistribuit.Transport);
+      setRecommendedAccommodationSum(data.bugetDistribuit.Cazare);
+    } else {
+      // Dacă nu este JSON, tratează-l ca text (de exemplu, mesaj de eroare)
+      const text = await response.text();
+      console.log("Răspuns text:", text);
+      alert(text);  // Afișează mesajul de eroare utilizatorului
+    }
+  } catch (error) {
+    console.error("Eroare la obținerea bugetului propus:", error);
+    alert("A apărut o eroare la obținerea bugetului propus.");
+  }
+};
 
   // Deschidere și închidere popups
   const handleOpenRentPopup = () => {
@@ -280,12 +336,76 @@ const HomePage: React.FC = () => {
     handleClosePopup();
   };
 
-  const handleExpenseSubmit = (e: React.FormEvent) => {
+  const handleExpenseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Expense submitted!");
-    console.log(`Name: ${name}, Amount: ${amount}, Category: ${category}`);
-    handleClosePopup();
+  
+    // Construim obiectul care va fi trimis către back-end
+    const expenseData = {
+      nume: name, // "nume" trebuie să corespundă cu DTO-ul
+      suma: parseFloat(amount.toFixed(2)), // "suma"
+      tipCheltuiala: category === "ECONOMII" ? "CONTAINER" : category, // Verificăm dacă este ECONOMII
+    };
+  
+    try {
+      // Obținem token-ul utilizatorului (presupunând că este stocat local)
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        alert("Autentificarea este necesară.");
+        return;
+      }
+  
+      // Trimitem cererea POST către server
+      const serverResponse = await fetch("http://localhost:8080/api/cheltuieli", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(expenseData), // Convertim obiectul în JSON
+      });
+  
+      // Verifică tipul răspunsului
+      const response = await fetch("http://localhost:8080/api/cheltuieli", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(expenseData),
+      });
+  
+      // Verifică dacă răspunsul este de succes
+      if (serverResponse.ok) {
+        let responseData;
+        try {
+          responseData = await serverResponse.text(); // Răspunsul de succes este text
+        } catch (error) {
+          console.error("Eroare la citirea răspunsului:", error);
+          alert("Eroare la procesarea răspunsului.");
+          return;
+        }
+  
+        // Afișează mesajul din răspunsul de succes
+        console.log("Răspuns server:", responseData);
+        alert(responseData);  // Afișează mesajul de succes ("Cheltuiala adaugata cu succes")
+  
+        // Resetăm valorile formularului
+        setName("");
+        setAmount("");
+        setCategory("");
+        handleClosePopup();
+      } else {
+        const errorText = await serverResponse.text(); // Citește eroarea ca text
+        console.error("Eroare la server:", serverResponse.status, errorText);
+        alert(`Eroare: Cererea nu a fost procesată corect. Status code: ${serverResponse.status}`);
+      }
+    } catch (error) {
+      console.error("Eroare la conectarea cu serverul:", error);
+      alert("A apărut o eroare. Te rugăm să încerci din nou.");
+    }
   };
+  
 
 
   const handleExpenseClosePopup = () => {
@@ -340,7 +460,10 @@ const HomePage: React.FC = () => {
       {/* Conținut principal */}
       <main className='main-contents'>
         <div className='diagram'>
-          <PieChart />
+        {/*Quick fix se poate sterge daca nu merge*/}
+          <PieChart onCategoriesFetched={function (categories: string[]): void {
+            throw new Error('Function not implemented.');
+          } } updateTrigger={0} />
         </div>
         <div className='expense-button'>
           <button onClick={handleOpenPopup}>+ Expense</button>
@@ -389,6 +512,8 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       )}
+
+      
 
       {/* Pop-up pentru Rent Budget */}
       {showRentPopup && (

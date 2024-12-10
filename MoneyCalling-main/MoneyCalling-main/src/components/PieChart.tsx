@@ -8,9 +8,10 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface PieChartProps {
   onCategoriesFetched: (categories: string[]) => void; // Callback pentru a transmite categoriile
+  updateTrigger: number; // Adăugăm updateTrigger ca prop
 }
 
-const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched }) => {
+const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched , updateTrigger}) => {
   // State-uri pentru datele din grafic și categorie
   const [data, setData] = useState({
     labels: [] as string[],
@@ -42,11 +43,10 @@ const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched }) => {
 
         const backendData = response.data;
 
-        // Configurare date și culori pentru grafic
-        const labels = Object.keys(backendData);
-        const values = Object.values(backendData) as number[];
+        const labels = Object.keys(backendData).filter(label => label !== "CONTAINER");
+        const values = labels.map(label => backendData[label]);
         const backgroundColors = [
-          '#DE80F2', '#EFDA89', '#3BAEE1', '#F28B82', '#A7F28B', '#F3A683', '#CAB6F2', '#E0E0E0',
+        '#DE80F2', '#EFDA89', '#3BAEE1', '#F28B82', '#A7F28B', '#F3A683', '#CAB6F2', '#E0E0E0',
         ];
 
         setData({
