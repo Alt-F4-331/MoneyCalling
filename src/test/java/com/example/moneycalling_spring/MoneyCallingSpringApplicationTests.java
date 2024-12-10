@@ -4,6 +4,7 @@ import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Repository.*;
 import com.example.moneycalling_spring.Service.*;
 import com.example.moneycalling_spring.dto.*;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,14 @@ class MoneyCallingSpringApplicationTests {
     private final Data dataNasterii = new Data(15, 12, 1998);
     private final Data dataC = new Data(9, 9, 2003);
     private final ProfilFinanciar profil = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-    private final Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "M", "0723456789", profil);
-    private final Utilizator utilizator2 = new Utilizator(1, "Marinescu", "Stefan", "parola1235", "stef.mari@email.com", dataNasterii, "M", "0723456789", profil);
+    private final Utilizator utilizator = new Utilizator(1, "Popescu", "Ion", "parola123", "ion.popescu@email.com", dataNasterii, "Male", "0723456789", profil);
+    private final Utilizator utilizator2 = new Utilizator(1, "Marinescu", "Stefan", "parola1235", "stef.mari@email.com", dataNasterii, "Male", "0723456789", profil);
     private final Diagrama diag  = new Diagrama(1, dataC, utilizator, true);
     private final Diagrama diag2 = new Diagrama(2, dataC, utilizator, true);
     private final Cheltuiala cheltuiala = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diag);
     private final Raport raport = new Raport(1, diag);
+    private final Abonament abonament = new Abonament(1, "iMusic", 10.0f, "Lunar", 9, 12, utilizator);
+
 
     @Test
     @Order(1)
@@ -48,7 +51,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(15, utilizator.getDataNasterii().getZi(), "user zi data nastere must be 15");
         assertEquals(12, utilizator.getDataNasterii().getLuna(), "user luna data nastere must be 12");
         assertEquals(1998, utilizator.getDataNasterii().getAn(), "user an data nastere must be 1998");
-        assertEquals("M", utilizator.getSex(), "user sex must be M");
+        assertEquals("Male", utilizator.getSex(), "user sex must be Male");
         assertEquals("0723456789", utilizator.getNumarTelefon(), "user numar must be 0723456789");
         assertEquals(profil.getId(), utilizator.getProfil().getId(), "user id profil must be 1");
         assertEquals(profil.getVenit(), utilizator.getProfil().getVenit(), "user venit profil must be 3000.0F");
@@ -101,6 +104,12 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(profilFinanciarnew.getDomiciliu(), utilizator.getProfil().getDomiciliu(), "user domiciliu profil must be Suceava");
         assertEquals(profilFinanciarnew.getContainerEconomii(), utilizator.getProfil().getContainerEconomii(), "user container economii profil must be 7000.0F");
         assertEquals(profilFinanciarnew.getDataSalar(), utilizator.getProfil().getDataSalar(), "user data salariu profil must be 20");
+
+        //Testarea functiei set pentru lista de abonamente
+        List<Abonament> listabonamente = new java.util.ArrayList<>(List.of());
+        listabonamente.add(abonament);
+        utilizator.setAbonamente(listabonamente);
+        assertEquals(listabonamente, utilizator.getAbonamente());
     }
 
     @Test
@@ -138,6 +147,15 @@ class MoneyCallingSpringApplicationTests {
         //Testarea functiei set pentru data salariu
         profil.setDataSalar(20);
         assertEquals(20, profil.getDataSalar(), "profil data salariu must be 20");
+
+
+        //Testarea constructorului cu un id
+        ProfilFinanciar pfi = new ProfilFinanciar(7);
+        assertEquals(7, pfi.getId(), "pfi id must be 7");
+        assertEquals(0, pfi.getVenit(), "pfi venit must be 0");
+        assertEquals(".", pfi.getDomiciliu(), "pfi domiciliu must be null");
+        assertEquals(0, pfi.getContainerEconomii(), "pfi container economii must be 0");
+        assertEquals(1, pfi.getDataSalar(), "pfi data salariu must be 1");
     }
 
     @Test
@@ -268,7 +286,7 @@ class MoneyCallingSpringApplicationTests {
         for(Cheltuiala.TipCheltuiala tip : tips){
             procenteini.put(tip, 0f);
         }
-        diag.initializeProcente(diag);
+        diag.initializeProcente(diag, 6000.0f);
 
         for(Cheltuiala.TipCheltuiala tip :tips){
             assertNotNull(diag.getProcenteCheltuieli().get(tip), "diag procenteCheltuieli must not be null");
@@ -296,6 +314,52 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(diag2, raport.getDiagrama(), "raport diagrama content must be same as diag2 content");
     }
 
+    @Test
+    @Order(13)
+    public void testConstructorGetteriAbonament(){
+        //Testarea tuturor campurilor din acest obiect cu ajutorul functiilor get
+        assertEquals(1, abonament.getId(), "abonamnet id must be 1");
+        assertEquals("iMusic", abonament.getNume(), "abonament nume must be iMusic");
+        assertEquals(10.0f, abonament.getValoare(), "abonament valoare must be 10.0f");
+        assertEquals("Lunar", abonament.getTipAbonament(), "abonament tip must be Lunar");
+        assertEquals(9, abonament.getZi(), "abonament zi must be 9");
+        assertEquals(12, abonament.getLuna(), "abonament luna must be 12");
+        assertEquals(utilizator, abonament.getUtilizator(), "abonament utilizator must be same as utilizator");
+    }
+
+    @Test
+    @Order(14)
+    public void testSetteriAbonament(){
+        //Testarea functiei set pentru id
+        abonament.setId(2);
+        assertEquals(2, abonament.getId(), "abonamnet id must be 2");
+
+        //Testarea functiei set pentru nume
+        abonament.setNume("Disney+");
+        assertEquals("Disney+", abonament.getNume(), "abonament nume must be Disney+");
+
+        //Testarea functiei set pentru valoare
+        abonament.setValoare(12.0f);
+        assertEquals(12.0f, abonament.getValoare(), "abonament valoare must be 12.0f");
+
+        //Testarea functiei set pentru tip abonament
+        abonament.setTipAbonament("Anual");
+        assertEquals("Anual", abonament.getTipAbonament(), "abonament tip must be Anual");
+
+        //Testarea functiei set pentru zi
+        abonament.setZi(23);
+        assertEquals(23, abonament.getZi(), "abonament zi must be 23");
+
+        //Testarea functiei set pentru luna
+        abonament.setLuna(4);
+        assertEquals(4, abonament.getLuna(), "abonament luna must be 4");
+
+        //Testarea functiei set pentru utilizator
+        abonament.setUtilizator(utilizator2);
+        assertEquals(utilizator2, abonament.getUtilizator(), "abonament utilizator must be same as utilizator2");
+
+    }
+
 
     // ==============================
     //        Teste Repository
@@ -303,10 +367,12 @@ class MoneyCallingSpringApplicationTests {
 
     private final Data dataRepo = new Data(15,10,2000);
     private final ProfilFinanciar profilRepo = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-    private final Utilizator utilizatorRepo = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataRepo,"mascul","0777333222", profilRepo);
+    private final Utilizator utilizatorRepo = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataRepo,"Male","0777333222", profilRepo);
     private final Diagrama diagRepo  = new Diagrama(1, dataRepo,  utilizatorRepo, true);
     private final Cheltuiala cheltuialaRepo = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagRepo);
     private final Raport raportRepo = new Raport(1, diagRepo);
+    private final Abonament abonamentRepo = new Abonament(1, "iMusic", 10.0f, "Lunar", 9, 12, utilizatorRepo);
+
 
     @Autowired
     private UtilizatorRepository utilizatorRepository;
@@ -323,11 +389,15 @@ class MoneyCallingSpringApplicationTests {
     @Autowired
     private RaportRepository raportRepository;
 
+    @Autowired
+    private AbonamentRepository abonamentRepository;
+
 
     @Test
-    @Order(13)
+    @Order(15)
     public void testSaveAndFindByIdFindAllUtilizator() {
         //Cautarea utilizatorului in repository
+        utilizatorRepository.save(utilizatorRepo);
         List<Utilizator> list = utilizatorRepository.findAll();
         Optional<Utilizator> found = utilizatorRepository.findById(list.get(0).getId());
         assertEquals(utilizatorRepo.getNume(), found.get().getNume());
@@ -340,7 +410,7 @@ class MoneyCallingSpringApplicationTests {
 
 
     @Test
-    @Order(23)
+    @Order(27)
     public void testDeletebyIdUtilizatorRepo() {
         //Initializarea cu un utilizator deja existent in repository
         Utilizator util = utilizatorRepository.getReferenceById(1);
@@ -353,7 +423,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(28)
+    @Order(33)
     public void testDeleteAllUtilizatorRepo(){
         //Stergerea tuturor insantelor din repository
         utilizatorRepository.deleteAll();
@@ -362,7 +432,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(14)
+    @Order(16)
     public void testSaveAndFindByIdFindALlProfilFinanciar(){
         //Salvarea in repository
         profilFinanciarRepository.save(profilRepo);
@@ -373,7 +443,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(24)
+    @Order(28)
     public void testDeleteByIdProfilFinanciarRepo() {
         //Initializarea cu un profil deja existent in repository
         ProfilFinanciar profi = profilFinanciarRepository.getReferenceById(1);
@@ -386,7 +456,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(16)
+    @Order(18)
     public void testSaveAndFindByIdFindAllCheltuiala(){
         //Salvare in repository
         cheltuialaRepository.save(cheltuialaRepo);
@@ -397,7 +467,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(25)
+    @Order(30)
     public void testDeleteByIdCheltuialaRepo() {
         //Initializarea cu o cheltuiala deja existenta in repository
         Cheltuiala chel = cheltuialaRepository.getReferenceById(1);
@@ -410,7 +480,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(15)
+    @Order(17)
     public void testSaveAndFindByIdFindAllDiagrama(){
         //Salvare in repository
         diagramaRepository.save(diagRepo);
@@ -423,7 +493,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(26)
+    @Order(29)
     public void testDeleteByIdDiagramaRepo() {
         //Initializarea cu o diagrama deja existenta in repository
         Diagrama diagr = diagramaRepository.getReferenceById(1);
@@ -436,7 +506,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(17)
+    @Order(19)
     public void testSaveAndFindByIdFindAllRaport(){
         //Salvarea in repository
         raportRepository.save(raportRepo);
@@ -447,7 +517,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(27)
+    @Order(31)
     public void testDeleteByIdRaportRepo() {
         //Initializarea cu o diagrama deja existenta in repository
         Raport raport = raportRepository.getReferenceById(1);
@@ -459,16 +529,50 @@ class MoneyCallingSpringApplicationTests {
         assertFalse(raportRepository.findById(raport.getId()).isPresent());
     }
 
+    @Test
+    @Order(20)
+    public void testSaveAndFindByIdFindAllAbonament(){
+        //Salvarea in repository
+        abonamentRepository.save(abonamentRepo);
+
+        List<Abonament> lista = abonamentRepository.findAll();
+        Optional<Abonament> found = abonamentRepository.findById(lista.get(0).getId());
+        assertEquals(abonamentRepo.getId(), found.get().getId());
+
+        //testare findbyutilizator and nume
+        //Optional<Abonament> found2 = abonamentRepository.findByUtilizatorAndNume(utilizatorRepo, "Ion");
+        //assertEquals(abonamentRepo, found2.get());
+
+        //testare findbytip
+        List<Abonament> found3 = abonamentRepository.findByTipAbonament("Lunar");
+        assertEquals(abonamentRepo.getId(), found3.get(0).getId());
+    }
+
+    @Test
+    @Order(32)
+    public void testDeleteByIdAbonamentRepo() {
+        //Initializarea cu un abonamnet deja existent
+        Abonament ab = abonamentRepository.getReferenceById(1);
+
+        //Stergerea din repository
+        abonamentRepository.deleteById(ab.getId());
+
+        //Cautarea abonamentului
+        assertFalse(abonamentRepository.findById(ab.getId()).isPresent());
+    }
+
     // ==============================
     //        Teste Service
     // ==============================
 
     private final Data dataServ = new Data(15,10,2000);
     private final ProfilFinanciar profilServ = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-    private final Utilizator utilizatorServ = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataServ,"mascul","0777333222", profilServ);
+    private final Utilizator utilizatorServ = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",dataServ,"Male","0777333222", profilServ);
     private final Diagrama diagServ  = new Diagrama(1, dataServ, utilizatorServ, true);
     private final Cheltuiala cheltuialaServ = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagServ);
     private final Raport raportServ = new Raport(1, diagServ);
+    private final Abonament abonamentServ = new Abonament(1, "iMusic", 10.0f, "Lunar", 9, 12, utilizatorServ);
+
 
     @Autowired
     UtilizatorService utilizatorService;
@@ -485,8 +589,11 @@ class MoneyCallingSpringApplicationTests {
     @Autowired
     DiagramaService diagService;
 
+    @Autowired
+    AbonamentService abonamentService;
+
     @Test
-    @Order(18)
+    @Order(21)
     public void testUtilizatorService(){
         //testarea functiei deleteALL
         utilizatorService.deleteAll();
@@ -524,7 +631,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(19)
+    @Order(22)
     public void testProfilFinanciarService(){
         //testarea functiei deleteALL
         profilFinanciarService.deleteAll();
@@ -550,7 +657,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(20)
+    @Order(23)
     public void testDiagramaService(){
         //testarea functiei deleteALL
         diagService.deleteAll();
@@ -599,7 +706,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(21)
+    @Order(24)
     public void testCheltuialaService(){
         //testarea functiei deleteALL
         cheltuialaService.deleteAll();
@@ -638,7 +745,7 @@ class MoneyCallingSpringApplicationTests {
 
 
     @Test
-    @Order(22)
+    @Order(25)
     public void testRaportService(){
         //Adaugarea in service a unui raport
         utilizatorService.saveUtilizator(utilizatorServ);
@@ -692,19 +799,33 @@ class MoneyCallingSpringApplicationTests {
         assertTrue(lista2a.isEmpty());
     }
 
+    @Test
+    @Order(26)
+    public void testAbonamentService(){
+        //Adaugarea in service a unui abonament
+        utilizatorService.saveUtilizator(utilizatorServ);
+        profilFinanciarService.saveProfilFinanciar(profilServ);
+        diagService.saveDiagrama(diagServ);
+        cheltuialaService.saveCheltuiala(cheltuialaServ);
+        raportService.saveRaport(raportServ);
+
+        //testare getall
+    }
+
     // ==============================
     //        Teste dto
     // ==============================
 
     private final Data datadto = new Data(15,10,2000);
     private final ProfilFinanciar profildto = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
-    private final Utilizator utilizatordto = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",datadto,"mascul","0777333222", profildto);
+    private final Utilizator utilizatordto = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",datadto,"Male","0777333222", profildto);
     private final Diagrama diagdto  = new Diagrama(1, datadto, utilizatordto, true);
     private final Cheltuiala cheltuialadto = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagdto);
     private final Raport raportdto = new Raport(1, diagdto);
+    private final Abonament abonamentdto = new Abonament(1, "iMusic", 10.0f, "Lunar", 9, 12, utilizatordto);
 
 
-    @Order(29)
+    @Order(34)
     @Test
     public void testLoginDTO() {
         LoginRequestDTO logindto = new LoginRequestDTO();
@@ -717,7 +838,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(logindto.getParola(), utilizatordto.getParola(), "dto parola must be same as utilizatordto parola");
     }
 
-    @Order(30)
+    @Order(35)
     @Test
     public void testCreareContDTO(){
         CreareContDto contdto = new CreareContDto();
@@ -759,7 +880,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals("00000", cdto.getNumarTelefon(), "cdto numar must be 00000");
     }
 
-    @Order(31)
+    @Order(36)
     @Test
     public void testDataDTO(){
         DataDTO dto = new DataDTO();
@@ -786,10 +907,10 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(2000, dt.getAn(), "dto an must be 2000");
     }
 
-    @Order(32)
+    @Order(37)
     @Test
     public void testDiagramaDTO(){
-        DiagramaRequestDTO dreqdto = new DiagramaRequestDTO();
+        DiagramaRequestDTO dreqdto = new DiagramaRequestDTO(1, datadto);
 
         //testare set get id
         dreqdto.setId(diagdto.getId());
@@ -799,12 +920,9 @@ class MoneyCallingSpringApplicationTests {
         dreqdto.setData(diagdto.getDataDiagrama());
         assertEquals(dreqdto.getData(), diagdto.getDataDiagrama(), "dto data must be same as diagdto data");
 
-        //testare set det utilizator id
-        dreqdto.setUserId(utilizatordto.getId());
-        assertEquals(dreqdto.getUserId(), diagdto.getUser().getId(), "dto userId must be same as utilizatordto id");
     }
 
-    @Order(33)
+    @Order(38)
     @Test
     public void testProfilFinanciarDTO(){
         ProfilFinanciarDto pfdto = new ProfilFinanciarDto(1600.0F, "Iasi", 13000.0F, 15);
@@ -830,7 +948,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(profildto.getDataSalar(), pfdto.getDataSalar(), "dto data salariu must be same as profildto");
     }
 
-    @Order(36)
+    @Order(39)
     @Test
     public void testCheltuialaDTO(){
         CheltuialaDTO cdto = new CheltuialaDTO("fotbal", 1000.0f, Cheltuiala.TipCheltuiala.SANATATE);
@@ -851,7 +969,39 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(cheltuialadto.getTipCheltuiala(), cdto.getTipCheltuiala(), "dto tip must be same as cheltuialdto");
     }
 
-    @Order(34)
+    @Test
+    @Order(42)
+    public void testAbonamentDTO(){
+        AbonamentDTO dto = new AbonamentDTO();
+        AbonamentDTO abdto = new AbonamentDTO("Netflix", 40.0f, "Anual", 10, 12);
+
+        //testare set get nume
+        assertEquals("Netflix", abdto.getNume(), "abdto nume must be ");
+        dto.setNume("Spotify");
+        assertEquals("Spotify", dto.getNume(), "dto nume must be Spotify");
+
+        //testare set get valoare
+        assertEquals(40.0f, abdto.getValoare(), "abdto valoare must be 40.0f");
+        dto.setValoare(22.0f);
+        assertEquals(22.0f, dto.getValoare(), "dto valoare must be 22.0f");
+
+        //testare set get tip
+        assertEquals("Anual", abdto.getTipAbonament(), "abdto tip abonament must be Anual");
+        dto.setTipAbonament("Lunar");
+        assertEquals("Lunar", dto.getTipAbonament(), "dto tip abonament must be Lunar");
+
+        //testare set get zi
+        assertEquals(10, abdto.getZiua(), "abdto zi must be 10");
+        dto.setZiua(20);
+        assertEquals(20, dto.getZiua(), "dto zi must be 20");
+
+        //testare set get luna
+        assertEquals(12, abdto.getLuna(), "abdto zi must be 12");
+        dto.setLuna(6);
+        assertEquals(6, dto.getLuna(), "dto zi must be 6");
+    }
+
+    @Order(40)
     @Test
     public void testRaportRequestDTO(){
         RaportRequestDTO rdto = new RaportRequestDTO();
@@ -878,7 +1028,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(dto.getIdDiagrama(), r.getDiagrama().getId(), "dto id diaagrama must be same as r");
     }
 
-    @Order(35)
+    @Order(41)
     @Test
     public void testCheltuialaRequestDTO(){
         CheltuialaRequestDTO cdto = new CheltuialaRequestDTO();
