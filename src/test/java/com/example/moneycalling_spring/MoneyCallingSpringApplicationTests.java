@@ -185,6 +185,28 @@ class MoneyCallingSpringApplicationTests {
         //Testarea functiei set pentru anul nasterii
         dataNasterii.setAn(2003);
         assertEquals(2003, dataNasterii.getAn(), "dataNasterii an must be 2003");
+
+        //Testarea validarii datei
+        Data datatest = new Data();
+        datatest.setZi(9);
+        datatest.setLuna(12);
+        datatest.setAn(2003);
+        assertDoesNotThrow(datatest::validateDate, "datatest is valid");
+
+        datatest.setZi(31);// month december is 31 days long
+        assertDoesNotThrow(datatest::validateDate, "datatest is valid");
+
+        datatest.setZi(32);// the month is exceeded
+        assertThrows(IllegalArgumentException.class, datatest::validateDate, "december doesn't have 32 days");
+
+        datatest.setLuna(2);
+        datatest.setZi(29);
+        assertThrows(IllegalArgumentException.class, datatest::validateDate, "2023 isn't leap year");
+
+        datatest.setLuna(4);
+        datatest.setZi(31);
+        assertThrows(IllegalArgumentException.class, datatest::validateDate);
+
     }
 
     @Test
@@ -227,6 +249,17 @@ class MoneyCallingSpringApplicationTests {
         //Testarea functiei set pentru diagrama
         cheltuiala.setDiagrama(diag2);
         assertEquals(diag2, cheltuiala.getDiagrama(), "cheltuiala diagrama content must be same as diag2 content");
+
+        //Testarea functiei equals
+        Cheltuiala chel = new Cheltuiala(2, "newhome", 60000.0F, Cheltuiala.TipCheltuiala.EDUCATIE, diag2);
+        assertTrue(cheltuiala.equals(chel), "chel equals cheltuiala");
+        chel.setSuma(55555.0f);
+        assertFalse(cheltuiala.equals(chel), "chel should not equal cheltuiala");
+        assertFalse(cheltuiala.equals(utilizator), "chel should not equal utilizator");
+
+        //Testarea functiei hash
+        chel = cheltuiala;
+        assertEquals(cheltuiala.hashCode(), chel.hashCode(), "the hashes should be equal");
     }
 
     @Test
@@ -592,6 +625,19 @@ class MoneyCallingSpringApplicationTests {
     @Autowired
     AbonamentService abonamentService;
 
+    @Autowired
+    AbonamentRepository abonamentRepositorySA;
+    @Autowired
+    DiagramaRepository diagramaRepositorySA;
+    @Autowired
+    UtilizatorRepository utilizatorRepositorySA;
+    @Autowired
+    UtilizatorRepository utilizatorRepositorySA1;
+    @Autowired
+    UtilizatorService utilizatorServiceSA;
+    @Autowired
+    CheltuialaService cheltuialaServiceSA;
+
     @Test
     @Order(21)
     public void testUtilizatorService(){
@@ -809,7 +855,29 @@ class MoneyCallingSpringApplicationTests {
         cheltuialaService.saveCheltuiala(cheltuialaServ);
         raportService.saveRaport(raportServ);
 
+        //testare save
+        abonamentRepositorySA.save(abonamentServ);
+        diagramaRepositorySA.save(diagServ);
+        utilizatorRepositorySA.save(utilizatorServ);
+        utilizatorServiceSA.saveUtilizator(utilizatorServ);
+        cheltuialaServiceSA.saveCheltuiala(cheltuialaServ);
+
+        abonamentService = new AbonamentService(abonamentRepositorySA, diagramaRepositorySA, utilizatorRepositorySA, cheltuialaServiceSA);
+
         //testare getall
+        List<Abonament> lista = abonamentService.getAllAbonamente();
+        assertEquals(lista.get(0).getId(), abonamentServ.getId());
+
+        //testare getabonament by id
+        assertEquals(abonamentServ.getId(), abonamentService.getAbonamentById(abonamentServ.getId()).get().getId());
+
+        //testare getabonament by utilizator
+        assertEquals(abonamentServ.getId(), abonamentService.getAbonamenteByUtilizatorId(utilizatorServ.getId()).get(0).getId());
+
+        //testare eliminare abonament
+        abonamentService.deleteAbonament(abonamentServ.getId());
+        lista = abonamentService.getAllAbonamente();
+        assertTrue(lista.isEmpty());
     }
 
     // ==============================

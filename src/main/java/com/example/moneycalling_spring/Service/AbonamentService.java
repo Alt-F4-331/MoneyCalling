@@ -26,7 +26,7 @@ public class AbonamentService {
 
 
 
-    public AbonamentService(AbonamentRepository abonamentRepository, UtilizatorService utilizatorService, DiagramaRepository diagramaRepository, UtilizatorRepository utilizatorRepository, UtilizatorRepository utilizatorRepository1, CheltuialaService cheltuialaService) {
+    public AbonamentService(AbonamentRepository abonamentRepository, DiagramaRepository diagramaRepository, UtilizatorRepository utilizatorRepository1, CheltuialaService cheltuialaService) {
         this.abonamentRepository = abonamentRepository;
 
         this.diagramaRepository = diagramaRepository;

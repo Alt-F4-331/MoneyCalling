@@ -63,7 +63,7 @@ public class Data {
     /**
      * Valideaza dacă ziua, luna si anul formeaza o data valida
      */
-    private void validateDate() {
+    public void validateDate() {
         /*if (luna < 1 || luna > 12) {
             throw new IllegalArgumentException("Luna nu poate fi mai mare decât 12 și trebuie să fie între 1 și 12.");
         }*/
