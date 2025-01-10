@@ -311,6 +311,24 @@ body {
 
 }
 
+.popup-container-add-sub{
+  background-color: #191742;
+  color: #FFFFFF;
+  border-radius: 10px;
+  padding: 20px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.payment-frequency-btnactive{
+  background-color: #1F1E70;
+  display: flex;
+  align-items: center; /* Centrare verticală a textului cu inputul */
+  justify-content: center; /* Spațiere între label și input */
+}
+
 /* Titlul pop-up */
 .popup-container h2 {
   margin-bottom: 25px;
@@ -319,37 +337,13 @@ body {
 /* Grup de formular */
 .form-group {
   display: flex;
-  align-items: center; /* Centrare verticală a textului cu inputul */
-  justify-content: space-between; /* Spațiere între label și input */
-  gap: 15px;
+  align-items: left; /* Centrare verticală a textului cu inputul */
 }
 
 /* Etichete */
 .form-group label {
   font-size: 18px !important;
-  margin-right: 10px; /* Spațiu între etichetă și input */
-  flex: 1; /* Ajustează lățimea pentru etichete */
-  text-align: right; /* Textul etichetei aliniat la dreapta */
-}
-
-/* Inputuri */
-.form-group input {
-  flex: 1; /* Eliminăm distribuția proporțională */
-  width: 1000px; /* Setăm o lățime fixă */
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-right: 70px;
-}
-
-/* Acțiuni (butoane) */
-.form-actions {
-  display: flex;
-  justify-content: space-evenly;
-  margin-top: 30px;
-  margin-bottom: 20px;
-  gap: 10px;
+  text-align: left; /* Textul etichetei aliniat la dreapta */
 }
 
 .form-actions button {
@@ -391,17 +385,7 @@ body {
   color: red;
 }
 
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 
 .popup-container {
   background-color: #191742;
@@ -468,6 +452,7 @@ body {
 
 
 .submit-sub-button {
+  margin-left: 5px;
   padding: 1px 16px;
   background-color: #1F1E70;
   color: #ffffff;
@@ -519,6 +504,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 .popup-container-holiday {
   background-color: #191742;
@@ -531,12 +517,10 @@ body {
 }
 
 .form-group-holiday {
-  padding: 15px;
   margin-top: 15px;
   display: flex;
   justify-content: space-between; /* Spațiere egală între etichetă și input */
   align-items: center; /* Aliniere verticală la mijloc */
-  gap: 15px;
   margin-bottom: 10px; /* Spațiu între fiecare grup de input */
 }
 
@@ -585,7 +569,6 @@ body {
   font-weight: bold;
   color: #B7B7B7;
   background-color: #1F1E4C; /* Fundal ușor contrastant */
-  padding: 5px 10px; /* Spațiere internă */
   border-radius: 5px;
   width: 30%; /* Ajustare automată */
   text-align: center; /* Text centrat */
@@ -594,7 +577,6 @@ body {
   background-color: #191742;
   color: #fff;
   border-radius: 10px;
-  padding: 20px;
   width: 400px;
   text-align: center;
   margin: 0 auto;
@@ -698,7 +680,6 @@ p {
 .submit-button {
   background-color: #1F1E70;
   width: 30%;
-  margin-left: 5px;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -707,6 +688,10 @@ p {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-bottom: 10px;
+  display: flex;              /* Use flexbox */
+  align-items: center;        /* Vertically center the text */
+  justify-content: center;    /* Horizontally center the text */
+  text-align: center; 
 }
 
 .submit-button:hover {
@@ -873,5 +858,3 @@ p {
   margin-top: 15px;
  
 }
-
-

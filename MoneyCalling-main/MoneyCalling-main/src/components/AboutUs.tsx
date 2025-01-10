@@ -53,7 +53,7 @@ const AboutUs: React.FC = () => {
         <section className="about-section">
           <h2>What We Offer</h2>
           <h3>Personalized Budgeting Tools</h3>
-          <p>Set custom budgets, track spending, and get real-time insights.</p>
+          <p>Set custom budgets, track spending, and get real-time insights. Manage your finances effortlessly with tailored recommendations to help you stay on track and reach your financial goals.</p>
           <h3>Insights and Analytics</h3>
           <p>Understand your spending trends and get customized recommendations. Our easy-to- read reports break down your finances, helping you identify opportunities to save and grow.</p>
         </section>
@@ -61,11 +61,11 @@ const AboutUs: React.FC = () => {
         <section className="about-section">
           <h2>Our Values</h2>
           <h3>Transparency</h3>
-          <p>We provide clear, actionable information so you always know where you stand.</p>
+          <p>We provide clear, actionable information so you always know where you stand. Trust and integrity guide our actions, helping you make confident financial choices.</p>
           <h3>Empowerment</h3>
           <p>We're here to make money management simple, providing tools that help you confidently make financial decisions.</p>
           <h3>Privacy and Security</h3>
-          <p>Your trust is important to us, and we prioritize data protection in everything we do.</p>
+          <p>Your trust is important to us, and we prioritize data protection in everything we do, maintaining the highest standards of security</p>
           <h3>Continuous Improvement</h3>
           <p>We're committed to evolving with your needs, constantly updating our tools to deliver the best financial solutions.</p>
         </section>

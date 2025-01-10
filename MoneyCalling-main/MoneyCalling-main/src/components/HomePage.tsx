@@ -14,16 +14,16 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 const HomePage: React.FC = () => {
   //categorii pentru expense
   const [categories, setCategories] = useState<string[]>([
-    'ALIMENTATIE',
-    'LOCUINTA',
-    'EDUCATIE',
-    'SANATATE',
+    'FOOD',
+    'HOME',
+    'EDUCATION',
+    'HEALTH',
     'DIVERTISMENT',
     'TRANSPORT',
-    'IMBRACAMINTE',
-    'ECONOMII'
+    'CLOTHING',
+    'ECONOMY'
   ]);
-  
+
   const memorizedCategories = React.useMemo(() => categories, [categories]);
 
   const [showRentPopup, setShowRentPopup] = useState(false);
@@ -51,6 +51,7 @@ const HomePage: React.FC = () => {
   const [recommendedAccommodationSum, setRecommendedAccommodationSum] = useState<number>(0);
 
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
+  const [showAddSubscriptionPopup, setShowAddSubscriptionPopup] = useState(false);
   const [newSubscriptionName, setNewSubscriptionName] = useState('');
   const [newSubscriptionPrice, setNewSubscriptionPrice] = useState('');
   const [paymentFrequency, setPaymentFrequency] = useState<'monthly' | 'yearly'>('monthly');
@@ -88,15 +89,16 @@ const HomePage: React.FC = () => {
         // Dummy data for chart (X: months, Y: savings)
         const selectedMonths = 3;
         const data = {
-          months: Array.from({ length: selectedMonths }, (_, i) => i - Math.floor(selectedMonths / 2)), // To include negative X values
-          savings: Array.from({ length: selectedMonths }, () => Math.floor(Math.random() * 2000) - 1000), // Random savings, including negative values
+          months: Array.from({ length: selectedMonths }, (_, i) => i), // Nu mai folosim valori negative
+          savings: Array.from({ length: selectedMonths }, () => Math.floor(Math.random() * 2000) - 1000), // Random savings, inclusiv valori negative
         };
-
+  
         // Draw the chart on canvas
         drawChart(ctx, data);
       }
     }
   }, [showSavingsPopup]);
+  
 
   const drawChart = (ctx: CanvasRenderingContext2D, data: { months: number[]; savings: number[] }) => {
     const canvasWidth = ctx.canvas.width;
@@ -111,7 +113,7 @@ const HomePage: React.FC = () => {
     const centerY = canvasHeight / 2;
 
     // Adjusting scale
-    const xMin = Math.min(...data.months);
+    const xMin = 0;
     const xMax = Math.max(...data.months);
     const yMin = Math.min(...data.savings);
     const yMax = Math.max(...data.savings);
@@ -126,18 +128,15 @@ const HomePage: React.FC = () => {
     ctx.beginPath();
     ctx.moveTo(margin, centerY); // X-axis start
     ctx.lineTo(canvasWidth - margin, centerY); // X-axis end
-    ctx.moveTo(centerX, margin); // Y-axis start
-    ctx.lineTo(centerX, canvasHeight - margin); // Y-axis end
+    ctx.moveTo(margin, margin); // Y-axis start
+    ctx.lineTo(margin, canvasHeight - margin); // Y-axis end
     ctx.strokeStyle = '#fff'; // White color for the axes
     ctx.lineWidth = 2;
     ctx.stroke();
 
     // Draw arrows at the end of the axes
     drawArrow(ctx, canvasWidth - margin, centerY, 10, 0); // X-axis positive arrow
-    drawArrow(ctx, centerX, margin, 0, -10); // Y-axis positive arrow (pointing up)
-
-
-
+    drawArrow(ctx, margin, margin, 0, -10); // Y-axis positive arrow (pointing up)
 
     ctx.strokeStyle = 'white'; // White line for the graph
     ctx.lineWidth = 2;
@@ -181,7 +180,13 @@ const HomePage: React.FC = () => {
     setShowSubscriptionPopup(false);
   };
 
+  const handleOpenAddSubscriptionPopup = () => {
+    setShowAddSubscriptionPopup(true);
+  }
 
+  const handleCloseAddSubscriptionPopup = () => {
+    setShowAddSubscriptionPopup(false);
+  }
 
 
   const handleAddSubscription = (e: React.FormEvent) => {
@@ -204,6 +209,7 @@ const HomePage: React.FC = () => {
     setPaymentDueDate('');
     setPaymentMonth('');
     setPaymentDay('');
+    setShowAddSubscriptionPopup(false);
   };
 
 
@@ -233,7 +239,7 @@ const HomePage: React.FC = () => {
   const handleHolidaySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    
+
 
 
     const token = localStorage.getItem("token");
@@ -249,7 +255,7 @@ const HomePage: React.FC = () => {
     }
 
     try {
-      
+
       console.log("n-am ajuns");
 
       // Apelul către endpoint-ul /sugereaza-vacanta pentru a obține bugetul propus
@@ -262,25 +268,25 @@ const HomePage: React.FC = () => {
 
       const contentType = response.headers.get("Content-Type");
 
-    if (contentType && contentType.includes("application/json")) {
-      // Dacă răspunsul este JSON, îl parsează
-      const data = await response.json();
-      console.log("Răspuns JSON:", data);
+      if (contentType && contentType.includes("application/json")) {
+        // Dacă răspunsul este JSON, îl parsează
+        const data = await response.json();
+        console.log("Răspuns JSON:", data);
 
-      // Afișează sumele recomandate
-      setRecommendedTravelSum(data.bugetDistribuit.Transport);
-      setRecommendedAccommodationSum(data.bugetDistribuit.Cazare);
-    } else {
-      // Dacă nu este JSON, tratează-l ca text (de exemplu, mesaj de eroare)
-      const text = await response.text();
-      console.log("Răspuns text:", text);
-      alert(text);  // Afișează mesajul de eroare utilizatorului
+        // Afișează sumele recomandate
+        setRecommendedTravelSum(data.bugetDistribuit.Transport);
+        setRecommendedAccommodationSum(data.bugetDistribuit.Cazare);
+      } else {
+        // Dacă nu este JSON, tratează-l ca text (de exemplu, mesaj de eroare)
+        const text = await response.text();
+        console.log("Răspuns text:", text);
+        alert(text);  // Afișează mesajul de eroare utilizatorului
+      }
+    } catch (error) {
+      console.error("Eroare la obținerea bugetului propus:", error);
+      alert("A apărut o eroare la obținerea bugetului propus.");
     }
-  } catch (error) {
-    console.error("Eroare la obținerea bugetului propus:", error);
-    alert("A apărut o eroare la obținerea bugetului propus.");
-  }
-};
+  };
 
   // Deschidere și închidere popups
   const handleOpenRentPopup = () => {
@@ -338,23 +344,23 @@ const HomePage: React.FC = () => {
 
   const handleExpenseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     // Construim obiectul care va fi trimis către back-end
     const expenseData = {
       nume: name, // "nume" trebuie să corespundă cu DTO-ul
       suma: parseFloat(amount.toFixed(2)), // "suma"
       tipCheltuiala: category === "ECONOMII" ? "CONTAINER" : category, // Verificăm dacă este ECONOMII
     };
-  
+
     try {
       // Obținem token-ul utilizatorului (presupunând că este stocat local)
       const token = localStorage.getItem("token");
-  
+
       if (!token) {
         alert("Autentificarea este necesară.");
         return;
       }
-  
+
       // Trimitem cererea POST către server
       const serverResponse = await fetch("http://localhost:8080/api/cheltuieli", {
         method: "POST",
@@ -364,7 +370,7 @@ const HomePage: React.FC = () => {
         },
         body: JSON.stringify(expenseData), // Convertim obiectul în JSON
       });
-  
+
       // Verifică tipul răspunsului
       const response = await fetch("http://localhost:8080/api/cheltuieli", {
         method: "POST",
@@ -374,7 +380,7 @@ const HomePage: React.FC = () => {
         },
         body: JSON.stringify(expenseData),
       });
-  
+
       // Verifică dacă răspunsul este de succes
       if (serverResponse.ok) {
         let responseData;
@@ -385,14 +391,14 @@ const HomePage: React.FC = () => {
           alert("Eroare la procesarea răspunsului.");
           return;
         }
-  
+
         // Afișează mesajul din răspunsul de succes
         console.log("Răspuns server:", responseData);
         alert(responseData);  // Afișează mesajul de succes ("Cheltuiala adaugata cu succes")
-  
+
         // Resetăm valorile formularului
         setName("");
-        setAmount("");
+        setAmount(0);
         setCategory("");
         handleClosePopup();
       } else {
@@ -405,7 +411,7 @@ const HomePage: React.FC = () => {
       alert("A apărut o eroare. Te rugăm să încerci din nou.");
     }
   };
-  
+
 
 
   const handleExpenseClosePopup = () => {
@@ -460,10 +466,10 @@ const HomePage: React.FC = () => {
       {/* Conținut principal */}
       <main className='main-contents'>
         <div className='diagram'>
-        {/*Quick fix se poate sterge daca nu merge*/}
+          {/*Quick fix se poate sterge daca nu merge*/}
           <PieChart onCategoriesFetched={function (categories: string[]): void {
             throw new Error('Function not implemented.');
-          } } updateTrigger={0} />
+          }} updateTrigger={0} />
         </div>
         <div className='expense-button'>
           <button onClick={handleOpenPopup}>+ Expense</button>
@@ -504,16 +510,15 @@ const HomePage: React.FC = () => {
                 </select>
               </div>
 
-              <div className='form-actions'>
-                <button type='submit'>Add</button>
-                <button type='button' onClick={handleClosePopup}>Cancel</button>
+              <div className='parent-container'>
+                <button type='submit' className='submit-sub-button'>Add</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      
+
 
       {/* Pop-up pentru Rent Budget */}
       {showRentPopup && (
@@ -531,7 +536,9 @@ const HomePage: React.FC = () => {
                 step="any"
                 required
               />
-              <button type="submit">Submit</button>
+              <div className='form-actions'>
+                <button type="submit">Submit</button>
+              </div>
             </form>
           </div>
         </div>
@@ -543,8 +550,8 @@ const HomePage: React.FC = () => {
           <div className='popup-container' onClick={(e) => e.stopPropagation()}>
             <p>The amount you introduced is not in the budget range. Want to continue?</p>
             <div className="popup-actions">
-              <button onClick={handleCloseWarningPopup}>No</button>
-              <button onClick={() => { setShowWarningPopup(false); setShowRentPopup(false); }}>Yes</button>
+              <button className="submit-sub-button" onClick={handleCloseWarningPopup}>No</button>
+              <button className="submit-sub-button" onClick={() => { setShowWarningPopup(false); setShowRentPopup(false); }}>Yes</button>
             </div>
           </div>
         </div>
@@ -583,12 +590,12 @@ const HomePage: React.FC = () => {
               </div>
               {/* Recomandare pentru sumă travel */}
               <div className="recommended-sum-holiday">
-                <label>Recommended sum for travel:</label>
+                <label>Recommended sum for travel (round trip):</label>
                 <div className="recommended-value-holiday">{recommendedTravelSum}</div>
               </div>
               {/* Recomandare pentru sumă cazare */}
               <div className="recommended-sum-holiday">
-                <label>Recommended sum for accommodation:</label>
+                <label>Recommended sum for accommodation ($/day):</label>
                 <div className="recommended-value-holiday">{recommendedAccommodationSum}</div>
               </div>
               <div className='form-actions'>
@@ -610,7 +617,7 @@ const HomePage: React.FC = () => {
               </div>
 
               <div className="info-box">Budget range: {budgetRange.min} - {budgetRange.max}</div>
-              <p>Please choose one of the following payment options:</p>
+              <p>Please choose in how many months you want to pay the installment:</p>
               <div className="installment-options">
                 {installmentOptions.map((option) => (
                   <button
@@ -640,8 +647,9 @@ const HomePage: React.FC = () => {
                 </div>
               </div>
               <div className="recommended-sum">Recommended sum: {recommendedSum}</div>
-              <button type="submit" className="submit-button">Submit</button>
-
+              <div className='form-actions'>
+                <button type="submit">Submit</button>
+              </div>
             </form>
           </div>
         </div>
@@ -690,16 +698,6 @@ const HomePage: React.FC = () => {
               Your savings have changed by: <strong>15%</strong>{" "}
               {selectedMonths && `in the last ${selectedMonths} months`}
             </div>
-
-            {/* Close Button */}
-            <div className="parent-container">
-              <button
-                className="month-close"
-                onClick={handleCloseSavingsPopup}
-              >
-                Close
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -709,106 +707,6 @@ const HomePage: React.FC = () => {
         <div className="popup-overlay" onClick={handleCloseSubscriptionPopup}>
           <div className="popup-container-subscription" onClick={(e) => e.stopPropagation()}>
             <h2>Subscription Report</h2>
-
-            <form onSubmit={handleAddSubscription} className="add-subscription-form">
-              <div className="form-group">
-                <input
-                  type="text"
-                  id="serviceName"
-                  value={newSubscriptionName}
-                  onChange={(e) => setNewSubscriptionName(e.target.value)}
-                  placeholder="Subscription Name"
-                  required
-                />
-              </div>
-
-              <div className="yearmonth-options">
-                <button
-                  type="button"
-                  onClick={() => setPaymentFrequency('monthly')}
-                  className={`payment-frequency-btn ${paymentFrequency === 'monthly' ? 'active' : ''}`}
-                >
-                  Monthly
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPaymentFrequency('yearly')}
-                  className={`payment-frequency-btn ${paymentFrequency === 'yearly' ? 'active' : ''}`}
-                >
-                  Yearly
-                </button>
-              </div>
-
-              {paymentFrequency === 'monthly' && (
-                <>
-                  <div className="form-group">
-                    <input
-                      type="number"
-                      id="servicePriceMonthly"
-                      value={newSubscriptionPrice}
-                      onChange={(e) => setNewSubscriptionPrice(e.target.value)}
-                      placeholder="Subscription Value (€/month)"
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      id="paymentDueDate"
-                      value={paymentDueDate}
-                      onChange={(e) => setPaymentDueDate(e.target.value)}
-                      placeholder="(DD)"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-
-              {paymentFrequency === 'yearly' && (
-                <>
-                  <div className="form-group">
-                    <input
-                      type="number"
-                      id="servicePriceYearly"
-                      value={newSubscriptionPrice}
-                      onChange={(e) => setNewSubscriptionPrice(e.target.value)}
-                      placeholder="Subscription Value (€/year)"
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      id="paymentMonthDay"
-                      value={paymentMonthDayInput} // Using the local state to display the value
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        // Only update month and day if the input is not empty
-                        if (value) {
-                          const [day, month] = value.split('/');
-                          if (day && month) {
-                            setPaymentMonth(day);  // Set day as month
-                            setPaymentDay(month);  // Set month as day
-                          }
-                        } else {
-                          setPaymentMonth('');  // Reset month if input is cleared
-                          setPaymentDay('');    // Reset day if input is cleared
-                        }
-                        setPaymentMonthDayInput(value);  // Update the input value
-                      }}
-                      placeholder="DD/MM"  // Placeholder text
-                      pattern="\d{2}/\d{2}"  // Enforces DD/MM format
-                      required
-                    />
-                  </div>
-                </>
-              )}
-              <div className='parent-container'>
-                <button type="submit" className="submit-sub-button">Add Subscription</button>
-              </div>
-
-            </form>
-
             <div className="subscription-list">
               {subscriptions.length === 0 ? (
                 <p>No subscriptions added yet.</p>
@@ -830,16 +728,102 @@ const HomePage: React.FC = () => {
                 ))
               )}
             </div>
-
-            <div className="subscription-actions">
-              <button className="close-sub-button" onClick={handleCloseSubscriptionPopup}>Close</button>
+            <div className='parent-container'>
+              <button onClick={handleOpenAddSubscriptionPopup} type="submit" className="submit-sub-button">Add</button>
             </div>
           </div>
         </div>
       )}
 
-
-
+      {showAddSubscriptionPopup && (
+        <div className="popup-overlay" onClick={handleCloseAddSubscriptionPopup}>
+          {/* Popup pentru adăugarea unui abonament */}
+          <div className="popup-container-add-sub" onClick={(e) => e.stopPropagation()}>
+            <h2>Add Subscription</h2>
+            <form onSubmit={handleAddSubscription} className="add-subscription-form">
+              <div className="form-group">
+                <input
+                  type="text"
+                  id="serviceName"
+                  value={newSubscriptionName}
+                  onChange={(e) => setNewSubscriptionName(e.target.value)}
+                  placeholder="Subscription Name"
+                  required
+                />
+              </div>
+              <div className="yearmonth-options">
+                <button
+                  type="button"
+                  onClick={() => setPaymentFrequency("monthly")}
+                  className={`payment-frequency-btn${paymentFrequency === "monthly" ? "active" : ""}`}
+                >
+                  Monthly
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentFrequency("yearly")}
+                  className={`payment-frequency-btn${paymentFrequency === "yearly" ? "active" : ""}`}
+                >
+                  Yearly
+                </button>
+              </div>
+              {paymentFrequency === "monthly" && (
+                <>
+                  <div className="form-group">
+                    <input
+                      type="number"
+                      id="servicePriceMonthly"
+                      value={newSubscriptionPrice}
+                      onChange={(e) => setNewSubscriptionPrice(e.target.value)}
+                      placeholder="Subscription Value (€/month)"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      id="paymentDueDate"
+                      value={paymentDueDate}
+                      onChange={(e) => setPaymentDueDate(e.target.value)}
+                      placeholder="DD"
+                      required
+                    />
+                  </div>
+                </>
+              )}
+              {paymentFrequency === "yearly" && (
+                <>
+                  <div className="form-group">
+                    <input
+                      type="number"
+                      id="servicePriceYearly"
+                      value={newSubscriptionPrice}
+                      onChange={(e) => setNewSubscriptionPrice(e.target.value)}
+                      placeholder="Subscription Value (€/year)"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <input
+                      type="text"
+                      id="paymentMonthDay"
+                      value={paymentMonthDayInput}
+                      onChange={(e) => setPaymentMonthDayInput(e.target.value)}
+                      placeholder="DD/MM"
+                      required
+                    />
+                  </div>
+                </>
+              )}
+              <div className="parent-container">
+                <button type="submit" className="submit-sub-button">
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

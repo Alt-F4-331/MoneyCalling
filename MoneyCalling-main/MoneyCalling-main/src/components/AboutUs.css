@@ -33,7 +33,7 @@
 .about-header p {
   font-size: 50px;
   color: #CBE3EF;
-  text-align: left;
+  text-align: left !important;
 }
 
 /* Secțiunile din pagină */
@@ -67,7 +67,7 @@
 .about-section p {
   font-size: 30px;
   color: #CBE3EF;
-  text-align: left;
+  text-align: left !important;
 }
 
 /* Linkuri */
