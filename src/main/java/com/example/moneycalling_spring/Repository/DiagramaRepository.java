@@ -23,5 +23,8 @@ public interface DiagramaRepository extends JpaRepository<Diagrama, Integer> {
     @Query("SELECT d FROM Diagrama d WHERE d.dataDiagrama.luna = :luna AND d.dataDiagrama.an = :an AND d.user.id = :userId")
     Optional<Diagrama> findByDataAndUser(@Param("luna") int luna, @Param("an") int an, @Param("userId") int userId);
 
+    @Query("SELECT d.id FROM Diagrama d ORDER BY d.id ASC")
+    List<Integer> findAllIds();
+
 
 }

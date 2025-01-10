@@ -1,9 +1,6 @@
 package com.example.moneycalling_spring.Controller;
 
-import com.example.moneycalling_spring.Domain.Cheltuiala;
-import com.example.moneycalling_spring.Domain.Data;
-import com.example.moneycalling_spring.Domain.Diagrama;
-import com.example.moneycalling_spring.Domain.Utilizator;
+import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.CheltuialaService;
 import com.example.moneycalling_spring.Service.DiagramaService;
@@ -16,10 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/diagrame")
@@ -33,6 +28,7 @@ public class DiagramaController {
     private final CheltuialaService cheltuialaService;
 
     private final JwtUtil jwtutil;
+
 
     public DiagramaController(DiagramaService service, UtilizatorService utilizatorService, CheltuialaService cheltuialaService, JwtUtil jwtutil)
     {
@@ -183,6 +179,48 @@ public class DiagramaController {
         int userId = jwtutil.getUserIdByToken(token);
         Diagrama diagrama = diagramaService.findDiagramaByDataAndUser(luna, an, userId);
         return ResponseEntity.ok(diagrama);
+    }
+
+    @Operation(summary = "Creeaza o noua diagrama")
+    @PostMapping(("/finalizare"))
+    public ResponseEntity<?> finalizareDiagrama(
+            @RequestHeader("Authorization") String token
+    )
+    {
+        //buton pentru finalizare diagrama,o nouadiagrama se face , iar ce a ramas din vechea diagrama se adauga la
+        //containerul de economii
+
+        int userId = jwtutil.getUserIdByToken(token);
+
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Utilizator utilizator = utilizatorOptional.get();
+
+        ProfilFinanciar pf = utilizator.getProfil();
+
+        Diagrama diagramaCurenta = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();
+
+        pf.setContainerEconomii(pf.getContainerEconomii() + diagramaService.baniEconomisiti(diagramaCurenta , pf.getVenit()));
+        //actualizeaza containerul ,adaugand sumele ramase
+
+        utilizator.setProfil(pf);
+        utilizatorService.saveUtilizator(utilizator);
+        int luna , an;
+        if(diagramaCurenta.getDataDiagrama().getLuna() == 12)
+        {
+            luna =1;
+            an = diagramaCurenta.getDataDiagrama().getAn()+1;
+
+        }
+        else {
+            luna = diagramaCurenta.getDataDiagrama().getLuna()+1;
+            an = diagramaCurenta.getDataDiagrama().getAn();
+        }
+
+        Diagrama diagramaNoua =diagramaService.createAndConfigureDiagrama(utilizator,pf.getDataSalar(),luna,an);
+        return ResponseEntity.ok(diagramaNoua);
     }
 
 

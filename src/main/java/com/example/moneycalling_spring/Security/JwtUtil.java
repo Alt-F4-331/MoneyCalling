@@ -56,7 +56,6 @@ public class JwtUtil {
     {
         // Verifică dacă token-ul este valid
         if (token == null || !token.startsWith("Bearer ")) {
-            System.out.println("token1");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST).getStatusCodeValue();
         }
 

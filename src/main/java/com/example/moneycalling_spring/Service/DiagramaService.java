@@ -1,15 +1,20 @@
 package com.example.moneycalling_spring.Service;
 
+import com.example.moneycalling_spring.Domain.Cheltuiala;
 import com.example.moneycalling_spring.Domain.Data;
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Exception.ResourceNotFoundException;
 import com.example.moneycalling_spring.Repository.DiagramaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,6 +41,15 @@ public class DiagramaService {
         //aici trebuie aruncata exceptie
         return diagramarepo.save(diagrama);
         // adauga sau actualizeaza diagrama cu id- ul dat
+    }
+
+    public int getFirstAvailableId() {
+        List<Integer> allIds = diagramarepo.findAllIds();
+        int id = 1;
+        while (allIds.contains(id)) {
+            id++;
+        }
+        return id;
     }
 
     public void stergeDiagramaById(int id)
@@ -114,6 +128,53 @@ public class DiagramaService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public Diagrama createAndConfigureDiagrama(Utilizator utilizator,int zi,int luna , int an) {
+        Diagrama diagrama = new Diagrama();
+
+
+        Data data = new Data(zi,luna,an);
+        diagrama.setDataDiagrama(data);
+
+        // Setăm alte atribute
+        diagrama.setId(getFirstAvailableId());
+        diagrama.setUser(utilizator);
+        diagrama.setActiva(true);
+
+        // Inițializăm procentele
+        diagrama.initializeProcente(diagrama, utilizator.getProfil().getContainerEconomii());
+
+        // Salvăm și setăm diagrama activă
+        Diagrama savedDiagrama = saveDiagrama(diagrama);
+        seteazaDiagramaActiva(diagrama);
+
+        return savedDiagrama;
+    }
+
+    public float baniEconomisiti(Diagrama diagrama, float sumaTotala) {
+        // Obținem map-ul cu procente
+        Map<Cheltuiala.TipCheltuiala, Float> procenteMap = diagrama.getProcenteCheltuieli();
+
+        // Calculăm suma procentelor excluzând CONTAINER
+        float sumaProcente = 0.0f;
+
+        for (Map.Entry<Cheltuiala.TipCheltuiala, Float> entry : procenteMap.entrySet()) {
+            Cheltuiala.TipCheltuiala tip = entry.getKey();
+            Float procent = entry.getValue();
+
+            // Excludem tipul CONTAINER
+            if (!tip.equals(Cheltuiala.TipCheltuiala.CONTAINER)) {
+                sumaProcente += procent;
+            }
+        }
+
+        float rezultat= (sumaProcente / 100) * sumaTotala;
+        BigDecimal rezultatFinal = BigDecimal.valueOf(rezultat);
+        return rezultatFinal.setScale(2, RoundingMode.HALF_UP).floatValue();
+        // Calculăm valoarea finală (procent cumulativ aplicat la suma totală)
+
+    }
+    
 
 
 }

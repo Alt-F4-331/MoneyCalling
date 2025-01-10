@@ -3,6 +3,8 @@ package  com.example.moneycalling_spring.Controller;
 import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Security.JwtUtil;
+import com.example.moneycalling_spring.Service.CheltuialaService;
+import com.example.moneycalling_spring.Service.DiagramaService;
 import com.example.moneycalling_spring.Service.ProfilFinanciarService;
 import com.example.moneycalling_spring.Service.UtilizatorService;
 import com.example.moneycalling_spring.dto.CreareContDto;
@@ -14,6 +16,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +32,16 @@ public class UtilizatorController {
 
     private final JwtUtil jwtutil;
 
+    private final DiagramaService diagramaService;
 
-    public UtilizatorController(UtilizatorService utilizatorService, ProfilFinanciarService profilFinanciarService ,JwtUtil jwt) {
+
+    public UtilizatorController(UtilizatorService utilizatorService, ProfilFinanciarService profilFinanciarService , JwtUtil jwt, CheltuialaService cheltuialaService, DiagramaService diagramaService) {
 
         this.utilizatorService = utilizatorService;
         this.profilFinanciarService=profilFinanciarService;
         this.jwtutil = jwt;
+
+        this.diagramaService = diagramaService;
     }
     @Operation(summary = "Obtine utilizator dupa email")
     @GetMapping("/email")
@@ -127,7 +135,7 @@ public class UtilizatorController {
 
     @Operation(summary = "Creează un cont de utilizator fără profil financiar completat")
     @PostMapping("/createAccount")
-    public ResponseEntity<Utilizator> createAccount(@RequestBody CreareContDto cont) {
+    public ResponseEntity<Utilizator> createAccount(@Valid @RequestBody CreareContDto cont) {
 
         System.out.println("Creare cont primit: ");  // Log pentru a verifica dacă cererea ajunge
         // Inițializează un utilizator gol
@@ -193,6 +201,12 @@ public class UtilizatorController {
         profilExistent.setDataSalar(profilFinanciarNou.getDataSalar());
 
         ProfilFinanciar profilSalvat = profilFinanciarService.saveProfilFinanciar(profilExistent);
+        int zi = profilSalvat.getDataSalar();
+        LocalDate today = LocalDate.now();
+        int luna = today.getMonthValue();
+        int an = today.getYear();
+
+        diagramaService.createAndConfigureDiagrama(utilizator,zi ,luna,an);
 
         // 4. Returnează profilul actualizat
         return ResponseEntity.ok(profilSalvat);
