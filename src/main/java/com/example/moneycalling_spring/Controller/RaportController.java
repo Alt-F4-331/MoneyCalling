@@ -171,7 +171,6 @@ public class RaportController {
     @Operation(summary = "Sugerează alocarea bugetului pentru vacanță")
     public ResponseEntity<?> sugereazaBugetVacanta(@RequestHeader("Authorization") String token, @RequestParam int nrZile, @RequestParam float bugetTotal) {
 
-
         System.out.println(nrZile);
 
         int userId = jwtutil.getUserIdByToken(token);
@@ -195,6 +194,11 @@ public class RaportController {
         float sumaCazare = bugetTotal * procentCazare / nrZile;
         float sumaAltele = bugetTotal * procentAltele;
 
+        // Rotunjirea valorilor la două zecimale
+        sumaTransport = Math.round(sumaTransport * 100) / 100.0f;
+        sumaCazare = Math.round(sumaCazare * 100) / 100.0f;
+        sumaAltele = Math.round(sumaAltele * 100) / 100.0f;
+
         // Crearea unui HashMap pentru rezultate
         Map<String, Float> bugetDistribuit = new HashMap<>();
         bugetDistribuit.put("Transport", sumaTransport);
@@ -210,6 +214,7 @@ public class RaportController {
                 "message", "Bugetul propus este: " + bugetDistribuit + " Doriti sa continuati? Apelați endpoint-ul /confirma-vacanta pentru a confirma sau refuza."
         ), HttpStatus.OK);
     }
+
 
 
     @PostMapping("/confirma-vacanta")
@@ -257,14 +262,17 @@ public class RaportController {
         Map<String, Float> rezultat = diagrame.stream()
                 .collect(Collectors.toMap(
                         diagrama -> diagrama.getDataDiagrama().getLuna() + " " + diagrama.getDataDiagrama().getAn(), // Cheia: Luna și anul
-                        diagrama -> diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.CONTAINER, 0f), // Valoarea: procentul CONTAINER
+                        diagrama -> {
+                            float procent = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.CONTAINER, 0f);
+                            return Math.round(procent * 100) / 100.0f; // Rotunjire la două zecimale
+                        },
                         (v1, v2) -> v1, // În caz de duplicate (nu ar trebui să fie), ia primul
                         LinkedHashMap::new // Păstrează ordinea originală
                 ));
 
         return ResponseEntity.ok(rezultat);
-
     }
+
 
 
 
