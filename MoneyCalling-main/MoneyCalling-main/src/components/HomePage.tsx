@@ -224,69 +224,101 @@ const HomePage: React.FC = () => {
 
 
   // Funcții pentru deschiderea și închiderea pop-up-ului pentru Holiday Report
-  const handleOpenHolidayPopup = () => {
-    setShowHolidayPopup(true);
-  };
+const handleOpenHolidayPopup = () => {
+  setShowHolidayPopup(true);
+};
 
-  const handleCloseHolidayPopup = () => {
-    setShowHolidayPopup(false);
-    setRecommendedAccommodationSum(0);
-    setRecommendedTravelSum(0);
-    setHolidayDays(0); // Resetare număr de zile
-    setHolidaySum(0); // Resetare sumă pentru vacanță
-  };
+const handleCloseHolidayPopup = () => {
+  setShowHolidayPopup(false);
+  setRecommendedAccommodationSum(0);
+  setRecommendedTravelSum(0);
+  setHolidayDays(0); // Resetare număr de zile
+  setHolidaySum(0); // Resetare sumă pentru vacanță
+};
 
-  const handleHolidaySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+// Funcție pentru apelul automat al endpoint-ului /sugereaza-vacanta
+const fetchHolidaySuggestion = async (nrZile: number, bugetTotal: number) => {
+  const token = localStorage.getItem("token");
 
+  if (!token) {
+    console.error("Token-ul nu este disponibil. Vă rugăm să vă autentificați.");
+    return;
+  }
 
-
-
-    const token = localStorage.getItem("token");
-    const nrZile = holidayDays; // Numărul de zile din formular
-    const bugetTotal = holidaySum; // Suma totală din formular
-    if (!nrZile || !bugetTotal) {
-      console.error("Please provide both number of days and total budget");
-      return;
-    }
-    if (!token) {
-      alert("Token-ul nu este disponibil. Vă rugăm să vă autentificați.");
-      return;
-    }
-
-    try {
-
-      console.log("n-am ajuns");
-
-      // Apelul către endpoint-ul /sugereaza-vacanta pentru a obține bugetul propus
-      const response = await fetch(`http://localhost:8080/api/rapoarte/sugereaza-vacanta?nrZile=${nrZile}&bugetTotal=${bugetTotal}`, {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/rapoarte/sugereaza-vacanta?nrZile=${nrZile}&bugetTotal=${bugetTotal}`,
+      {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
         },
-      });
-
-      const contentType = response.headers.get("Content-Type");
-
-      if (contentType && contentType.includes("application/json")) {
-        // Dacă răspunsul este JSON, îl parsează
-        const data = await response.json();
-        console.log("Răspuns JSON:", data);
-
-        // Afișează sumele recomandate
-        setRecommendedTravelSum(data.bugetDistribuit.Transport);
-        setRecommendedAccommodationSum(data.bugetDistribuit.Cazare);
-      } else {
-        // Dacă nu este JSON, tratează-l ca text (de exemplu, mesaj de eroare)
-        const text = await response.text();
-        console.log("Răspuns text:", text);
-        alert(text);  // Afișează mesajul de eroare utilizatorului
       }
-    } catch (error) {
-      console.error("Eroare la obținerea bugetului propus:", error);
-      alert("A apărut o eroare la obținerea bugetului propus.");
+    );
+
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType && contentType.includes("application/json")) {
+      const data = await response.json();
+      console.log("Răspuns JSON:", data);
+
+      // Afișează sumele recomandate
+      setRecommendedTravelSum(data.bugetDistribuit.Transport);
+      setRecommendedAccommodationSum(data.bugetDistribuit.Cazare);
+    } else {
+      const text = await response.text();
+      console.log("Răspuns text:", text);
+      alert(text);
     }
-  };
+  } catch (error) {
+    console.error("Eroare la obținerea bugetului propus:", error);
+    alert("A apărut o eroare la obținerea bugetului propus.");
+  }
+};
+
+// Monitorizează schimbările la numărul de zile și buget pentru a apela automat endpoint-ul
+useEffect(() => {
+  if (holidayDays > 0 && holidaySum > 0) {
+    fetchHolidaySuggestion(holidayDays, holidaySum);
+  }
+}, [holidayDays, holidaySum]);
+
+const handleHolidaySubmit = async (e: React.FormEvent) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("Token-ul nu este disponibil. Vă rugăm să vă autentificați.");
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/rapoarte/confirma-vacanta?confirm=${true}`,
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(`Status: ${response.status} (${response.statusText})`);
+
+    if (response.ok) {
+      const message = await response.text();
+      alert(message); // Mesaj de succes
+      localStorage.setItem('savings', String(savingsSum));
+      setTriggerReload((prev) => !prev);
+    } else {
+      const errorText = await response.text();
+      alert(`Eroare: ${errorText}`); // Mesaj de eroare
+    }
+  } catch (error) {
+    console.error("Eroare la confirmarea vacanței:", error);
+    alert("A apărut o eroare la confirmarea vacanței.");
+  }
+};
+
 
   // Deschidere și închidere popups
   const handleOpenRentPopup = () => {
@@ -422,12 +454,15 @@ const HomePage: React.FC = () => {
   };
 
 
+  const [triggerReload, setTriggerReload] = useState(false); // Variabilă pentru trigger
+
+// useEffect pentru a actualiza savings din localStorage
   useEffect(() => {
-    const savedSavings = localStorage.getItem('savings');
-    if (savedSavings) {
-      setSavingsSum(Number(savedSavings)); // Setează savings din localStorage
-    }
-  }, []);
+  const savedSavings = localStorage.getItem("savings");
+  if (savedSavings) {
+    setSavingsSum(Number(savedSavings)); // Setează savings din localStorage
+  }
+}, [triggerReload]);
 
 
   return (
