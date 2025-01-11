@@ -129,6 +129,7 @@ const fetchChartData = async (year: number, month: number) => {
                             ))}
                         </select>
                     </div>
+                    <div className="select-year">Select Month:</div>
                     <div className="months-grid">
                         {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map(
                             (month, index) => (

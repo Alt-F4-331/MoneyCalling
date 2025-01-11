@@ -58,6 +58,11 @@ const MyAccount: React.FC = () => {
     navigate('/homepage');
   };
 
+  const handleSignOut = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
+
   return (
     <div className="my-account-container">
       <header className="navbar">
@@ -77,22 +82,34 @@ const MyAccount: React.FC = () => {
       </header>
       
       <div className="my-account-card">
-        <button onClick={handleBackClick} className="back-button">&lt; Back</button>
+      <button onClick={handleBackClick} className="back-button"></button>
         <h2 className="my-account-title">Profile</h2>
 
         {loading ? (
           <p>Loading...</p>  // Arătăm un mesaj de încărcare până când datele sunt obținute
         ) : userData ? (
           <div className="user-profile-info">
+            <div className="form-row">
             <div className="form-group">
+            <label>First Name:</label>
               <input
                 type="text"
                 placeholder="Name"
+                value={userData.prenume}
+                readOnly
+              />
+            </div>
+            <div className="form-group last-name">
+              <label>Last Name:</label>
+              <input
+                type="text"
                 value={userData.nume}
                 readOnly
               />
             </div>
+            </div>
             <div className="form-group">
+            <label className="other-labels">Email:</label>
               <input
                 type="email"
                 placeholder="Email"
@@ -101,6 +118,7 @@ const MyAccount: React.FC = () => {
               />
             </div>
             <div className="form-group">
+            <label className="other-labels">Phone Number:</label>
               <input
                 type="tel"
                 placeholder="Phone Number"
@@ -109,6 +127,7 @@ const MyAccount: React.FC = () => {
               />
             </div>
             <div className="form-group">
+            <label className="other-labels">Password:</label>
               <input
                 type="password"
                 placeholder="Password"
@@ -117,7 +136,8 @@ const MyAccount: React.FC = () => {
               />
             </div>
             <div className="edit-button-container">
-            <button className="edit-button">Edit</button>
+            <button className="edit-button edit">Edit</button>
+            <button className="sign-out-button" onClick={handleSignOut}>Sign Out</button>
           </div>
           </div>
         ) : (

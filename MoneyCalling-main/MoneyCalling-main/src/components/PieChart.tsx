@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
@@ -72,13 +73,24 @@ const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched , updateTrigger
     };
 
     fetchData();
-  }, [onCategoriesFetched]);
+  }, [onCategoriesFetched, updateTrigger]);
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
         display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem: any) => {
+            const dataset = tooltipItem.dataset;
+            const currentValue = dataset.data[tooltipItem.dataIndex];
+            const total = dataset.data.reduce((sum: number, value: number) => sum + value, 0);
+            const percentage = ((currentValue / total) * 100).toFixed(2); // Calculează procentajul
+            return `${tooltipItem.label}: ${currentValue} (${percentage}%)`;
+          },
+        },
       },
       title: {
         display: false,

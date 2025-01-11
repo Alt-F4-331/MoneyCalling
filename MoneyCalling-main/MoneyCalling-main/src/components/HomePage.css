@@ -858,3 +858,15 @@ p {
   margin-top: 15px;
  
 }
+
+.blinking-link {
+  animation: blinker 1.5s linear infinite;
+  background-color: yellow;
+  border-radius: 5px;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0.5;
+  }
+}

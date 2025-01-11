@@ -60,21 +60,24 @@
   /* Conținut principal */
   .main-content {
     display: flex;
-    gap: 150px;
+    gap: 100px;
     margin-top: 100px;
+    margin-left: 0 !important;
     padding: 20px;
-    justify-content: center;
+    justify-content: left;
   }
   
   /* Calendar */
   .calendar-section {
-    background-color: #14123BD9;
-    padding: 20px;
+    background-color: #1E1F4C;
+    padding: 30px;
     border-radius: 8px;
     text-align: center;
-    width: 40%;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    width: 50%;
+    height: 100%;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    margin-left:30px;
   }
   
   .calendar-section h1 {
@@ -85,18 +88,18 @@
   .months-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 30px;
     margin-top: 50px;
   }
   
   .months-grid button {
-    background-color: #1F1B4D;
+    background-color: #0F0D40;
     color: #FFFFFF;
     border: none;
-    padding: 30px;
-    border-radius: 5px;
+    padding: 40px;
+    border-radius: 7px;
     cursor: pointer;
-    font-size: 25px;
+    font-size: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -115,8 +118,8 @@
   }
   
   .pie-chart-dash {
-    width: 400px;
-    height: 400px;
+    width: 600px;
+    height: 600px;
     background: conic-gradient(
       #FF69B4 0% 33%,
       #FFD700 33% 66%,
@@ -157,21 +160,26 @@
   }
   
   .year-selector select {
-    background-color: #1F1B4D;
+    background-color: #2F2D5D;
     color: #FFFFFF;
     border: none;
-    padding: 10px 20px;
+    padding: 15px 25px;
     border-radius: 5px;
-    font-size: 18px;
+    font-size: 24px;
     cursor: pointer;
   }
   
   .year-selector select:hover {
-    background-color: #263663;
+    background-color: #262350;
   }
   
   .year-selector select:focus {
     outline: none;
     box-shadow: 0 0 5px #FFD700;
+  }
+
+  .select-year {
+    font-size: 30px;
+    margin-top: 40px;
   }
     
