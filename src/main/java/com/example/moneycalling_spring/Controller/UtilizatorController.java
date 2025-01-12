@@ -11,6 +11,7 @@ import com.example.moneycalling_spring.Service.UtilizatorService;
 import com.example.moneycalling_spring.dto.CreareContDto;
 import com.example.moneycalling_spring.dto.LoginRequestDTO;
 import com.example.moneycalling_spring.dto.ProfilFinanciarDto;
+import com.example.moneycalling_spring.dto.UpdateUserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -162,6 +163,33 @@ public class UtilizatorController {
         // Returnează utilizatorul creat cu HTTP Status 201 Created
         return new ResponseEntity<>(utilizatorSalvat, HttpStatus.CREATED);
     }
+
+    @Operation(summary = "Creează un cont de utilizator fără profil financiar completat")
+    @PostMapping("/updateAccount")
+    public ResponseEntity<Utilizator> updateAccount(@RequestHeader("Authorization") String token,@Valid @RequestBody UpdateUserDTO updateUserDTO) {
+
+        int userId = jwtutil.getUserIdByToken(token);
+
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Utilizator utilizator = utilizatorOptional.get();
+
+        utilizator.setNume(updateUserDTO.getNume());
+        utilizator.setNumarTelefon(updateUserDTO.getNumarTelefon());
+        utilizator.setPrenume(updateUserDTO.getPrenume());
+        utilizator.setEmail(updateUserDTO.getEmail());
+        utilizator.setParola(updateUserDTO.getParola());
+
+        // Salvează utilizatorul cu profilul financiar necompletat
+        Utilizator utilizatorSalvat = utilizatorService.saveUtilizator(utilizator);
+
+        // Returnează utilizatorul creat cu HTTP Status 201 Created
+        return new ResponseEntity<>(utilizatorSalvat, HttpStatus.CREATED);
+
+    }
+
     @PutMapping("/profil-financiar")
     @Operation(summary = "Actualizeaza profil financiar al utilizatorului logat")
     public ResponseEntity<ProfilFinanciar> updateProfilFinanciar(
