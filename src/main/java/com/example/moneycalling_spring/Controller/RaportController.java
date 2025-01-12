@@ -105,7 +105,7 @@ public class RaportController {
 
     @PostMapping("/initiaza-chirie")
     @Operation(summary = "Inițiază procesul pentru adăugarea chiriei")
-    public ResponseEntity<String> initiazaChirie(@RequestHeader("Authorization") String token, @RequestBody float chiriePropusa) {
+    public ResponseEntity<String> initiazaChirie(@RequestHeader("Authorization") String token, @RequestParam float chiriePropusa) {
         int userId = jwtutil.getUserIdByToken(token);
         Utilizator utilizator = utilizatorService.getById(userId).get();  // No exception handling
         float venit = utilizator.getProfil().getVenit();

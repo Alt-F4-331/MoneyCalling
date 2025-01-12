@@ -164,7 +164,7 @@ public class UtilizatorController {
         return new ResponseEntity<>(utilizatorSalvat, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Creează un cont de utilizator fără profil financiar completat")
+    @Operation(summary = "Actualizeaza datele user-ului logat")
     @PostMapping("/updateAccount")
     public ResponseEntity<Utilizator> updateAccount(@RequestHeader("Authorization") String token,@Valid @RequestBody UpdateUserDTO updateUserDTO) {
 
