@@ -1,14 +1,17 @@
 package com.example.moneycalling_spring;
 
+import com.example.moneycalling_spring.Controller.*;
 import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Repository.*;
+import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.*;
 import com.example.moneycalling_spring.dto.*;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -443,7 +446,7 @@ class MoneyCallingSpringApplicationTests {
 
 
     @Test
-    @Order(27)
+    @Order(33)
     public void testDeletebyIdUtilizatorRepo() {
         //Initializarea cu un utilizator deja existent in repository
         Utilizator util = utilizatorRepository.getReferenceById(1);
@@ -456,7 +459,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(33)
+    @Order(39)
     public void testDeleteAllUtilizatorRepo(){
         //Stergerea tuturor insantelor din repository
         utilizatorRepository.deleteAll();
@@ -476,7 +479,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(28)
+    @Order(34)
     public void testDeleteByIdProfilFinanciarRepo() {
         //Initializarea cu un profil deja existent in repository
         ProfilFinanciar profi = profilFinanciarRepository.getReferenceById(1);
@@ -500,7 +503,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(30)
+    @Order(36)
     public void testDeleteByIdCheltuialaRepo() {
         //Initializarea cu o cheltuiala deja existenta in repository
         Cheltuiala chel = cheltuialaRepository.getReferenceById(1);
@@ -526,7 +529,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(29)
+    @Order(35)
     public void testDeleteByIdDiagramaRepo() {
         //Initializarea cu o diagrama deja existenta in repository
         Diagrama diagr = diagramaRepository.getReferenceById(1);
@@ -550,7 +553,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(31)
+    @Order(37)
     public void testDeleteByIdRaportRepo() {
         //Initializarea cu o diagrama deja existenta in repository
         Raport raport = raportRepository.getReferenceById(1);
@@ -582,7 +585,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(32)
+    @Order(38)
     public void testDeleteByIdAbonamentRepo() {
         //Initializarea cu un abonamnet deja existent
         Abonament ab = abonamentRepository.getReferenceById(1);
@@ -632,14 +635,12 @@ class MoneyCallingSpringApplicationTests {
     @Autowired
     UtilizatorRepository utilizatorRepositorySA;
     @Autowired
-    UtilizatorRepository utilizatorRepositorySA1;
-    @Autowired
     UtilizatorService utilizatorServiceSA;
     @Autowired
     CheltuialaService cheltuialaServiceSA;
 
     @Test
-    @Order(21)
+    @Order(27)
     public void testUtilizatorService(){
         //testarea functiei deleteALL
         utilizatorService.deleteAll();
@@ -677,7 +678,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(22)
+    @Order(28)
     public void testProfilFinanciarService(){
         //testarea functiei deleteALL
         profilFinanciarService.deleteAll();
@@ -703,7 +704,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(23)
+    @Order(29)
     public void testDiagramaService(){
         //testarea functiei deleteALL
         diagService.deleteAll();
@@ -739,6 +740,10 @@ class MoneyCallingSpringApplicationTests {
         diagService.seteazaDiagramaActiva(diagServ);
         assertTrue(diagServ.isActiva(), "diagServ is active");
 
+        //testare getfirstid
+        int result = diagService.getFirstAvailableId();
+        assertEquals(diagServ.getId()+1, result);
+
         //testare deletebyid
         diagService.stergeDiagramaById(diagServ.getId());
 
@@ -752,7 +757,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(24)
+    @Order(30)
     public void testCheltuialaService(){
         //testarea functiei deleteALL
         cheltuialaService.deleteAll();
@@ -791,7 +796,7 @@ class MoneyCallingSpringApplicationTests {
 
 
     @Test
-    @Order(25)
+    @Order(31)
     public void testRaportService(){
         //Adaugarea in service a unui raport
         utilizatorService.saveUtilizator(utilizatorServ);
@@ -846,7 +851,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(26)
+    @Order(32)
     public void testAbonamentService(){
         //Adaugarea in service a unui abonament
         utilizatorService.saveUtilizator(utilizatorServ);
@@ -856,7 +861,7 @@ class MoneyCallingSpringApplicationTests {
         raportService.saveRaport(raportServ);
 
         //testare save
-        abonamentRepositorySA.save(abonamentServ);
+        abonamentService.addAbonament(abonamentServ);
         diagramaRepositorySA.save(diagServ);
         utilizatorRepositorySA.save(utilizatorServ);
         utilizatorServiceSA.saveUtilizator(utilizatorServ);
@@ -873,6 +878,14 @@ class MoneyCallingSpringApplicationTests {
 
         //testare getabonament by utilizator
         assertEquals(abonamentServ.getId(), abonamentService.getAbonamenteByUtilizatorId(utilizatorServ.getId()).get(0).getId());
+
+        //testarea get abonament by utilizator si nume
+        ///assertEquals(abonamentServ.getId(), abonamentService.getAbonamentByUserAndName(utilizatorServ, utilizatorServ.getNume()).get().getId());
+
+        //testare getfirstid
+        int result = abonamentService.getFirstAvailableId();
+        assertEquals(abonamentServ.getId()+1, result);
+
 
         //testare eliminare abonament
         abonamentService.deleteAbonament(abonamentServ.getId());
@@ -893,7 +906,7 @@ class MoneyCallingSpringApplicationTests {
     private final Abonament abonamentdto = new Abonament(1, "iMusic", 10.0f, "Lunar", 9, 12, utilizatordto);
 
 
-    @Order(34)
+    @Order(40)
     @Test
     public void testLoginDTO() {
         LoginRequestDTO logindto = new LoginRequestDTO();
@@ -906,7 +919,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(logindto.getParola(), utilizatordto.getParola(), "dto parola must be same as utilizatordto parola");
     }
 
-    @Order(35)
+    @Order(41)
     @Test
     public void testCreareContDTO(){
         CreareContDto contdto = new CreareContDto();
@@ -948,7 +961,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals("00000", cdto.getNumarTelefon(), "cdto numar must be 00000");
     }
 
-    @Order(36)
+    @Order(42)
     @Test
     public void testDataDTO(){
         DataDTO dto = new DataDTO();
@@ -975,7 +988,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(2000, dt.getAn(), "dto an must be 2000");
     }
 
-    @Order(37)
+    @Order(43)
     @Test
     public void testDiagramaDTO(){
         DiagramaRequestDTO dreqdto = new DiagramaRequestDTO(1, datadto);
@@ -990,7 +1003,7 @@ class MoneyCallingSpringApplicationTests {
 
     }
 
-    @Order(38)
+    @Order(44)
     @Test
     public void testProfilFinanciarDTO(){
         ProfilFinanciarDto pfdto = new ProfilFinanciarDto(1600.0F, "Iasi", 13000.0F, 15);
@@ -1016,7 +1029,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(profildto.getDataSalar(), pfdto.getDataSalar(), "dto data salariu must be same as profildto");
     }
 
-    @Order(39)
+    @Order(45)
     @Test
     public void testCheltuialaDTO(){
         CheltuialaDTO cdto = new CheltuialaDTO("fotbal", 1000.0f, Cheltuiala.TipCheltuiala.SANATATE);
@@ -1038,7 +1051,7 @@ class MoneyCallingSpringApplicationTests {
     }
 
     @Test
-    @Order(42)
+    @Order(48)
     public void testAbonamentDTO(){
         AbonamentDTO dto = new AbonamentDTO();
         AbonamentDTO abdto = new AbonamentDTO("Netflix", 40.0f, "Anual", 10, 12);
@@ -1069,7 +1082,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(6, dto.getLuna(), "dto zi must be 6");
     }
 
-    @Order(40)
+    @Order(46)
     @Test
     public void testRaportRequestDTO(){
         RaportRequestDTO rdto = new RaportRequestDTO();
@@ -1096,7 +1109,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(dto.getIdDiagrama(), r.getDiagrama().getId(), "dto id diaagrama must be same as r");
     }
 
-    @Order(41)
+    @Order(47)
     @Test
     public void testCheltuialaRequestDTO(){
         CheltuialaRequestDTO cdto = new CheltuialaRequestDTO();
@@ -1129,5 +1142,298 @@ class MoneyCallingSpringApplicationTests {
 
     }
 
+    @Test
+    @Order(49)
+    public void testUpdateUserDTO(){
+        UpdateUserDTO updto = new UpdateUserDTO("Tudor", "Alexandru", "password", "tudor@test.com", "0742123456");
 
+        //testare get
+        assertEquals("Tudor", updto.getNume(), "dto nume must be Tudor");
+        assertEquals("Alexandru", updto.getPrenume(), "dto prenume must be Alexandru");
+        assertEquals("password", updto.getParola(), "dto parola must be password");
+        assertEquals("tudor@test.com", updto.getEmail(), "dto email must be tudor@test.com");
+        assertEquals("0742123456", updto.getNumarTelefon(), "dto numar telefon must be 0742123456");
+
+        //testare set
+        updto.setNume("newName");
+        assertEquals("newName", updto.getNume(), "dto nume must be same as newName");
+
+        updto.setPrenume("newPrenume");
+        assertEquals("newPrenume", updto.getPrenume(), "dto prenume must be same as newPrenume");
+
+        updto.setParola("newParola");
+        assertEquals("newParola", updto.getParola(), "dto parola must be newParola");
+
+        updto.setEmail("newEmail");
+        assertEquals("newEmail", updto.getEmail(), "dto email must be same as newEmail");
+
+        updto.setNumarTelefon("00000000000");
+        assertEquals("00000000000", updto.getNumarTelefon(), "dto numartelefon must be same as 00000000000");
+
+    }
+
+
+    // ==============================
+    //        Teste controller
+    // ==============================
+
+    private final Data datacontroller = new Data(15,10,2000);
+    private final ProfilFinanciar profilcontroller = new ProfilFinanciar(1,3000.0f, "București",6000.0f , 15);
+    private final Utilizator utilizatorcontroller = new Utilizator(1,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",datacontroller,"Male","0777333222", profilcontroller);
+    private final Diagrama diagcontroller  = new Diagrama(1, datacontroller, utilizatorcontroller, true);
+    private final Cheltuiala cheltuialacontroller = new Cheltuiala(1, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagcontroller);
+    private final Raport raportcontroller = new Raport(1, diagcontroller);
+    private final Abonament abonamentcontroller = new Abonament(1, "iMusic", 10.0f, "Lunar", 9, 12, utilizatorcontroller);
+
+    @Autowired
+    UtilizatorController utilizatorController;
+
+    @Autowired
+    ProfilFinanciarController profilController;
+
+    @Autowired
+    DiagramaController diagController;
+
+    @Autowired
+    CheltuialaController chelController;
+
+    @Autowired
+    RaportController raportController;
+
+    @Autowired
+    AbonamentController abonamentController;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Test
+    @Order(21)
+    public void testUtilizatorController() {
+        //data setup
+        String email = "test@example.com";
+        String wrongPassword = "wrongPassword";
+        String mockToken = "mockJwtToken";
+
+        LoginRequestDTO validLoginRequest = new LoginRequestDTO();
+        validLoginRequest.setEmail(utilizatorRepo.getEmail());
+        validLoginRequest.setParola(utilizatorRepo.getParola());
+        LoginRequestDTO invalidLoginRequest = new LoginRequestDTO();
+        invalidLoginRequest.setEmail(email);
+        invalidLoginRequest.setParola(wrongPassword);
+
+        UtilizatorController utilizatorController = new UtilizatorController(utilizatorService, profilFinanciarService, jwtUtil, cheltuialaService, diagService);
+
+        //testarea functiei login
+        ResponseEntity<String> response = utilizatorController.login(validLoginRequest);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Status must be OK");
+
+        response = utilizatorController.login(invalidLoginRequest);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode(), "Status must be UNAUTHORIZED");
+
+
+        //testarea functiei get utilizator by email
+        ResponseEntity<Utilizator> resp_utilizator = utilizatorController.getUtilizatorByEmail(utilizatorcontroller.getEmail());
+        assertEquals(HttpStatus.OK, resp_utilizator.getStatusCode(), "Status must be OK");
+
+        //testarea functiei get utilizator by id
+        resp_utilizator = utilizatorController.getUtilizatorById(utilizatorcontroller.getId());
+        assertEquals(HttpStatus.OK, resp_utilizator.getStatusCode(), "Status must be OK");
+
+        //testarea functiei de adaugare utilizator
+        ProfilFinanciar profilcontroller1 = new ProfilFinanciar(99,3000.0f, "București",6000.0f , 15);
+        Utilizator utilizatorcontroller1 = new Utilizator(99,"Ion", "Popescu","ionnuesmecher" , "ion.popescu@example.com",datacontroller,"Male","0777333222", profilcontroller1);
+        utilizatorRepository.save(utilizatorcontroller1);
+        resp_utilizator = utilizatorController.createUtilizator(utilizatorcontroller1);
+        assertEquals(HttpStatus.CREATED, resp_utilizator.getStatusCode(), "Status must be CREATED");
+
+
+        //testarea functiei de stergere utilizator
+        ResponseEntity<Void> resp_void = utilizatorController.deleteUtilizator(utilizatorcontroller1.getId());
+        assertEquals(HttpStatus.NO_CONTENT, resp_void.getStatusCode(), "Status must be NO_CONTENT");
+
+        //testarea functiei de returnare
+        ResponseEntity<List<Utilizator>> resp_list = utilizatorController.getAllUtilizatori();
+        assertEquals(HttpStatus.OK, resp_list.getStatusCode(), "Status must be OK");
+    }
+
+    @Test
+    @Order(22)
+    public void testProfilController() {
+        //data setup
+        String email = "test@example.com";
+        String wrongPassword = "wrongPassword";
+        String mockToken = "mockJwtToken";
+
+        profilFinanciarRepository.save(profilRepo);
+        utilizatorRepository.save(utilizatorRepo);
+        profilFinanciarService.saveProfilFinanciar(profilRepo);
+        utilizatorService.saveUtilizator(utilizatorRepo);
+
+        LoginRequestDTO validLoginRequest = new LoginRequestDTO();
+        validLoginRequest.setEmail(utilizatorRepo.getEmail());
+        validLoginRequest.setParola(utilizatorRepo.getParola());
+
+        UtilizatorController utilizatorController = new UtilizatorController(utilizatorService, profilFinanciarService, jwtUtil, cheltuialaService, diagService);
+        ProfilFinanciarController profilfinanciarController = new ProfilFinanciarController(profilFinanciarService, utilizatorService, jwtUtil);
+
+
+        ResponseEntity<String> response = utilizatorController.login(validLoginRequest);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Status must be OK");
+
+        //testarea functiei get all
+        ResponseEntity<List<ProfilFinanciar>> resp_list = profilfinanciarController.getAllProfiluriFinanciare();
+        assertEquals(HttpStatus.OK, resp_list.getStatusCode(), "Status must be OK");
+
+
+        ProfilFinanciar profilcontroller1 = new ProfilFinanciar(4,3000.0f, "București",6000.0f , 15);
+        profilFinanciarService.saveProfilFinanciar(profilcontroller1);
+        //testarea functiei delete
+        ResponseEntity<Void> resp_void = profilfinanciarController.deleteProfilFinanciarById(profilcontroller1.getId());
+        assertEquals(HttpStatus.NO_CONTENT, resp_void.getStatusCode(), "Status must be NO_CONTENT");
+    }
+
+    @Test
+    @Order(23)
+    public void testDiagramaController(){
+        //data setup
+        String email = "test@example.com";
+        String wrongPassword = "wrongPassword";
+        String mockToken = "mockJwtToken";
+
+        profilFinanciarRepository.save(profilRepo);
+        utilizatorRepository.save(utilizatorRepo);
+
+        LoginRequestDTO validLoginRequest = new LoginRequestDTO();
+        validLoginRequest.setEmail(utilizatorRepo.getEmail());
+        validLoginRequest.setParola(utilizatorRepo.getParola());
+
+        UtilizatorController utilizatorController = new UtilizatorController(utilizatorService, profilFinanciarService, jwtUtil, cheltuialaService, diagService);
+        ProfilFinanciarController profilfinanciarController = new ProfilFinanciarController(profilFinanciarService, utilizatorService, jwtUtil);
+        DiagramaController diagramaController = new DiagramaController(diagService, utilizatorService, cheltuialaService, jwtUtil);
+
+        ResponseEntity<String> response = utilizatorController.login(validLoginRequest);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Status must be OK");
+
+        //testarea functiei get diagrama by id
+        ResponseEntity<Diagrama> resp = diagramaController.getDiagramaById(diagServ.getId());
+        assertEquals(HttpStatus.OK, resp.getStatusCode(), "Status must be OK");
+
+        //testarea functiei get all
+        ResponseEntity<List<Diagrama>> resp_list = diagramaController.getAllDiagrame();
+        assertEquals(HttpStatus.OK, resp_list.getStatusCode(), "Status must be OK");
+
+        Diagrama diagcontroller1  = new Diagrama(22, datacontroller, utilizatorcontroller, true);
+        //testarea functiei delete
+        ResponseEntity<HttpStatus> resp_delete = diagramaController.deleteDiagrama(diagcontroller1.getId());
+        assertEquals(HttpStatus.NO_CONTENT, resp_delete.getStatusCode(), "Status must be NO_CONTENT");
+    }
+
+    @Test
+    @Order(24)
+    public void testCheltuialaController(){
+        //data setup
+        String email = "test@example.com";
+        String wrongPassword = "wrongPassword";
+        String mockToken = "mockJwtToken";
+
+        profilFinanciarRepository.save(profilRepo);
+        utilizatorRepository.save(utilizatorRepo);
+
+        LoginRequestDTO validLoginRequest = new LoginRequestDTO();
+        validLoginRequest.setEmail(utilizatorRepo.getEmail());
+        validLoginRequest.setParola(utilizatorRepo.getParola());
+
+        UtilizatorController utilizatorController = new UtilizatorController(utilizatorService, profilFinanciarService, jwtUtil, cheltuialaService, diagService);
+        ProfilFinanciarController profilfinanciarController = new ProfilFinanciarController(profilFinanciarService, utilizatorService, jwtUtil);
+        DiagramaController diagramaController = new DiagramaController(diagService, utilizatorService, cheltuialaService, jwtUtil);
+        CheltuialaController cheltuialaController = new CheltuialaController(cheltuialaService, diagService, utilizatorService, jwtUtil);
+
+        ResponseEntity<String> response = utilizatorController.login(validLoginRequest);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Status must be OK");
+
+        //testarea functiei get cheltuiala by id
+        ResponseEntity<Cheltuiala> resp = cheltuialaController.getCheltuialaById(cheltuialaServ.getId());
+        assertEquals(HttpStatus.OK, resp.getStatusCode(), "Status must be OK");
+
+        Cheltuiala cheltuialacontroller1 = new Cheltuiala(11, "home", 50000.0F, Cheltuiala.TipCheltuiala.LOCUINTA, diagcontroller);
+        //testarea functiei delete
+        ResponseEntity<Void> resp_void = cheltuialaController.deleteCheltuiala(cheltuialacontroller1.getId());
+        assertEquals(HttpStatus.NO_CONTENT, resp_void.getStatusCode(), "Status must be NO_CONTENT");
+
+    }
+
+    @Test
+    @Order(25)
+    public void testRaportController(){
+        //data setup
+        String email = "test@example.com";
+        String wrongPassword = "wrongPassword";
+        String mockToken = "mockJwtToken";
+
+        profilFinanciarRepository.save(profilRepo);
+        utilizatorRepository.save(utilizatorRepo);
+
+        LoginRequestDTO validLoginRequest = new LoginRequestDTO();
+        validLoginRequest.setEmail(utilizatorRepo.getEmail());
+        validLoginRequest.setParola(utilizatorRepo.getParola());
+
+        UtilizatorController utilizatorController = new UtilizatorController(utilizatorService, profilFinanciarService, jwtUtil, cheltuialaService, diagService);
+        ProfilFinanciarController profilfinanciarController = new ProfilFinanciarController(profilFinanciarService, utilizatorService, jwtUtil);
+        DiagramaController diagramaController = new DiagramaController(diagService, utilizatorService, cheltuialaService, jwtUtil);
+        CheltuialaController cheltuialaController = new CheltuialaController(cheltuialaService, diagService, utilizatorService, jwtUtil);
+        RaportController raportController = new RaportController(raportService, utilizatorService, diagService, cheltuialaService, jwtUtil, abonamentService);
+
+        ResponseEntity<String> response = utilizatorController.login(validLoginRequest);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Status must be OK");
+
+        //testarea functiei save raport
+        RaportRequestDTO raportrdto = new RaportRequestDTO(2, diagcontroller.getId());
+        raportService.saveRaport(raportdto);
+        ResponseEntity<RaportRequestDTO> resp = raportController.saveRaport(raportrdto);
+        assertEquals(HttpStatus.CREATED, resp.getStatusCode(), "Status must be CREATED");
+
+        //testarea functiei get by id diagrama
+        ResponseEntity<List<RaportRequestDTO>> resp_list = raportController.getAllRapoarteByIdDiagrama(diagcontroller.getId());
+        assertEquals(HttpStatus.OK, resp_list.getStatusCode(), "Status must be OK");
+
+        //testarea functiei sugereaza rata
+        ResponseEntity<Float> resp_rata = raportController.sugereazaRata(50000.0F, 7);
+        assertEquals(HttpStatus.OK, resp_rata.getStatusCode(), "Status must be OK");
+
+        //testarea functiei delete raport
+        ResponseEntity<Void> resp_void = raportController.deleteRaportById(raportrdto.getId());
+        assertEquals(HttpStatus.NO_CONTENT, resp_void.getStatusCode(), "Status must be NO_CONTENT");
+
+    }
+
+    @Test
+    @Order(26)
+    public void testAbonamentController(){
+        //data setup
+        String email = "test@example.com";
+        String wrongPassword = "wrongPassword";
+        String mockToken = "mockJwtToken";
+
+        profilFinanciarRepository.save(profilRepo);
+        utilizatorRepository.save(utilizatorRepo);
+
+        LoginRequestDTO validLoginRequest = new LoginRequestDTO();
+        validLoginRequest.setEmail(utilizatorRepo.getEmail());
+        validLoginRequest.setParola(utilizatorRepo.getParola());
+
+        UtilizatorController utilizatorController = new UtilizatorController(utilizatorService, profilFinanciarService, jwtUtil, cheltuialaService, diagService);
+        ProfilFinanciarController profilfinanciarController = new ProfilFinanciarController(profilFinanciarService, utilizatorService, jwtUtil);
+        DiagramaController diagramaController = new DiagramaController(diagService, utilizatorService, cheltuialaService, jwtUtil);
+        CheltuialaController cheltuialaController = new CheltuialaController(cheltuialaService, diagService, utilizatorService, jwtUtil);
+        RaportController raportController = new RaportController(raportService, utilizatorService, diagService, cheltuialaService, jwtUtil, abonamentService);
+        AbonamentController abonamentController = new AbonamentController(abonamentService, jwtUtil, utilizatorService);
+
+
+        ResponseEntity<String> response = utilizatorController.login(validLoginRequest);
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Status must be OK");
+
+        //testarea functiei delete abonament
+        ResponseEntity<Void> resp_void = abonamentController.deleteAbonament(abonamentcontroller.getId());
+        assertEquals(HttpStatus.NO_CONTENT, resp_void.getStatusCode(), "Status must be NO_CONTENT");
+    }
 }
