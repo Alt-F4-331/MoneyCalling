@@ -113,7 +113,7 @@ body {
   width: 300px;
   height: 70px;
   font-size: 18px;
-  background-color: #2B0066;
+  background-color: #14123BD9; /* Fundal albastru-închis */
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -183,7 +183,7 @@ body {
  
 .expense-button {
   position: fixed; /* Face ca butonul să fie fix pe ecran */
-  left: 200px; /* Ajustează poziția orizontală pentru aliniere */
+  left: 920px; /* Ajustează poziția orizontală pentru aliniere */
   bottom: 25px;
   display: flex;
   align-items: center;
@@ -245,7 +245,7 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   color: #FFFFFF;
   font-size: 18px;
-  min-width: 200px; /* Lățime minimă */
+  min-width: 300px; /* Lățime minimă */
 }
 
 .categories-card h4 {
@@ -272,6 +272,104 @@ body {
 
 .category-select{
   color: white;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.expenses-card {
+  background-color: #14123BE5; /* Fundal închis */
+  padding: 15px;
+  margin-top: 20px;
+  margin-left: 100px; /* Alineat cu cardul de categorii */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: #FFFFFF;
+  font-size: 18px;
+  min-width: 300px; /* Lățime minimă */
+  max-width: 400px !important; /* Smaller card width */
+  max-height: 200px !important; /* Limit the height */
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: right;
+  margin-bottom: 15px;
+}
+
+.filter-container {
+  display: flex;
+  align-items: right;
+  gap: 10px;
+}
+
+.filter-container span {
+  color: #FFFFFF;
+  font-size: 16px;
+}
+
+.filter-dropdown {
+  background-color: #3d3967;
+  color: #FFFFFF;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  align-items: right;
+  margin-left: 170px;
+}
+
+.filter-dropdown:hover {
+  background-color: #3d3967;
+}
+
+.expenses-card h4 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.expenses-card ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-height: calc(4 * 30px); /* Show up to 4 items, assuming 40px per item */
+  overflow-y: auto; /* Enable vertical scrolling if there are more than 4 items */
+}
+
+/* Hide scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+.expenses-card ul::-webkit-scrollbar {
+  display: none;
+}
+
+.expenses-card li {
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.expenses-card button {
+  background-color: #3BAEE1;
+  color: #FFFFFF;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.expenses-card button:hover {
+  background-color: #2A91C1;
 }
 
 /* Fundal semi-transparent pentru pop-up */

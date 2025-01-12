@@ -31,12 +31,12 @@
   flex-direction: column; /* Orientare pe coloană pentru câmpuri */
   align-items: center; /* Centrare pe orizontală */
 }
-.sex-option {
-  width: 100%; /* Aceeași lățime ca celelalte câmpuri */
-}
 
+.date-inputs {
+  width: 100%;
+}
 .sex-option select {
-  width: 100%; /* Lățime completă */
+  width: 100% !important; /* Lățime completă */
   padding: 3px; /* Spațiere interioară pentru confort */
   border: 1px solid #ccc; /* Bordură similară */
   border-radius: 5px; /* Colțuri rotunjite */
@@ -53,6 +53,10 @@
 .sex-option select:focus {
   border-color: #6a5acd; /* Bordură evidențiată la focus */
   box-shadow: 0 0 5px rgba(106, 90, 205, 0.5); /* Efect de focus */
+}
+
+.opt {
+  width: 100%;
 }
 
 

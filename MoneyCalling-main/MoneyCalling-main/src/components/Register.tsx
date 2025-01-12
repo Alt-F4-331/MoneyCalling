@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
-import logo from  '../assets/logo.png'; // Import logo
+import logo from '../assets/logo.png'; // Import logo
 import axios from 'axios';
-
 
 const Register: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -17,74 +17,120 @@ const Register: React.FC = () => {
   const [cpassword, setCPassword] = useState('');
   const [successMessage, setSuccessMessage] = useState<string | null>(null); // Mesaj de succes
 
-
   const navigate = useNavigate();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
 
+  const validateField = (field: string, value: string) => {
+    switch (field) {
+      case 'firstName':
+      case 'lastName':
+        if (!value) return 'Fields cannot be empty.';
+        if (value.length > 50) return 'Fields cannot exceed 50 characters.';
+        break;
 
-  const nextStep = () => setStep(step + 1);
+      case 'password':
+        if (!value) return 'Password cannot be empty.';
+        if (value.length < 8) return 'Password must have at least 8 characters.';
+        break;
+
+      case 'email': {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value) return 'Email cannot be empty.';
+        if (!emailRegex.test(value)) return 'Please enter a valid email.';
+        break;
+      }
+
+      case 'sex':
+        if (!value) return 'Please select a gender.';
+        break;
+
+      case 'phone': {
+        const phoneRegex = /^\d{10,15}$/;
+        if (!value) return 'Phone number cannot be empty.';
+        if (!phoneRegex.test(value)) return 'Phone number must have between 10 and 15 digits.';
+        break;
+      }
+
+      default:
+        return '';
+    }
+    return '';
+  };
+
+  const nextStep = () => {
+    let errorMessage = '';
+    if (step === 1) {
+      errorMessage = validateField('firstName', firstName) || validateField('lastName', lastName);
+    } else if (step === 2) {
+      errorMessage =
+        (!birthDate.day || !birthDate.month || !birthDate.year) && 'Please complete the birth date.' ||
+        validateField('sex', sex);
+    } else if (step === 3) {
+      errorMessage = validateField('email', email) || validateField('phone', phone);
+    } else if (step === 4) {
+      if (!password || !cpassword || password !== cpassword) {
+        errorMessage = 'Passwords do not match or are empty.';
+      } else {
+        errorMessage = validateField('password', password);
+      }
+    }
+
+    if (errorMessage) {
+      setSuccessMessage(errorMessage);
+      return;
+    }
+
+    setSuccessMessage(null); // Clear error message
+    setStep(step + 1);
+  };
+
   const prevStep = () => setStep(step - 1);
 
   const submitForm = async () => {
-    // Pregătește datele pentru a se potrivi cu CreareContDto
     const contData = {
       nume: firstName,
       prenume: lastName,
       parola: password,
       email: email,
       dataNasterii: {
-        zi: parseInt(birthDate.day, 10), // Convertiți ziua la int
-        luna: parseInt(birthDate.month, 10), // Convertiți luna la int
-        an: parseInt(birthDate.year, 10), // Convertiți anul la int
+        zi: parseInt(birthDate.day, 10),
+        luna: parseInt(birthDate.month, 10),
+        an: parseInt(birthDate.year, 10),
       },
       sex: sex,
       numarTelefon: phone,
     };
 
-    console.log("Datele trimise:", contData);
-    console.log(typeof contData.dataNasterii.an); // Tipul variabilei an (int)
-
     try {
-      // Trimite cererea POST cu Axios
       const response = await axios.post('http://localhost:8080/api/utilizatori/createAccount', contData, {
-         method: 'POST',
         headers: {
-          'Content-Type': 'application/json', // Specifică tipul de conținut
+          'Content-Type': 'application/json',
         },
       });
-      console.log(response.data.nume);
 
       if (response.status === 201) {
-        console.log("Răspunsul API-ului:", response);
-        setSuccessMessage('Cont creat cu succes!'); // Afișează mesajul de succes
-        navigate('/homepage')
+        setSuccessMessage('Account successfully created!');
+        navigate('/homepage');
       } else {
-        // Dacă răspunsul nu este OK, afișează eroarea
-        console.log(response.data.nume);
-        console.error("Eroare la crearea contului:", response.data);
-        setError('Eroare la crearea contului. Încearcă din nou.');
+        setError('Failed to create account. Please try again.');
       }
     } catch (err) {
-      console.error("Eroare la comunicarea cu serverul:", err);
-      setError('Eroare la comunicarea cu serverul. Încearcă din nou.');
+      setError('Server communication error. Please try again.');
     }
   };
 
   return (
-    <div className="login-body"> {/* Use the same class for background */}
-      <div className="login-container"> {/* Change to login-container */}
+    <div className="login-body">
+      <div className="login-container">
         <img src={logo} alt="Logo" className="logo" />
         {successMessage && (
-        <div className="overlay" onClick={() => setSuccessMessage(null)}>
-          <div className="success-message">
-            {successMessage}
+          <div className="overlay" onClick={() => setSuccessMessage(null)}>
+            <div className="success-message">{successMessage}</div>
           </div>
-        </div>
-      )}
+        )}
         {step === 1 && (
-          <div className="login-form"> {/* Use login-form */}
+          <div className="login-form">
             <h2>Create Account</h2>
             <input
               type="text"
@@ -98,12 +144,13 @@ const Register: React.FC = () => {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
+            {error && <p className="error">{error}</p>}
             <button className="next-button" onClick={nextStep}>Next</button>
             <button className="back-button" onClick={() => navigate('/')}>Cancel</button>
           </div>
         )}
         {step === 2 && (
-          <div className="login-form"> {/* Use login-form */}
+          <div className="login-form">
             <h2>Date of Birth</h2>
             <div className="date-inputs">
               <input
@@ -112,12 +159,22 @@ const Register: React.FC = () => {
                 value={birthDate.day}
                 onChange={(e) => setBirthDate({ ...birthDate, day: e.target.value })}
               />
-              <input
-                type="text"
-                placeholder="Month"
-                value={birthDate.month}
-                onChange={(e) => setBirthDate({ ...birthDate, month: e.target.value })}
-              />
+              <div className="sex-option">
+                <select
+                  value={birthDate.month}
+                  onChange={(e) => setBirthDate({ ...birthDate, month: e.target.value })}
+                >
+                  <option value="" disabled>Select Month</option>
+                  {Array.from({ length: 12 }, (_, index) => {
+                    const month = (index + 1).toString().padStart(2, '0');
+                    return (
+                      <option key={month} value={month}>
+                        {month}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
               <input
                 type="text"
                 placeholder="Year"
@@ -125,25 +182,20 @@ const Register: React.FC = () => {
                 onChange={(e) => setBirthDate({ ...birthDate, year: e.target.value })}
               />
             </div>
-            <div className="sex-option">
-              <select
-                value={sex}
-                onChange={(e) => setSex(e.target.value)}
-              >
-                <option value="">
-                  Select Gender
-                </option>
+            <div className="sex-option opt">
+              <select value={sex} onChange={(e) => setSex(e.target.value)}>
+                <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
               </select>
             </div>
-
+            {error && <p className="error">{error}</p>}
             <button className="next-button" onClick={nextStep}>Next</button>
             <button className="back-button" onClick={prevStep}>Back</button>
           </div>
         )}
         {step === 3 && (
-          <div className="login-form"> {/* Use login-form */}
+          <div className="login-form">
             <h2>Contact Information</h2>
             <input
               type="email"
@@ -157,12 +209,13 @@ const Register: React.FC = () => {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
+            {error && <p className="error">{error}</p>}
             <button className="next-button" onClick={nextStep}>Next</button>
             <button className="back-button" onClick={prevStep}>Back</button>
           </div>
         )}
         {step === 4 && (
-          <div className="login-form"> {/* Use login-form */}
+          <div className="login-form">
             <h2>Create a Password</h2>
             <input
               type="password"
@@ -176,6 +229,7 @@ const Register: React.FC = () => {
               value={cpassword}
               onChange={(e) => setCPassword(e.target.value)}
             />
+            {error && <p className="error">{error}</p>}
             <button className="next-button" onClick={submitForm}>Register</button>
             <button className="back-button" onClick={prevStep}>Back</button>
           </div>
