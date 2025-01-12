@@ -22,10 +22,13 @@ const FinancialProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [message, setMessage] = useState<string | null>(null);
 
   const handleBackClick = () => {
     navigate('/homepage');
   };
+
+  const closeMessage = () => setMessage(null);
 
   // Funcție pentru a obține userId din token
   const getUserIdFromToken = (token: string): string | null => {
@@ -66,13 +69,13 @@ const FinancialProfile: React.FC = () => {
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
-          alert('Failed to fetch user data');
+          setMessage('Failed to fetch user data');
         } finally {
           setLoading(false);  // Încheiem încărcarea
         }
       } else {
         // Dacă nu există token, redirectăm utilizatorul către pagina de login
-        alert('Please log in first.');
+        setMessage('Please log in first.');
         navigate('/login');
       }
 
@@ -98,12 +101,12 @@ const FinancialProfile: React.FC = () => {
       );
 
       if (response.status === 200) {
-        alert('Profile updated successfully!');
+        setMessage('Profile updated successfully!');
         setIsEditing(false); // Ieșim din modul de editare
       }
     } catch (error) {
       console.error('Error updating user data:', error);
-      alert('Failed to update profile');
+      setMessage('Failed to update profile');
     }
 
   };
@@ -120,6 +123,11 @@ const FinancialProfile: React.FC = () => {
 
   return (
     <div className="financial-profile-container">
+      {message && (
+        <div className="overlay" onClick={closeMessage}>
+          <div className="success-message">{message}</div>
+        </div>
+      )}
       <header className="navbar">
         <Link to="/info-page">
           <img src={logo} alt="Logo" className="logo-image" />

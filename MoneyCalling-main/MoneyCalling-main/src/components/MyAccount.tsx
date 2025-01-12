@@ -12,6 +12,9 @@ const MyAccount: React.FC = () => {
   const [userData, setUserData] = useState<any>(null);  // State pentru datele utilizatorului
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);  // State pentru a arăta încărcarea
+  const [message, setMessage] = useState<string | null>(null);
+
+  const closeMessage = () => setMessage(null);
 
    // Funcție pentru a obține ID-ul utilizatorului din token
    const getUserIdFromToken = (token: string) => {
@@ -38,13 +41,13 @@ const MyAccount: React.FC = () => {
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        alert('Failed to fetch user data');
+        setMessage('Failed to fetch user data');
       } finally {
         setLoading(false);  // Încheiem încărcarea
       }
     } else {
       // Dacă nu există token, redirectăm utilizatorul către pagina de login
-      alert('Please log in first.');
+      setMessage('Please log in first.');
       navigate('/login');
     }
   };
@@ -65,6 +68,11 @@ const MyAccount: React.FC = () => {
 
   return (
     <div className="my-account-container">
+      {message && (
+        <div className="overlay" onClick={closeMessage}>
+          <div className="success-message">{message}</div>
+        </div>
+      )}
       <header className="navbar">
         <Link to="/info-page">
           <img src={logo} alt="Logo" className="logo-image" />

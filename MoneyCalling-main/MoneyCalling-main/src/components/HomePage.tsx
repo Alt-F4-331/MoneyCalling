@@ -23,7 +23,7 @@ const HomePage: React.FC = () => {
     'CLOTHING',
     'ECONOMY'
   ]);
-
+  const [message, setMessage] = useState<string | null>(null);
   const memorizedCategories = React.useMemo(() => categories, [categories]);
 
   const [showRentPopup, setShowRentPopup] = useState(false);
@@ -68,6 +68,8 @@ const HomePage: React.FC = () => {
 
   const [name, setName] = useState<string>("");
 
+
+  const closeMessage = () => setMessage(null);
 
   const handleOpenSavingsPopup = () => {
     setShowSavingsPopup(true);
@@ -268,11 +270,11 @@ const fetchHolidaySuggestion = async (nrZile: number, bugetTotal: number) => {
     } else {
       const text = await response.text();
       console.log("Răspuns text:", text);
-      alert(text);
+      setMessage(text);
     }
   } catch (error) {
     console.error("Eroare la obținerea bugetului propus:", error);
-    alert("A apărut o eroare la obținerea bugetului propus.");
+    setMessage("A apărut o eroare la obținerea bugetului propus.");
   }
 };
 
@@ -287,7 +289,7 @@ const handleHolidaySubmit = async (e: React.FormEvent) => {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    alert("Token-ul nu este disponibil. Vă rugăm să vă autentificați.");
+    setMessage("Token-ul nu este disponibil. Vă rugăm să vă autentificați.");
     return;
   }
 
@@ -306,16 +308,16 @@ const handleHolidaySubmit = async (e: React.FormEvent) => {
 
     if (response.ok) {
       const message = await response.text();
-      alert(message); // Mesaj de succes
+      setMessage(message); // Mesaj de succes
       localStorage.setItem('savings', String(savingsSum));
       setTriggerReload((prev) => !prev);
     } else {
       const errorText = await response.text();
-      alert(`Eroare: ${errorText}`); // Mesaj de eroare
+      setMessage(`Eroare: ${errorText}`); // Mesaj de eroare
     }
   } catch (error) {
     console.error("Eroare la confirmarea vacanței:", error);
-    alert("A apărut o eroare la confirmarea vacanței.");
+    setMessage("A apărut o eroare la confirmarea vacanței.");
   }
 };
 
@@ -339,7 +341,7 @@ const handleHolidaySubmit = async (e: React.FormEvent) => {
     if (rentAmount < budgetRange.min || rentAmount > budgetRange.max) {
       setShowWarningPopup(true);
     } else {
-      //alert("Rent amount is within the budget range!");
+      //setMessage("Rent amount is within the budget range!");
       setShowRentPopup(false);
     }
   };
@@ -389,7 +391,7 @@ const handleHolidaySubmit = async (e: React.FormEvent) => {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        alert("Autentificarea este necesară.");
+        setMessage("Autentificarea este necesară.");
         return;
       }
 
@@ -420,13 +422,13 @@ const handleHolidaySubmit = async (e: React.FormEvent) => {
           responseData = await serverResponse.text(); // Răspunsul de succes este text
         } catch (error) {
           console.error("Eroare la citirea răspunsului:", error);
-          alert("Eroare la procesarea răspunsului.");
+          setMessage("Eroare la procesarea răspunsului.");
           return;
         }
 
         // Afișează mesajul din răspunsul de succes
         console.log("Răspuns server:", responseData);
-        alert(responseData);  // Afișează mesajul de succes ("Cheltuiala adaugata cu succes")
+        setMessage(responseData);  // Afișează mesajul de succes ("Cheltuiala adaugata cu succes")
 
         // Resetăm valorile formularului
         setName("");
@@ -436,11 +438,11 @@ const handleHolidaySubmit = async (e: React.FormEvent) => {
       } else {
         const errorText = await serverResponse.text(); // Citește eroarea ca text
         console.error("Eroare la server:", serverResponse.status, errorText);
-        alert(`Eroare: Cererea nu a fost procesată corect. Status code: ${serverResponse.status}`);
+        setMessage(`Eroare: Cererea nu a fost procesată corect. Status code: ${serverResponse.status}`);
       }
     } catch (error) {
       console.error("Eroare la conectarea cu serverul:", error);
-      alert("A apărut o eroare. Te rugăm să încerci din nou.");
+      setMessage("A apărut o eroare. Te rugăm să încerci din nou.");
     }
   };
 
@@ -466,7 +468,13 @@ const handleHolidaySubmit = async (e: React.FormEvent) => {
 
 
   return (
+
     <div className='home-page'>
+      {message && (
+        <div className="overlay" onClick={closeMessage}>
+          <div className="success-message">{message}</div>
+        </div>
+      )}
       {/* Bara de navigare */}
       <header className='navbar'>
         <Link to="/info-page">
