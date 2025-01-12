@@ -206,6 +206,7 @@ public class UtilizatorController {
         int luna = today.getMonthValue();
         int an = today.getYear();
 
+        //conditie
         diagramaService.createAndConfigureDiagrama(utilizator,zi ,luna,an);
 
         // 4. Returnează profilul actualizat

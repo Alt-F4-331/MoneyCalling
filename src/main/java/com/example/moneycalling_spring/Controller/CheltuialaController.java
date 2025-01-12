@@ -130,9 +130,19 @@ public class CheltuialaController {
     // Endpoint pentru a obține toate cheltuielile după id-ul diagramei
     @Operation(summary = "Obtine toate cheltuielile dintr-o diagrama")
     @GetMapping("/diagrama/{idDiagrama}")
-    public ResponseEntity<List<CheltuialaRequestDTO>> getAllCheltuieliByIdDiagrama(@PathVariable int idDiagrama) {
+    public ResponseEntity<?> getAllCheltuieliByIdDiagrama(@RequestHeader("Authorization") String token) {
         //aceasta functie se foloseste pentru legenda de cheltuileli pentru o diagrama
-        Optional<Diagrama> diagrama_opt = diagramaService.getById(idDiagrama);
+
+
+        int userId = jwtUtil.getUserIdByToken(token);
+
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Utilizator utilizator = utilizatorOptional.get();
+        Optional<Diagrama> diagrama_opt = diagramaService.getDiagramaActivaByUtilizator(utilizator);
+
         if (diagrama_opt.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);  // Dacă nu există, returnăm 404
         }
