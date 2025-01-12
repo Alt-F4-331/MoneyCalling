@@ -1,5 +1,6 @@
 package  com.example.moneycalling_spring.Controller;
 
+import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.ProfilFinanciar;
 import com.example.moneycalling_spring.Domain.Utilizator;
 import com.example.moneycalling_spring.Security.JwtUtil;
@@ -206,7 +207,9 @@ public class UtilizatorController {
         int luna = today.getMonthValue();
         int an = today.getYear();
 
-        //conditie
+
+
+        if(diagramaService.findDiagramaByDataAndUser(luna,an,userId) ==null)
         diagramaService.createAndConfigureDiagrama(utilizator,zi ,luna,an);
 
         // 4. Returnează profilul actualizat
