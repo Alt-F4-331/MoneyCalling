@@ -237,8 +237,10 @@ public class UtilizatorController {
 
 
 
-        if(diagramaService.findDiagramaByDataAndUser(luna,an,userId) ==null)
-        diagramaService.createAndConfigureDiagrama(utilizator,zi ,luna,an);
+        Optional<Diagrama> optionalDiagrama = diagramaService.findDiagramaByDataAndUser(luna, an, userId);
+
+        if (optionalDiagrama.isEmpty())
+             diagramaService.createAndConfigureDiagrama(utilizator,zi ,luna,an);
 
         // 4. Returnează profilul actualizat
         return ResponseEntity.ok(profilSalvat);

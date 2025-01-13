@@ -177,7 +177,7 @@ public class DiagramaController {
         //primeste diagrama userului logat dupa luna si an
 
         int userId = jwtutil.getUserIdByToken(token);
-        Diagrama diagrama = diagramaService.findDiagramaByDataAndUser(luna, an, userId);
+        Diagrama diagrama = diagramaService.findDiagramaByDataAndUser(luna, an, userId).get();
         return ResponseEntity.ok(diagrama);
     }
 

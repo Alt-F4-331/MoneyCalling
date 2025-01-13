@@ -733,7 +733,7 @@ class MoneyCallingSpringApplicationTests {
         assertEquals(diagServ.getId(), diagService.getDiagramaActivaByUtilizator(utilizatorServ).get().getId());
 
         //testare findby data and user
-        assertEquals(diagServ.getId(), diagService.findDiagramaByDataAndUser(10, 2000, 1).getId());
+        assertEquals(diagServ.getId(), diagService.findDiagramaByDataAndUser(10, 2000, 1).get().getId());
 
         //testare diag activa
         diagServ.setActiva(false);

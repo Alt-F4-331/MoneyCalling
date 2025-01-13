@@ -100,10 +100,10 @@ public class DiagramaService {
         diagramarepo.save(diagrama); // Salvează diagrama activă
     }
 
-    public Diagrama findDiagramaByDataAndUser(int luna, int an, int userId) {
-        return diagramarepo.findByDataAndUser(luna, an, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Diagrama nu a fost găsită pentru utilizatorul specificat și data: luna " + luna + ", anul " + an));
+    public Optional<Diagrama> findDiagramaByDataAndUser(int luna, int an, int userId) {
+        return diagramarepo.findByDataAndUser(luna, an, userId);
     }
+
 
     public List<Diagrama> getUltimeleDiagrame(Utilizator utilizator, int numarLuni) {
         // Obține toate diagramele utilizatorului

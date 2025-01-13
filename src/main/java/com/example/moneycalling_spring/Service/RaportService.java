@@ -41,7 +41,7 @@ public class RaportService {
     }
 
     public float sugereazaChirieByVenit(float venit, Diagrama diagrama) {
-        float procent = diagrama.getProcenteCheltuieli().get(Cheltuiala.TipCheltuiala.LOCUINTA) - 5;
+        float procent = 25;
         //aici vrem ca dupa plata chiriei,sa ramana 5% din venit alocat pentru alte lucruri in locuinta
         return (procent * venit) / 100;
     }
