@@ -82,6 +82,25 @@ body {
   margin-right: 10px;
 }
 
+/* Animație pentru palpairea galbenă */
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.nav-links a.blinking {
+  animation: blink 1s infinite;
+  background-color: yellow; /* Fundal galben pentru evidențiere */
+  color: black; /* Text negru pentru contrast */
+}
+
 .profile-image {
   width: 40px;
   height: 40px;

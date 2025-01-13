@@ -12,6 +12,8 @@ import InfoPage from './components/InfoPage';
 import MyAccount from './components/MyAccount';
 
 const App: React.FC = () => {
+
+  
   return (
     <div className='app-container'>
     <Router>

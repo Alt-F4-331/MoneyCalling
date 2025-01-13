@@ -15,17 +15,32 @@ import axios from 'axios';
 const HomePage: React.FC = () => {
   //categorii pentru expense
   const [categories, setCategories] = useState<string[]>([
-    'FOOD',
-    'HOME',
-    'EDUCATION',
-    'HEALTH',
-    'DIVERTISMENT',
-    'TRANSPORT',
-    'CLOTHING',
-    'ECONOMY'
+    'FOOD',           // Alimentație
+    'HOME',           // Locuință
+    'EDUCATION',      // Educație
+    'HEALTH',         // Sănătate
+    'DIVERTISMENT',   // Divertisment
+    'TRANSPORT',      // Transport
+    'CLOTHING',       // Îmbrăcăminte
+    'ECONOMY',        // Economii
   ]);
-  const [message, setMessage] = useState<string | null>(null);
+
+  // Maparea categoriilor (frontend -> backend)
+  const categoryMap = {
+    FOOD: 'ALIMENTATIE',
+    HOME: 'LOCUINTA',
+    EDUCATION: 'EDUCATIE',
+    HEALTH: 'SANATATE',
+    DIVERTISMENT: 'DIVERTISMENT',
+    TRANSPORT: 'TRANSPORT',
+    CLOTHING: 'IMBRACAMINTE',
+    ECONOMY: 'ECONOMII',
+  };
+
+  // Memorizează categoriile pentru a preveni recalculările inutile
   const memorizedCategories = React.useMemo(() => categories, [categories]);
+  const [message, setMessage] = useState<string | null>(null);
+  
 
   // const [showRentPopup, setShowRentPopup] = useState(false);
   // const [showWarningPopup, setShowWarningPopup] = useState(false);
@@ -287,10 +302,6 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
       // Poți să adaugi un mesaj de eroare pentru utilizator
   }
 };
-
-
-
-
 
 
   // Handle deleting a subscription
@@ -567,15 +578,17 @@ useEffect(() => {
   const handleExpenseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Mapăm categoria aleasă din frontend la categoria corespunzătoare din backend
+    const mappedCategory = categoryMap[category];
+
     // Construim obiectul care va fi trimis către back-end
     const expenseData = {
       nume: name, // "nume" trebuie să corespundă cu DTO-ul
       suma: parseFloat(amount.toFixed(2)), // "suma"
-      tipCheltuiala: category === "ECONOMII" ? "CONTAINER" : category, // Verificăm dacă este ECONOMII
+      tipCheltuiala: mappedCategory, // Folosim categoria mapată în română
     };
 
     try {
-      // Obținem token-ul utilizatorului (presupunând că este stocat local)
       const token = localStorage.getItem("token");
 
       if (!token) {
@@ -583,18 +596,7 @@ useEffect(() => {
         return;
       }
 
-      // Trimitem cererea POST către server
       const serverResponse = await fetch("http://localhost:8080/api/cheltuieli", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(expenseData), // Convertim obiectul în JSON
-      });
-
-      // Verifică tipul răspunsului
-      const response = await fetch("http://localhost:8080/api/cheltuieli", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -603,20 +605,18 @@ useEffect(() => {
         body: JSON.stringify(expenseData),
       });
 
-      // Verifică dacă răspunsul este de succes
       if (serverResponse.ok) {
         let responseData;
         try {
-          responseData = await serverResponse.text(); // Răspunsul de succes este text
+          responseData = await serverResponse.text();
         } catch (error) {
           console.error("Eroare la citirea răspunsului:", error);
           setMessage("Eroare la procesarea răspunsului.");
           return;
         }
 
-        // Afișează mesajul din răspunsul de succes
         console.log("Răspuns server:", responseData);
-        setMessage(responseData);  // Afișează mesajul de succes ("Cheltuiala adaugata cu succes")
+        setMessage(responseData);
 
         // Resetăm valorile formularului
         setName("");
@@ -624,7 +624,7 @@ useEffect(() => {
         setCategory("");
         handleClosePopup();
       } else {
-        const errorText = await serverResponse.text(); // Citește eroarea ca text
+        const errorText = await serverResponse.text();
         console.error("Eroare la server:", serverResponse.status, errorText);
         setMessage(`Eroare: Cererea nu a fost procesată corect. Status code: ${serverResponse.status}`);
       }
@@ -655,6 +655,8 @@ useEffect(() => {
 }, [triggerReload]);
 
 
+
+
   return (
 
     <div className='home-page'>
@@ -663,8 +665,8 @@ useEffect(() => {
           <div className="success-message">{message}</div>
         </div>
       )}
-      {/* Bara de navigare */}
-      <header className='navbar'>
+       {/* Bara de navigare */}
+       <header className='navbar'>
         <Link to="/info-page">
           <img src={logo} alt="Logo" className="logo-image" />
         </Link>
@@ -678,7 +680,7 @@ useEffect(() => {
         <Link to='/my-account' className='profile-link'>
           <img src={profile_pic} alt="Profile" className="profile-image" />
         </Link>
-      </header>
+      </header> 
 
       {/* Meniu lateral */}
       <aside className='sidebar'>
