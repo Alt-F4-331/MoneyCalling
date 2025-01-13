@@ -106,13 +106,22 @@ public class DiagramaService {
 
 
     public List<Diagrama> getUltimeleDiagrame(Utilizator utilizator, int numarLuni) {
+        // Obține diagrama activă pentru utilizator
+        Optional<Diagrama> diagramaActivaOpt = getDiagramaActivaByUtilizator(utilizator);
+
+        if (diagramaActivaOpt.isEmpty()) {
+            throw new RuntimeException("Nu există o diagrama activă pentru utilizatorul specificat.");
+        }
+
+        // Determină data activă din diagrama activă
+        Diagrama diagramaActiva = diagramaActivaOpt.get();
+        Data dataActiva = diagramaActiva.getDataDiagrama();
+        LocalDate dataLimita = LocalDate.of(dataActiva.getAn(), dataActiva.getLuna(), 1).minusMonths(numarLuni-1);
+
         // Obține toate diagramele utilizatorului
         List<Diagrama> diagrameUtilizator = diagramarepo.findByUser(utilizator);
 
-        // Determină data minimă pentru numărul de luni specificat
-        LocalDate dataLimita = LocalDate.now().minusMonths(numarLuni);
-
-        // Filtrare diagrame după dată
+        // Filtrare diagrame după data limitei bazată pe diagrama activă
         return diagrameUtilizator.stream()
                 .filter(diagrama -> {
                     Data dataDiagrama = diagrama.getDataDiagrama();
@@ -128,6 +137,7 @@ public class DiagramaService {
                 })
                 .collect(Collectors.toList());
     }
+
 
     public Diagrama createAndConfigureDiagrama(Utilizator utilizator,int zi,int luna , int an) {
         Diagrama diagrama = new Diagrama();

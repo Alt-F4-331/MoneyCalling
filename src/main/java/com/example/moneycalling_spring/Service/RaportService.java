@@ -40,10 +40,10 @@ public class RaportService {
         //sterge raport dupa id
     }
 
-    public float sugereazaChirieByVenit(float venit, Diagrama diagrama) {
-        float procent = 25;
+    public float sugereazaChirieByVenit(float suma, Diagrama diagrama) {
+        float procent = 85;
         //aici vrem ca dupa plata chiriei,sa ramana 5% din venit alocat pentru alte lucruri in locuinta
-        return (procent * venit) / 100;
+        return (procent * suma) / 100;
     }
 
     public float sugereazaRataByVenit(float suma, int ani) {
