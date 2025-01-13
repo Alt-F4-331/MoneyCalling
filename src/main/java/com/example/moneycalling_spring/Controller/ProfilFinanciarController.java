@@ -66,6 +66,39 @@ public class ProfilFinanciarController {
         return new ResponseEntity<>(profil,HttpStatus.OK);
     }
 
+    @GetMapping("/api/profiluri-financiare/complet")
+    @Operation(summary = "Verifică dacă profilul financiar al utilizatorului logat este complet")
+    public ResponseEntity<Boolean> esteProfilFinanciarComplet(@RequestHeader("Authorization") String token) {
+        int userId = jwtUtil.getUserIdByToken(token);
+
+        // Găsim utilizatorul după ID
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Utilizator inexistent
+        }
+
+        Utilizator utilizator = utilizatorOptional.get();
+        ProfilFinanciar profil = utilizator.getProfil();
+
+        // Verificăm dacă profilul există
+        if (profil == null) {
+            return new ResponseEntity<>(false, HttpStatus.OK); // Profil inexistent => incomplet
+        }
+
+        // Verificăm dacă profilul este complet
+        boolean esteComplet = profilEsteComplet(profil);
+        return new ResponseEntity<>(esteComplet, HttpStatus.OK);
+    }
+
+    // Metodă auxiliară pentru validarea completitudinii profilului financiar
+    private boolean profilEsteComplet(ProfilFinanciar profil) {
+        return profil.getVenit() != 0 && // Venitul trebuie să fie mai mare decât 0
+                profil.getDomiciliu() != null && // Domiciliul nu trebuie să fie null
+                profil.getContainerEconomii() != 0 && // Containerul economiilor nu trebuie să fie null
+                profil.getDataSalar() != 0; // Data salariului nu trebuie să fie null sau goală
+    }
+
+
     // Endpoint pentru a șterge toate profilurile financiare
     @DeleteMapping
     @Operation(summary = "sterge toate profilurile")
