@@ -76,16 +76,15 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
 
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const [showAddSubscriptionPopup, setShowAddSubscriptionPopup] = useState(false);
-  const [newSubscriptionName, setNewSubscriptionName] = useState('');
-  const [newSubscriptionPrice, setNewSubscriptionPrice] = useState('');
-  const [paymentFrequency, setPaymentFrequency] = useState<'monthly' | 'yearly'>('monthly');
-  const [paymentDueDate, setPaymentDueDate] = useState(1);
-  const [paymentMonth, setPaymentMonth] = useState(1);
-  const [paymentDay, setPaymentDay] = useState(1);
-  const [subscriptions, setSubscriptions] = useState<{ name: string, price: number, frequency: string, paymentDueDate: number }[]>([]);
-  const [paymentMonthDayInput, setPaymentMonthDayInput] = useState(1);  // State to handle the input value
+  const [subscriptions, setSubscriptions] = useState<any[]>([]);
 
+  const [newSubscriptionName, setNewSubscriptionName] = useState("");
+  const [newSubscriptionPrice, setNewSubscriptionPrice] = useState("");
+  const [paymentFrequency, setPaymentFrequency] = useState<"monthly" | "yearly">("monthly");
 
+  // Stările pentru ziua și luna plății
+  const [paymentDay, setPaymentDay] = useState<number>(1);  // Ziua pentru plata abonamentului
+  const [paymentMonth, setPaymentMonth] = useState<number>(1);  // Luna pentru plata abonamentului (valabil doar pentru abonamentele anuale)
   const [showSavingsPopup, setShowSavingsPopup] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedMonths, setSelectedMonths] = useState('');
@@ -103,8 +102,39 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
     setShowSavingsPopup(false);
   };
 
-  const handleMonthSelection = (months: string) => {
-    setSelectedMonths(months); // Update the selected months
+  
+
+
+  const handleMonthSelection = async (months: string) => {
+    setSelectedMonths(months); // Actualizează selecția lunilor (pentru styling sau alte utilizări)
+  
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token-ul nu este disponibil");
+      return;
+    }
+  
+    try {
+      // Realizează cererea către backend
+      const response = await fetch(`http://localhost:8080/api/rapoarte/economii?luni=${months}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Eroare la obținerea datelor economiilor");
+      }
+  
+      const data = await response.json();
+      console.log("Datele economiilor primite:", data); // Debug: verifică răspunsul din backend
+  
+      setSelectedMonths(data); // Actualizează starea cu datele primite
+    } catch (error) {
+      console.error("Eroare la cererea datelor economiilor:", error);
+    }
   };
 
 
@@ -118,7 +148,7 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
       }
 
       try {
-        const response = await fetch(`http://localhost:8080/api/economii?luni=3`, {
+        const response = await fetch(`http://localhost:8080/api/rapoarte/economii?luni=3`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -131,6 +161,7 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
         }
 
         const data = await response.json();
+        console.log('Date primite de la API:', data);
         setSelectedMonths(data); // Setează datele economiilor
       } catch (error) {
         console.error('Eroare:', error);
@@ -146,70 +177,82 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
     if (showSavingsPopup && canvasRef.current && Object.keys(selectedMonths).length > 0) {
       const ctx = canvasRef.current.getContext('2d');
       if (ctx) {
-        // Conversia lunilor și economiilor în tipuri numerice
-        const months = Object.keys(selectedMonths).map((key, index) => index); // Folosește indexurile pentru axa X
-        const savings = Object.values(selectedMonths).map(value => parseFloat(value)); // Convertește economiile la numere
-        const data = {
-          months: months, // Luni (ex: "Jan 2022", "Feb 2022")
-          savings: savings, // Economii (procentajele)
-        };
-        drawChart(ctx, data); // Desenează graficul cu datele
+        drawChart(ctx, {
+          months: Object.keys(selectedMonths),
+          savings: Object.values(selectedMonths),
+        });
       }
     }
   }, [showSavingsPopup, selectedMonths]);
   
+  
 
-  const drawChart = (ctx: CanvasRenderingContext2D, data: { months: number[]; savings: number[] }) => {
+  const drawChart = (ctx, data) => {
     const canvasWidth = ctx.canvas.width;
     const canvasHeight = ctx.canvas.height;
-
-    // Clear the previous canvas
+  
+    // Clear the canvas
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    // Set the margins and center origin
-    const margin = 20;
-    const centerX = canvasWidth / 2;
-    const centerY = canvasHeight / 2;
-
-    // Adjusting scale
-    const xMin = 0;
-    const xMax = Math.max(...data.months);
-    const yMin = Math.min(...data.savings);
-    const yMax = Math.max(...data.savings);
-
-    const xRange = xMax - xMin;
-    const yRange = yMax - yMin;
-
-    const xScale = (canvasWidth - 2 * margin) / xRange;
-    const yScale = (canvasHeight - 2 * margin) / yRange;
-
-    // Draw X and Y axis
+  
+    const margin = 50;
+    const chartWidth = canvasWidth - 2 * margin;
+    const chartHeight = canvasHeight - 2 * margin;
+  
+    // Prepare data
+    const labels = Object.keys(data.months); // ["Jan 2023", "Feb 2023", ...]
+    const values = Object.values(data.savings); // [12.34, 45.67, ...]
+  
+    const maxValue = Math.max(...values);
+    const minValue = Math.min(...values);
+  
+    const xStep = chartWidth / labels.length;
+    const yScale = chartHeight / (maxValue - minValue);
+  
+    // Draw axes
     ctx.beginPath();
-    ctx.moveTo(margin, centerY); // X-axis start
-    ctx.lineTo(canvasWidth - margin, centerY); // X-axis end
-    ctx.moveTo(margin, margin); // Y-axis start
-    ctx.lineTo(margin, canvasHeight - margin); // Y-axis end
-    ctx.strokeStyle = '#fff'; // White color for the axes
+    ctx.moveTo(margin, margin);
+    ctx.lineTo(margin, canvasHeight - margin); // Y-axis
+    ctx.lineTo(canvasWidth - margin, canvasHeight - margin); // X-axis
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 2;
     ctx.stroke();
-
-    // Draw arrows at the end of the axes
-    drawArrow(ctx, canvasWidth - margin, centerY, 10, 0); // X-axis positive arrow
-    drawArrow(ctx, margin, margin, 0, -10); // Y-axis positive arrow (pointing up)
-
-    ctx.strokeStyle = 'white'; // White line for the graph
-    ctx.lineWidth = 2;
-    ctx.stroke();
+  
+    // Draw arrows
+    drawArrow(ctx, canvasWidth - margin, canvasHeight - margin, 10, 0); // X-axis
+    drawArrow(ctx, margin, margin, 0, -10); // Y-axis
+  
+    // Draw labels and points
+    labels.forEach((label, index) => {
+      const x = margin + index * xStep + xStep / 2;
+      const y = canvasHeight - margin - (values[index] - minValue) * yScale;
+  
+      // Draw point
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, 2 * Math.PI);
+      ctx.fillStyle = '#00ff00';
+      ctx.fill();
+  
+      // Draw label
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x, canvasHeight - margin + 20);
+  
+      // Draw connecting line
+      if (index > 0) {
+        const prevX = margin + (index - 1) * xStep + xStep / 2;
+        const prevY = canvasHeight - margin - (values[index - 1] - minValue) * yScale;
+  
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = '#00ff00';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    });
   };
-
-  // Function to draw an arrow at the end of an axis
-  const drawArrow = (
-    ctx: CanvasRenderingContext2D,
-    startX: number,
-    startY: number,
-    angleX: number,
-    angleY: number
-  ) => {
+  
+  const drawArrow = (ctx, startX, startY, angleX, angleY) => {
     const arrowSize = 10;
     const angle = Math.atan2(angleY, angleX);
     ctx.beginPath();
@@ -231,85 +274,130 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
 
 
 
-  const handleOpenSubscriptionPopup = () => {
-    //getAllSubscription
-    setShowSubscriptionPopup(true);
-  };
 
-  const handleCloseSubscriptionPopup = () => {
-    setShowSubscriptionPopup(false);
-  };
-
-  const handleOpenAddSubscriptionPopup = () => {
-    setShowAddSubscriptionPopup(true);
+  // Tipul așteptat pentru obiectul de abonament
+interface SubscriptionDTO {
+  nume: string;
+  valoare: number;
+  tipAbonament: "Lunar" | "Anual";  // Modificat aici
+  ziua: number;
+  luna: number;
+}
+ 
+const handleOpenSubscriptionPopup = async () => {
+  setShowSubscriptionPopup(true);
+ 
+  // Apelăm funcția pentru a obține abonamentele utilizatorului
+  await fetchSubscriptions();
+};
+ 
+const fetchSubscriptions = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.error("Token-ul nu este disponibil");
+    return;
   }
-
-  const handleCloseAddSubscriptionPopup = () => {
-    setShowAddSubscriptionPopup(false);
-  }
-
-
-  const handleAddSubscription = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Validarea câmpurilor
-    if (!newSubscriptionName || !newSubscriptionPrice || !paymentDueDate || !paymentMonth || !paymentDay) {
-        console.error('Toate câmpurile sunt obligatorii!');
-        return;
-    }
-
-    // Pregătește datele pentru abonament
-    const newSubscription = {
-        nume: newSubscriptionName,  // Numele abonamentului
-        valoare: parseFloat(newSubscriptionPrice), // Prețul abonamentului
-        tipAbonament: paymentFrequency,  // Tipul de abonament (monthly sau anual)
-        ziua: paymentFrequency === "monthly" ? paymentDueDate : paymentDay,  // Ziua pentru plata abonamentului
-        luna: paymentFrequency === "monthly" ? paymentMonth : '',  // Luna pentru plata abonamentului
-    };
-
-    const token = localStorage.getItem('token');
-    if (!token) {
-        console.error('Token-ul nu este disponibil');
-        return;
-    }
-
-    try {
-      const response = await axios.post(
-          'http://localhost:8080/api/abonamente',  // URL-ul endpoint-ului
-          newSubscription,  // Trimitere date în corpul cererii
-          {
-              headers: {
-                  Authorization: `Bearer ${token}`,  // Trimite token-ul în header
-              },
-          }
-      );
-      
-      console.log('Abonament adăugat:', response.data);
-      
-      // Actualizează starea sau alte acțiuni de succes
-      // Poți să actualizezi lista de abonamente, dacă este necesar
-      // setSubscriptions([...subscriptions, newSubscription]);
-
-      // Resetează câmpurile formularului
-      setNewSubscriptionName('');
-      setNewSubscriptionPrice('');
-      setPaymentDueDate(1);
-      setPaymentMonth(1);
-      setPaymentDay(1);
-      setShowAddSubscriptionPopup(false);
+ 
+  try {
+    const response = await axios.get("http://localhost:8080/api/abonamente/abonamente", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+ 
+    // Actualizăm lista de abonamente
+    setSubscriptions(response.data);
   } catch (error) {
-      console.error('Eroare la adăugarea abonamentului:', error);
-      // Poți să adaugi un mesaj de eroare pentru utilizator
+    console.error("Eroare la obținerea abonamentelor:", error);
   }
 };
-
-
-  // Handle deleting a subscription
-  const handleDeleteSubscription = (index: number) => {
-    const updatedSubscriptions = subscriptions.filter((_, i) => i !== index);
-    setSubscriptions(updatedSubscriptions);
+ 
+const handleCloseSubscriptionPopup = () => {
+  setShowSubscriptionPopup(false);
+};
+ 
+const handleOpenAddSubscriptionPopup = () => {
+  setShowAddSubscriptionPopup(true);
+};
+ 
+const handleCloseAddSubscriptionPopup = () => {
+  setShowAddSubscriptionPopup(false);
+};
+ 
+const handleAddSubscription = async (e: React.FormEvent) => {
+  e.preventDefault();
+ 
+  // Validarea câmpurilor
+  if (!newSubscriptionName || !newSubscriptionPrice || !paymentDay || (paymentFrequency === "yearly" && !paymentMonth)) {
+    console.error("Toate câmpurile sunt obligatorii!");
+    return;
+  }
+ 
+  // Modifică paymentFrequency pentru a trimite "Lunar" sau "Anual"
+  const formattedFrequency = paymentFrequency === "monthly" ? "Lunar" : "Anual";
+ 
+  // Pregătirea datelor pentru backend
+  const newSubscription: SubscriptionDTO = {
+    nume: newSubscriptionName, // Numele abonamentului
+    valoare: parseFloat(newSubscriptionPrice), // Prețul abonamentului
+    tipAbonament: formattedFrequency, // Trimitem "Lunar" sau "Anual"
+    ziua: paymentDay, // Ziua pentru plata abonamentului
+    luna: paymentFrequency === "yearly" ? paymentMonth : 1, // Luna pentru plata abonamentului (1 pentru monthly, luna selectată pentru yearly)
   };
-
+ 
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.error("Token-ul nu este disponibil");
+    return;
+  }
+ 
+  try {
+    const response = await axios.post("http://localhost:8080/api/abonamente", newSubscription, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+ 
+    console.log("Abonament adăugat:", response.data);
+ 
+    // Actualizarea listei de abonamente
+    setSubscriptions([...subscriptions, newSubscription]);
+ 
+    // Resetarea câmpurilor
+    setNewSubscriptionName("");
+    setNewSubscriptionPrice("");
+    setPaymentDay(1);
+    setPaymentMonth(1);
+    setShowAddSubscriptionPopup(false);
+  } catch (error) {
+    console.error("Eroare la adăugarea abonamentului:", error);
+  }
+};
+ 
+const handleDeleteSubscription = async (subscriptionId: number) => {
+  const token = localStorage.getItem("token");
+ 
+  if (!token) {
+    console.error("Token-ul nu este disponibil");
+    return;
+  }
+ 
+  try {
+    // Apelul pentru a șterge abonamentul
+    await axios.delete(`http://localhost:8080/api/abonamente/${subscriptionId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+ 
+    // Actualizarea listei de abonamente după ștergere
+    const updatedSubscriptions = subscriptions.filter(subscription => subscription.id !== subscriptionId);
+    setSubscriptions(updatedSubscriptions);
+ 
+  } catch (error) {
+    console.error("Eroare la ștergerea abonamentului:", error);
+  }
+};
 
 
   // Funcții pentru deschiderea și închiderea pop-up-ului pentru Holiday Report
@@ -553,7 +641,68 @@ useEffect(() => {
 
 //final david
 
-  const handleOpenInstallmentsPopup = () => setShowInstallmentsPopup(true);
+const [suggestedInstallment, setSuggestedInstallment] = useState<number | null>(null);
+const [calculatedInstallment, setCalculatedInstallment] = useState<number | null>(null);
+
+
+const fetchInstallmentSuggestion = async () => {
+  const token = localStorage.getItem('token'); // Preluare token din localStorage
+  if (!token) {
+    alert('Vă rugăm să vă autentificați pentru a continua.');
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:8080/api/rapoarte/sugerseaza-rata', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`, // Adaugă token-ul în header
+      },
+    });
+
+    if (response.ok) {
+      const suggestedInstallment = await response.json(); // Preia valoarea returnată din răspuns
+      setSuggestedInstallment(suggestedInstallment); // Salvează valoarea în state
+    } else {
+      const errorText = await response.text(); // Obține mesajul de eroare
+      alert(`A apărut o eroare: ${errorText}`);
+    }
+  } catch (error) {
+    alert('Eroare de rețea. Vă rugăm să verificați conexiunea.');
+  }
+};
+
+const calculateInstallment = async (sum: number, months: number) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/rapoarte/calculeaza-rata?sumaPropusa=${sum}&luni=${months}`,
+      {
+        method: 'GET',
+      }
+    );
+
+    if (response.ok) {
+      const installment = await response.json(); // Obține valoarea ratei
+      setCalculatedInstallment(installment); // Salvează rata în state
+    } else {
+      const errorText = await response.text(); // Obține mesajul de eroare
+      alert(`A apărut o eroare: ${errorText}`);
+    }
+  } catch (error) {
+    alert('Eroare de rețea. Vă rugăm să verificați conexiunea.');
+  }
+};
+
+useEffect(() => {
+  if (installmentSum && selectedInstallment) {
+    calculateInstallment(installmentSum, selectedInstallment);
+  }
+}, [installmentSum, selectedInstallment]);
+
+const handleOpenInstallmentsPopup = () => {
+  setShowInstallmentsPopup(true); // Deschide popup-ul
+  fetchInstallmentSuggestion();  // Apelează API-ul pentru a sugera rata
+};
   const handleCloseInstallmentsPopup = () => {
     setRecommendedSum(0);
     //setInstallmentSum(0);
@@ -562,10 +711,50 @@ useEffect(() => {
     setSelectedInstallment(null);
   };
 
-  const handleInstallmentSubmit = (e: React.FormEvent) => {
+  const handleInstallmentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(`Selected Installment: ${selectedInstallment || customInstallment}`);
-    handleCloseInstallmentsPopup();
+    
+    // Valoarea ratei care va fi trimisă la backend
+    const rateToSubmit = calculatedInstallment;
+
+    const token = localStorage.getItem('token'); // Preluare token din localStorage
+  if (!token) {
+    alert('Vă rugăm să vă autentificați pentru a continua.');
+    return;
+  }
+  
+    if (rateToSubmit) {
+      
+        try {
+          const response = await fetch(`http://localhost:8080/api/rapoarte/adauga-rata?rataPropusa=${calculatedInstallment}`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ rataPropusa: rateToSubmit }),
+          }); 
+          
+          // Logare informații despre răspuns
+      console.log("Status cod:", response.status);  // Vei vedea codul statusului (ex: 200, 400, etc.)
+      console.log("Status text:", response.statusText);  // Descrierea statusului (ex: "OK", "Bad Request", etc.)
+  
+        if (response.status ===200) {
+          const result = await response.json();
+          console.log("Răspuns complet API:", result);
+          alert(result); // Poți înlocui alert cu un mesaj de succes sau altceva
+        } else {
+          const errorText = await response.text();
+          alert(`A apărut o eroare: ${errorText}`);
+        }
+      } catch (error) {
+        alert("Eroare de rețea. Vă rugăm să verificați conexiunea.");
+      }
+    } else {
+      alert("Vă rugăm să selectați o rată.");
+    }
+  
+    handleCloseInstallmentsPopup(); // Închide popup-ul după trimiterea formularului
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -862,7 +1051,7 @@ useEffect(() => {
                 <input type='number' placeholder='Total: ' id='installment' name='installment' value={installmentSum} onChange={(e) => setInstallmentSum(parseFloat(e.target.value))} min="0" step="10" required />
               </div>
 
-              <div className="info-box">Budget range: {budgetRange.min} - {budgetRange.max}</div>
+              <div className="info-box">Budget range: {suggestedInstallment}</div>
               <p>Please choose in how many months you want to pay the installment:</p>
               <div className="installment-options">
                 {installmentOptions.map((option) => (
@@ -892,7 +1081,7 @@ useEffect(() => {
                   />
                 </div>
               </div>
-              <div className="recommended-sum">Recommended sum: {recommendedSum}</div>
+              <div className="recommended-sum">Monthly sum: {calculatedInstallment}</div>
               <div className='form-actions'>
                 <button type="submit">Submit</button>
               </div>
@@ -902,98 +1091,102 @@ useEffect(() => {
         </div>
       )}
 
-      {showSavingsPopup && (
-        <div className="popup-overlay" onClick={handleCloseSavingsPopup}>
-          <div
-            className="popup-container-savings"
-            onClick={(e) => e.stopPropagation()}
+{showSavingsPopup && (
+  <div className="popup-overlay" onClick={handleCloseSavingsPopup}>
+    <div
+      className="popup-container-savings"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h2>Report - Savings</h2>
+
+      {/* Canvas Area */}
+      <div className="canvas-container">
+        <canvas
+          ref={canvasRef}
+          width="350"
+          height="300"
+          style={{ border: "1px solid black" }}
+        ></canvas>
+      </div>
+
+      {/* Instruction Text */}
+      <div className="select-months-display">
+        Select the amount of months:
+      </div>
+
+      {/* Month Selector */}
+      <div className="installment-options">
+        {[3, 6, 12, 24, 60, "All"].map((months) => (
+          <button
+            key={months}
+            className="month-option"
+            onClick={() =>
+              handleMonthSelection(months === "All" ? "" : String(months))
+            }
           >
-            <h2>Report - Savings</h2>
+            {months}
+          </button>
+        ))}
+      </div>
 
-            {/* Canvas Area */}
-            <div className="canvas-container">
-              <canvas
-                ref={canvasRef}
-                width="350"
-                height="300"
-                style={{ border: "1px solid black" }}
-              ></canvas>
-            </div>
+      {/* Close Button */}
+      <button className="x-button" onClick={handleCloseSavingsPopup}>×</button>
 
-            {/* Instruction Text */}
-            <div className="select-months-display">
-              Select the amount of months:
-            </div>
+      {/* Percentage Display */}
+      <div className="percentage-display">
+        Your savings have changed by: <strong>15%</strong>{" "}
+        {selectedMonths && `in the last ${selectedMonths} months`}
+      </div>
+    </div>
+  </div>
+)}
 
-            {/* Month Selector */}
-            <div className="installment-options">
-              {[3, 6, 12, 24, 60, "All"].map((months) => (
-                <button
-                  key={months}
-                  className="month-option"
-                  onClick={() =>
-                    handleMonthSelection(months === "All" ? "" : String(months))
-                  }
-                >
-                  {months}
-                </button>
-                
-              ))}
-            </div>
-            <button className="x-button" onClick={handleCloseSavingsPopup}>×</button>
-            {/* Percentage Display */}
-            <div className="percentage-display">
-              Your savings have changed by: <strong>15%</strong>{" "}
-              {selectedMonths && `in the last ${selectedMonths} months`}
-            </div>
+
+
+{showSubscriptionPopup && (
+      <div className="popup-overlay" onClick={handleCloseSubscriptionPopup}>
+        <div className="popup-container-subscription" onClick={(e) => e.stopPropagation()}>
+          <h2>Subscription Report</h2>
+          <div className="subscription-list">
+            {subscriptions.length === 0 ? (
+              <p>No subscriptions added yet.</p>
+            ) : (
+              subscriptions.map((subscription) => (
+                <div key={subscription.id} className="subscription-item">
+                  <span>
+                    <strong>{subscription.nume}</strong> - {subscription.valoare}€ / {subscription.tipAbonament}
+                  </span>
+                  <p>
+                    Payment Due:{" "}
+                    {subscription.tipAbonament === "Lunar"
+                      ? `Day ${subscription.ziua}`
+                      : `Day ${subscription.ziua}, Month ${subscription.luna}`}
+                  </p>
+                  <button
+                    onClick={() => handleDeleteSubscription(subscription.id)}  // Trimiterea ID-ului
+                    className="delete-sub-button"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))
+            )}
           </div>
+          <button onClick={handleOpenAddSubscriptionPopup} className="submit-sub-button">
+            Add Subscription
+          </button>
         </div>
-      )}
-
-
-      {showSubscriptionPopup && (
-        <div className="popup-overlay" onClick={handleCloseSubscriptionPopup}>
-          <div className="popup-container-subscription" onClick={(e) => e.stopPropagation()}>
-            <h2>Subscription Report</h2>
-            <div className="subscription-list">
-              {subscriptions.length === 0 ? (
-                <p>No subscriptions added yet.</p>
-              ) : (
-                subscriptions.map((subscription, index) => (
-                  <div key={index} className="subscription-item">
-                    <span>
-                      <strong>{subscription.name}</strong> - {subscription.price}€ / {subscription.frequency}
-                    </span>
-                    <p>
-                      {subscription.frequency === 'monthly'
-                        ? `Payment Due Day: ${subscription.paymentDueDate}th`
-                        : `Payment Due Day: ${subscription.paymentDueDate.split(' ').join('/')}`}
-                    </p>
-                    <button onClick={() => handleDeleteSubscription(index)} className="delete-sub-button">
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-            <div className='parent-container'>
-              <button onClick={handleOpenAddSubscriptionPopup} type="submit" className="submit-sub-button">Add</button>
-            </div>
-            <button className="x-button" onClick={handleCloseSubscriptionPopup}>×</button>
-          </div>
-        </div>
-      )}
-
+      </div>
+    )}
+ 
       {showAddSubscriptionPopup && (
         <div className="popup-overlay" onClick={handleCloseAddSubscriptionPopup}>
-          {/* Popup pentru adăugarea unui abonament */}
           <div className="popup-container-add-sub" onClick={(e) => e.stopPropagation()}>
             <h2>Add Subscription</h2>
             <form onSubmit={handleAddSubscription} className="add-subscription-form">
               <div className="form-group">
                 <input
                   type="text"
-                  id="serviceName"
                   value={newSubscriptionName}
                   onChange={(e) => setNewSubscriptionName(e.target.value)}
                   placeholder="Subscription Name"
@@ -1004,79 +1197,57 @@ useEffect(() => {
                 <button
                   type="button"
                   onClick={() => setPaymentFrequency("monthly")}
-                  className={`payment-frequency-btn${paymentFrequency === "monthly" ? "active" : ""}`}
+                  className={`payment-frequency-btn ${paymentFrequency === "monthly" ? "active" : ""}`}
                 >
                   Monthly
                 </button>
                 <button
                   type="button"
                   onClick={() => setPaymentFrequency("yearly")}
-                  className={`payment-frequency-btn${paymentFrequency === "yearly" ? "active" : ""}`}
+                  className={`payment-frequency-btn ${paymentFrequency === "yearly" ? "active" : ""}`}
                 >
                   Yearly
                 </button>
               </div>
-              {paymentFrequency === "monthly" && (
-                <>
-                  <div className="form-group">
-                    <input
-                      type="number"
-                      id="servicePriceMonthly"
-                      value={newSubscriptionPrice}
-                      onChange={(e) => setNewSubscriptionPrice(e.target.value)}
-                      placeholder="Subscription Value (€/month)"
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      id="paymentDueDate"
-                      value={paymentDueDate}
-                      onChange={(e) => setPaymentDueDate(e.target.value)}
-                      placeholder="DD"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-              {paymentFrequency === "yearly" && (
-                <>
-                  <div className="form-group">
-                    <input
-                      type="number"
-                      id="servicePriceYearly"
-                      value={newSubscriptionPrice}
-                      onChange={(e) => setNewSubscriptionPrice(e.target.value)}
-                      placeholder="Subscription Value (€/year)"
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      id="paymentMonthDay"
-                      value={paymentMonthDayInput}
-                      onChange={(e) => setPaymentMonthDayInput(e.target.value)}
-                      placeholder="DD/MM"
-                      required
-                    />
-                  </div>
-                </>
-              )}
-              <div className="parent-container">
-                <button type="submit" className="submit-sub-button">
-                  Add
-                </button>
+              <div className="form-group">
+                <input
+                  type="number"
+                  value={newSubscriptionPrice}
+                  onChange={(e) => setNewSubscriptionPrice(e.target.value)}
+                  placeholder={`Subscription Value (€/${paymentFrequency === "monthly" ? "month" : "year"})`}
+                  required
+                />
               </div>
+              <div className="form-group">
+                <input
+                  type="number"
+                  value={paymentDay}
+                  onChange={(e) => setPaymentDay(parseInt(e.target.value, 10))}
+                  placeholder="Day"
+                  required
+                />
+              </div>
+              {paymentFrequency === "yearly" && (
+                <div className="form-group">
+                  <input
+                    type="number"
+                    value={paymentMonth}
+                    onChange={(e) => setPaymentMonth(parseInt(e.target.value, 10))}
+                    placeholder="Month"
+                    required
+                  />
+                </div>
+              )}
+              <button type="submit" className="submit-sub-button">
+                Add Subscription
+              </button>
             </form>
-            <button className="x-button" onClick={handleCloseAddSubscriptionPopup}>×</button>
           </div>
         </div>
       )}
-
+ 
     </div>
   );
 };
-
+ 
 export default HomePage;
