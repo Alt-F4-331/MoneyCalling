@@ -64,7 +64,7 @@ public class CheltuialaController {
         Diagrama diagrama = diagrama_opt.get();
 
         Cheltuiala.TipCheltuiala tip = chDTO.getTipCheltuiala();
-        float suma = chDTO.getSuma() / 2 ;
+        float suma = chDTO.getSuma()  ;
         float venitTotal = utilizator.getProfil().getVenit();
 
 
