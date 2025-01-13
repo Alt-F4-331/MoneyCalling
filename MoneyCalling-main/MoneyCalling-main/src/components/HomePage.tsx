@@ -747,6 +747,7 @@ useEffect(() => {
                 <button type='submit' className='submit-sub-button'>Add</button>
               </div>
             </form>
+            <button className="x-button" onClick={handleClosePopup}>×</button>
           </div>
         </div>
       )}
@@ -775,6 +776,7 @@ useEffect(() => {
                 <button type="submit">Submit</button>
               </div>
             </form>
+            <button className="x-button" onClick={handleCloseRentPopup}>×</button>
           </div>
         </div>
       )}
@@ -845,6 +847,7 @@ useEffect(() => {
                 <button type="submit">Submit</button>
               </div>
             </form>
+            <button className="x-button" onClick={handleCloseHolidayPopup}>×</button>
           </div>
         </div>
       )}
@@ -894,6 +897,7 @@ useEffect(() => {
                 <button type="submit">Submit</button>
               </div>
             </form>
+            <button className="x-button" onClick={handleCloseInstallmentsPopup}>×</button>
           </div>
         </div>
       )}
@@ -933,9 +937,10 @@ useEffect(() => {
                 >
                   {months}
                 </button>
+                
               ))}
             </div>
-
+            <button className="x-button" onClick={handleCloseSavingsPopup}>×</button>
             {/* Percentage Display */}
             <div className="percentage-display">
               Your savings have changed by: <strong>15%</strong>{" "}
@@ -974,6 +979,7 @@ useEffect(() => {
             <div className='parent-container'>
               <button onClick={handleOpenAddSubscriptionPopup} type="submit" className="submit-sub-button">Add</button>
             </div>
+            <button className="x-button" onClick={handleCloseSubscriptionPopup}>×</button>
           </div>
         </div>
       )}
@@ -1064,6 +1070,7 @@ useEffect(() => {
                 </button>
               </div>
             </form>
+            <button className="x-button" onClick={handleCloseAddSubscriptionPopup}>×</button>
           </div>
         </div>
       )}

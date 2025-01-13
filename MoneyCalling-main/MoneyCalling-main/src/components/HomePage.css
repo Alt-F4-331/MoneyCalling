@@ -414,6 +414,7 @@ body {
   width: 400px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   text-align: center;
+  position: relative;
 }
 
 .popup-container-subscription{
@@ -454,13 +455,28 @@ body {
 /* Grup de formular */
 .form-group {
   display: flex;
-  align-items: left; /* Centrare verticală a textului cu inputul */
+  align-items: center; /* Centrare verticală a textului cu inputul */
+  justify-content: space-between; /* Spațiere între label și input */
+  gap: 15px;
 }
 
 /* Etichete */
 .form-group label {
   font-size: 18px !important;
-  text-align: left; /* Textul etichetei aliniat la dreapta */
+  margin-right: 10px; /* Spațiu între etichetă și input */
+  flex: 1; /* Ajustează lățimea pentru etichete */
+  text-align: right; /* Textul etichetei aliniat la dreapta */
+}
+
+/* Inputuri */
+.form-group input {
+  flex: 1; /* Eliminăm distribuția proporțională */
+  width: 1000px; /* Setăm o lățime fixă */
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 70px;
 }
 
 .form-actions button {
@@ -502,7 +518,23 @@ body {
   color: red;
 }
 
+.x-button {
+  background: none; /* Elimină fundalul */
+  border: none; /* Elimină chenarul */
+  cursor: pointer; /* Arată cursorul de mână */
+  font-size: 40px; /* Ajustează dimensiunea pictogramei */
+  outline: none; /* Elimină chenarul pe focus */
+  position: absolute;
+  top: -25px;
+  right: -25px;
+}
 
+.x-button:hover {
+  background: none; /* Previne orice evidențiere de fundal */
+  box-shadow: none; /* Elimină orice efect de hover */
+  outline: none; /* Elimină orice contur */
+  color: red;
+}
 
 .popup-container {
   background-color: #191742;

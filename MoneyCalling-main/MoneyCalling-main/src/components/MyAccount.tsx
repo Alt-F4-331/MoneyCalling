@@ -132,7 +132,6 @@ const MyAccount: React.FC = () => {
       </header>
       
       <div className="my-account-card">
-        <button onClick={handleBackClick} className="back-button"></button>
         <h2 className="my-account-title">Profile</h2>
 
         {loading ? (
