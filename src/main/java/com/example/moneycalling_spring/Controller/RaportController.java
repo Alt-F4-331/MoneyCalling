@@ -101,10 +101,59 @@ public class RaportController {
 
     // Endpoint pentru sugerarea ratei pe baza sumei și numărului de ani
     @GetMapping("/sugerseaza-rata")
+    @Operation(summary = "Sugerează rata pe luna,dupa suma pt TRANSPORT")
+    public ResponseEntity<Float> sugereazaRata(@RequestHeader("Authorization") String token) {
+
+        float procentRata = 66;
+        int userId = jwtutil.getUserIdByToken(token);
+
+        Utilizator utilizator = utilizatorService.getById(userId).get();  // No exception handling
+        float venit = utilizator.getProfil().getVenit();
+
+        Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();// No exception handling
+
+        Float procentTransport = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.TRANSPORT, 0.0f);
+        float rezultat = (procentTransport * venit) / 100;
+        rezultat = Math.round(rezultat * 100) / 100.0f;
+        float rezultatFinal = (procentRata * rezultat)/100;
+        rezultatFinal = Math.round(rezultatFinal*100) / 100.0f;
+
+
+
+        return new ResponseEntity<>(rezultatFinal, HttpStatus.OK);
+    }
+
+    @GetMapping("/calculeaza-rata")
     @Operation(summary = "Sugerează rata pe baza sumei și numărului de ani")
-    public ResponseEntity<Float> sugereazaRata(@RequestParam float suma, @RequestParam int ani) {
-        float rataSugerata = raportService.sugereazaRataByVenit(suma, ani);
-        return new ResponseEntity<>(rataSugerata, HttpStatus.OK);
+    public ResponseEntity<Float> calculeazaRata(@RequestParam float sumaPropusa , @RequestParam int luni)
+
+    {
+        float rata = raportService.sugereazaRata(sumaPropusa,luni);
+        return new ResponseEntity<>(rata, HttpStatus.OK);
+
+    }
+
+    @PostMapping("/adauga-rata")
+    @Operation(summary = "Sugerează rata pe baza sumei și numărului de ani")
+    public ResponseEntity<?> addRata(@RequestHeader("Authorization") String token,@RequestParam float rataPropusa){
+        int userId = jwtutil.getUserIdByToken(token);
+        Utilizator utilizator = utilizatorService.getById(userId).get();  // No exception handling
+
+        Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();
+
+        Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "rata", rataPropusa, Cheltuiala.TipCheltuiala.TRANSPORT, diagrama);
+        cheltuialaService.saveCheltuiala(ch);
+
+        Float procentRamas = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.TRANSPORT, 0.0f);
+
+        float procentNou = procentRamas - (rataPropusa / utilizator.getProfil().getVenit()) * 100;
+
+        diagrama.getProcenteCheltuieli().put(Cheltuiala.TipCheltuiala.TRANSPORT, procentNou);
+        diagramaService.saveDiagrama(diagrama);
+        return new ResponseEntity<>("Rata propusă este acceptată automat.", HttpStatus.OK);
+
+
+
     }
 
     @PostMapping("/initiaza-chirie")

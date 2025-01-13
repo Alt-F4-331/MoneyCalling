@@ -1,6 +1,5 @@
 package com.example.moneycalling_spring.Service;
 
-import com.example.moneycalling_spring.Domain.Cheltuiala;
 import com.example.moneycalling_spring.Domain.Diagrama;
 import com.example.moneycalling_spring.Domain.Raport;
 import com.example.moneycalling_spring.Repository.ProfilFinanciarRepository;
@@ -46,11 +45,11 @@ public class RaportService {
         return (procent * suma) / 100;
     }
 
-    public float sugereazaRataByVenit(float suma, int ani) {
+    public float sugereazaRata(float suma, int luni) {
         float dobanda = 0.05f;
-        float sumaTotala = suma + suma * dobanda * ani;
-        float numarRate = ani * 12;
-        float valoareRate = sumaTotala / numarRate;
+        float sumaTotala = suma + suma * dobanda * luni /12;
+        float valoareRate = sumaTotala / luni;
+        valoareRate = Math.round(valoareRate*100)/100.0f;
         return valoareRate;
     }
 

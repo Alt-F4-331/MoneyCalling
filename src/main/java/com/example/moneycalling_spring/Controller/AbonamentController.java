@@ -55,7 +55,7 @@ public class AbonamentController {
 
 
 
-    @GetMapping("/utilizator/{utilizatorId}")
+    @GetMapping("/abonamente")
     @Operation(summary = "Afiseaza lista abonamentelor pe care le are un utilizator")
     public List<Abonament> getAbonamenteByUtilizator(@RequestHeader("Authorization") String token) {
 
