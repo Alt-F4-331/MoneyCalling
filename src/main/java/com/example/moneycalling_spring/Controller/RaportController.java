@@ -114,9 +114,13 @@ public class RaportController {
         Utilizator utilizator = utilizatorService.getById(userId).get();  // No exception handling
         float venit = utilizator.getProfil().getVenit();
 
-        Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();  // No exception handling
 
-        float chirieSugerata = raportService.sugereazaChirieByVenit(venit, diagrama);
+        Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();
+        Float procentLoc = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
+        float rezultat = (procentLoc * venit) / 100;
+        rezultat = Math.round(rezultat * 100) / 100.0f;// No exception handling
+
+        float chirieSugerata = raportService.sugereazaChirieByVenit(rezultat, diagrama);
 
         // Verificare fără excepții, doar returnează mesaj
         Float procentMaximLocuinta = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
