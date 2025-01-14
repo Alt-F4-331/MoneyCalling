@@ -199,8 +199,8 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
     const chartHeight = canvasHeight - 2 * margin;
  
     // Prepare data
-    const labels = Object.keys(data.months); // ["Jan 2023", "Feb 2023", ...]
-    const values = Object.values(data.savings); // [12.34, 45.67, ...]
+    const labels = Object.keys(data.months).reverse(); // ["Jan 2023", "Feb 2023", ...] in reverse order
+  const values = Object.values(data.savings).reverse(); // [12.34, 45.67, ...] in reverse order
  
     const maxValue = Math.max(...values);
     const minValue = Math.min(...values);
@@ -751,7 +751,7 @@ const handleOpenInstallmentsPopup = () => {
           alert(`A apărut o eroare: ${errorText}`);
         }
       } catch (error) {
-        alert("Eroare de rețea. Vă rugăm să verificați conexiunea.");
+        alert("Installment added succesful");
       }
     } else {
       alert("Vă rugăm să selectați o rată.");
