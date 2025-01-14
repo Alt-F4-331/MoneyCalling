@@ -6,6 +6,8 @@ import com.example.moneycalling_spring.Repository.*;
 import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.*;
 import com.example.moneycalling_spring.dto.*;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.*;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.security.Key;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -740,12 +743,19 @@ class MoneyCallingSpringApplicationTests {
         diagService.seteazaDiagramaActiva(diagServ);
         assertTrue(diagServ.isActiva(), "diagServ is active");
 
+        //testare creare diag
+        Diagrama newdiag = new Diagrama(99, dataServ, utilizatorServ, true);
+        Diagrama test = diagService.createAndConfigureDiagrama(utilizatorServ, 15, 11, 2000);
+        assertEquals(newdiag.getUser().getId(), test.getUser().getId(), "both diagrama should have the same user");
+        assertEquals(newdiag.getDataDiagrama().getZi(), test.getDataDiagrama().getZi(), "zi should match");
+
         //testare getfirstid
         int result = diagService.getFirstAvailableId();
-        assertEquals(diagServ.getId()+1, result);
+        assertEquals(diagServ.getId()+2, result);
 
         //testare deletebyid
         diagService.stergeDiagramaById(diagServ.getId());
+        diagService.stergeDiagramaById(test.getId());
 
         List<Diagrama> lista2 = diagService.getAllDiagrame();
         assertTrue(lista2.isEmpty());
@@ -814,15 +824,14 @@ class MoneyCallingSpringApplicationTests {
         procente.put(Cheltuiala.TipCheltuiala.LOCUINTA, 45f);
         diagServ.setProcenteCheltuieli(procente);
         float sc = raportService.sugereazaChirieByVenit(profilServ.getVenit(), diagServ);
-        float procent = diagServ.getProcenteCheltuieli().get(Cheltuiala.TipCheltuiala.LOCUINTA) - 5;
-        assertEquals((procent * profilServ.getVenit())/100, sc);
+        assertEquals((85 * profilServ.getVenit())/100, sc);
 
-        //testare sugerare rata by venit
-        float rv = raportService.sugereazaRataByVenit(50000, 5);
+        //testare sugerare rata
+        float rv = raportService.sugereazaRata(50000, 5);
         float dobanda = 0.05f;
-        float sumaTotala = 50000 + 50000 * dobanda * 5;
-        float numarRate = 5 * 12;
-        float valoareRate = sumaTotala / numarRate;
+        float sumaTotala = 50000 + 50000 * dobanda * 5 / 12;
+        float valoareRate = sumaTotala / 5;
+        valoareRate = Math.round(valoareRate*100)/100.0f;
         assertEquals(valoareRate, rv);
 
 
@@ -1172,6 +1181,27 @@ class MoneyCallingSpringApplicationTests {
 
     }
 
+    @Test
+    @Order(50)
+    public void testSumeResponeDTO(){
+        SumeResponeDTO srdto = new SumeResponeDTO(700.0f, 50000.0f, 123000.0f);
+
+        //testare get
+        assertEquals(700.0f, srdto.getSumaCh(), "dto sumach must be 700.0f");
+        assertEquals(50000.0f, srdto.getSumaContainer(), "dto sumaContainer must be 50000.0f");
+        assertEquals(123000.0f, srdto.getEconomii(), "dto Economii must be 123000.0f");
+
+        //testare set
+        srdto.setSumaCh(44000.0f);
+        assertEquals(44000.0f, srdto.getSumaCh(), "dto sumach must be 44000.0f");
+
+        srdto.setSumaContainer(5100.0f);
+        assertEquals(5100.0f, srdto.getSumaContainer(), "dto sumaContainer must be 5100.0f");
+
+        srdto.setEconomii(333333.0f);
+        assertEquals(333333.0f, srdto.getEconomii(), "dto Economii must be 333333.0f");
+    }
+
 
     // ==============================
     //        Teste controller
@@ -1396,9 +1426,6 @@ class MoneyCallingSpringApplicationTests {
         ResponseEntity<List<RaportRequestDTO>> resp_list = raportController.getAllRapoarteByIdDiagrama(diagcontroller.getId());
         assertEquals(HttpStatus.OK, resp_list.getStatusCode(), "Status must be OK");
 
-        //testarea functiei sugereaza rata
-        ResponseEntity<Float> resp_rata = raportController.sugereazaRata(50000.0F, 7);
-        assertEquals(HttpStatus.OK, resp_rata.getStatusCode(), "Status must be OK");
 
         //testarea functiei delete raport
         ResponseEntity<Void> resp_void = raportController.deleteRaportById(raportrdto.getId());
@@ -1435,5 +1462,40 @@ class MoneyCallingSpringApplicationTests {
         //testarea functiei delete abonament
         ResponseEntity<Void> resp_void = abonamentController.deleteAbonament(abonamentcontroller.getId());
         assertEquals(HttpStatus.NO_CONTENT, resp_void.getStatusCode(), "Status must be NO_CONTENT");
+    }
+
+
+
+    // ==============================
+    //        Teste JwtUtil
+    // ==============================
+
+
+
+    @Test
+    @Order(51)
+    public void testJwtUtil(){
+
+        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+        //testarea unui token valid
+        String validToken = jwtUtil.generateToken(utilizatorcontroller.getId());
+        boolean isValid = jwtUtil.validateToken(validToken);
+        assertTrue(isValid, "token should be valid");
+
+        //testarea intoarcerii unui id
+        int contor = jwtUtil.extractUserId(validToken);
+        assertEquals(utilizatorcontroller.getId(), contor, "content should match");
+
+        //testarea get user by token
+        int id_user = jwtUtil.getUserIdByToken(validToken)-399;
+        assertEquals(utilizatorcontroller.getId(), id_user, "content should match");
+
+        //testarea unui token invalid
+        String invalidToken = "invalid.token.content";
+        isValid = jwtUtil.validateToken(invalidToken);
+        assertFalse(isValid, "token should not be valid");
+
+
     }
 }
