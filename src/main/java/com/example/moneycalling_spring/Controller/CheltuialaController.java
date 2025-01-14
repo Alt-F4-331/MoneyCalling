@@ -86,7 +86,12 @@ public class CheltuialaController {
             utilizator.setProfil(pf);
             utilizatorService.saveUtilizator(utilizator);
             diagramaService.saveDiagrama(diagrama);
+            Cheltuiala ch = chDTO.mapToEntity(cheltuialaService.getFirstAvailableId(), diagrama);
+
+            Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
+
             return ResponseEntity.ok("Cheltuiala adaugata cu succes");
+
 
 
         }

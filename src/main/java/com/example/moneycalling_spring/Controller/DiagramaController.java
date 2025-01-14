@@ -7,6 +7,7 @@ import com.example.moneycalling_spring.Service.DiagramaService;
 import com.example.moneycalling_spring.Service.UtilizatorService;
 import com.example.moneycalling_spring.dto.CheltuialaRequestDTO;
 import com.example.moneycalling_spring.dto.DiagramaRequestDTO;
+import com.example.moneycalling_spring.dto.SumeResponeDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -169,16 +170,50 @@ public class DiagramaController {
     }
 
     @GetMapping("/getByData")
-    public ResponseEntity<Diagrama> getDiagramaByDataAndUser(
+    public ResponseEntity<SumeResponeDTO> getSumeByDataAndUser(
             @RequestParam int luna,
             @RequestParam int an,
             @RequestHeader("Authorization") String token) {
 
-        //primeste diagrama userului logat dupa luna si an
-
+        // Obține userId din token
         int userId = jwtutil.getUserIdByToken(token);
-        Diagrama diagrama = diagramaService.findDiagramaByDataAndUser(luna, an, userId).get();
-        return ResponseEntity.ok(diagrama);
+        Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
+
+        if (utilizatorOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Utilizator utilizator = utilizatorOptional.get();
+        Optional<Diagrama> diagramaOptional = diagramaService.findDiagramaByDataAndUser(luna, an, userId);
+
+        if (diagramaOptional.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Diagrama diagrama = diagramaOptional.get();
+        List<Cheltuiala> cheltuieli = cheltuialaService.getAllCheltuieliByIdDiagrama(diagrama);
+
+        float sumaCh = 0;
+        float sumaContainer = 0;
+
+        // Calculează sumele
+        for (Cheltuiala cheltuiala : cheltuieli) {
+            if (!cheltuiala.getTipCheltuiala().equals(Cheltuiala.TipCheltuiala.CONTAINER)) {
+                sumaCh += cheltuiala.getSuma();
+            } else {
+                sumaContainer += cheltuiala.getSuma();
+            }
+        }
+
+        // Rotunjire la 2 zecimale
+        sumaCh = Math.round(sumaCh * 100) / 100f;
+        sumaContainer = Math.round(sumaContainer * 100) / 100f;
+        float economii = Math.round((utilizator.getProfil().getVenit() - sumaCh) * 100) / 100f;
+
+        // Construiește DTO-ul pentru răspuns
+        SumeResponeDTO responseDTO = new SumeResponeDTO(sumaCh, sumaContainer, economii);
+
+        return ResponseEntity.ok(responseDTO);
     }
 
     @Operation(summary = "Creeaza o noua diagrama")

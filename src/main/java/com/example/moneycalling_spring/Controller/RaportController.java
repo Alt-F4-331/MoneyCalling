@@ -176,7 +176,7 @@ public class RaportController {
         float sumaMaximaLocuinta = (venit * procentMaximLocuinta) / 100;
 
         if (chiriePropusa > sumaMaximaLocuinta) {
-            return new ResponseEntity<>("Chiria propusă depășește limita maximă permisă pentru locuință! Maxim permis: " + sumaMaximaLocuinta, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Chiria propusă depășește limita maximă permisă pentru locuință! Maxim permis: " + sumaMaximaLocuinta, HttpStatus.OK);
         }
 
         if (chiriePropusa > chirieSugerata) {
@@ -197,19 +197,14 @@ public class RaportController {
 
     @PostMapping("/confirma-chirie")
     @Operation(summary = "Confirmă sau respinge chiria propusă")
-    public ResponseEntity<String> confirmaChirie(@RequestHeader("Authorization") String token, @RequestParam boolean confirm) {
+    public ResponseEntity<String> confirmaChirie(@RequestHeader("Authorization") String token, @RequestParam float chiriePropusa) {
         int userId = jwtutil.getUserIdByToken(token);
         Utilizator utilizator = utilizatorService.getById(userId).get();  // No exception handling
 
-        Optional<Float> chiriePropusaOptional = raportService.getChiriePropusa(userId);
-        if (chiriePropusaOptional.isEmpty()) {
-            return new ResponseEntity<>("Nu există o chirie propusă în așteptare.", HttpStatus.BAD_REQUEST);
-        }
-        float chiriePropusa = chiriePropusaOptional.get();
 
         Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();  // No exception handling
 
-        if (confirm) {
+
             Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "chirie", chiriePropusa, Cheltuiala.TipCheltuiala.LOCUINTA, diagrama);
             cheltuialaService.saveCheltuiala(ch);
             Float procentRamas = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
@@ -219,11 +214,9 @@ public class RaportController {
             diagrama.getProcenteCheltuieli().put(Cheltuiala.TipCheltuiala.LOCUINTA, procentNou);
             diagramaService.saveDiagrama(diagrama);
             return new ResponseEntity<>("Chiria propusă a fost acceptată și adăugată.", HttpStatus.OK);
-        } else {
-            //raportService.removeChiriePropusa(userId);
-            return new ResponseEntity<>("Chiria propusă a fost respinsă.", HttpStatus.OK);
+
         }
-    }
+
     @GetMapping("/sugereaza-vacanta")
     @Operation(summary = "Sugerează alocarea bugetului pentru vacanță")
     public ResponseEntity<?> sugereazaBugetVacanta(@RequestHeader("Authorization") String token, @RequestParam int nrZile, @RequestParam float bugetTotal) {
