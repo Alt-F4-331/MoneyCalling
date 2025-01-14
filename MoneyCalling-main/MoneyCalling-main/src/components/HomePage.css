@@ -1124,3 +1124,34 @@ p {
     opacity: 0.5;
   }
 }
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+        color: white; /* Culoare textului inițial */
+    }
+
+    50% {
+        opacity: 0.7;
+        color: #f6ff47; /* Galben la jumătatea animației */
+    }
+
+    100% {
+        opacity: 1;
+        color: white; /* Revenire la alb */
+    }
+}
+
+/* Apply the pulse animation to the button text */
+.pulse-button {
+    animation: pulse 1s infinite; /* Animația de puls */
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: transparent; /* Fundal transparent */
+    color: white; /* Culoare text alb inițial */
+    border-radius: 5px; /* Optional: pentru colțuri rotunjite */
+    outline: none; /* Evităm bordura la focus */
+}

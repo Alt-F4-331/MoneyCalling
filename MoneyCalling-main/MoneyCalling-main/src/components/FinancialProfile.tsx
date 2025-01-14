@@ -19,6 +19,8 @@ const FinancialProfile: React.FC = () => {
     containerEconomii: 0,
     dataSalar: 0
   });
+
+  const [isProfileComplete, setIsProfileComplete] = useState(false); // Noua stare
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -64,8 +66,18 @@ const FinancialProfile: React.FC = () => {
             containerEconomii: profil.containerEconomii || 0,
             dataSalar: profil.dataSalar || 0,
         });
+
           const savings = response.data.profil.containerEconomii;
           localStorage.setItem('savings', savings); // Stocăm savings în localStorage
+
+          // Verificăm dacă profilul este complet
+          const isComplete =
+            profil.venit > 0 &&
+            profil.domiciliu !== '' &&
+            profil.containerEconomii > 0 &&
+            profil.dataSalar > 0;
+          setIsProfileComplete(isComplete);
+          localStorage.setItem('isProfileComplete', JSON.stringify(isComplete));
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
@@ -103,6 +115,8 @@ const FinancialProfile: React.FC = () => {
       if (response.status === 200) {
         setMessage('Profile updated successfully!');
         setIsEditing(false); // Ieșim din modul de editare
+        fetchFinancialData(); // Reactualizăm datele după salvare
+
       }
     } catch (error) {
       console.error('Error updating user data:', error);
