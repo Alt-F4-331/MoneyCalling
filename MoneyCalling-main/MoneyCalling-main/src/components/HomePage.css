@@ -202,16 +202,16 @@ body {
  
 .expense-button {
   position: fixed; /* Face ca butonul să fie fix pe ecran */
-  left: 920px; /* Ajustează poziția orizontală pentru aliniere */
-  bottom: 25px;
+  left: 680px; /* Ajustează poziția orizontală pentru aliniere */
+  bottom: 70px;
   display: flex;
   align-items: center;
 }
 
 .expense-button button {
   padding: 10px, 20px;
-  height: 85px;
-  width: 140px;
+  height: 60px;
+  width: 200px;
   background-color: #14123BD9;
   color: #FFFFFF;
   border: none;
@@ -244,7 +244,7 @@ body {
   justify-content: center; /* Centrare orizontală */
   align-items: flex-start; /* Aliniere sus */
   gap: 20px; /* Spațiu între diagramă și chenar */
-  margin-top: -10px;
+  margin-top: 30px;
   margin-left: 40px;
   position: relative;
 }
@@ -258,13 +258,14 @@ body {
 .categories-card {
   background-color: #14123BE5; /* Fundal închis */
   padding: 15px;
-  margin-top: 150px;
-  margin-left: 100px;
+  margin-top: -40px; /* Aproape de navbar */
+  margin-left: 50px; /* Poziționare pe orizontală */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   color: #FFFFFF;
   font-size: 18px;
   min-width: 300px; /* Lățime minimă */
+  height: 340px; /* Înălțime fixă pentru a fi vizibil fundalul */
 }
 
 .categories-card h4 {
@@ -289,7 +290,7 @@ body {
   border-radius: 3px;
 }
 
-.category-select{
+.category-select {
   color: white;
 }
 
@@ -304,27 +305,36 @@ body {
 .expenses-card {
   background-color: #14123BE5; /* Fundal închis */
   padding: 15px;
-  margin-top: 20px;
-  margin-left: 100px; /* Alineat cu cardul de categorii */
+  margin-top: 50px; /* Aliniere verticală cu categories-card */
+  margin-left: 50px; /* Aliniere stânga cu categories-card */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   color: #FFFFFF;
   font-size: 18px;
   min-width: 300px; /* Lățime minimă */
-  max-width: 400px !important; /* Smaller card width */
-  max-height: 200px !important; /* Limit the height */
+  max-width: 300px; /* Aliniere dreapta cu categories-card */
+  height: 350px; /* Extindere pentru mai multe cheltuieli */
 }
+
+.expenses-card h4 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #FFFFFF;
+}
+
 
 .filter-header {
   display: flex;
   justify-content: space-between;
-  align-items: right;
+  align-items: center;
   margin-bottom: 15px;
 }
 
 .filter-container {
   display: flex;
-  align-items: right;
+  align-items: center;
   gap: 10px;
 }
 
@@ -361,8 +371,11 @@ body {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  max-height: calc(4 * 30px); /* Show up to 4 items, assuming 40px per item */
-  overflow-y: auto; /* Enable vertical scrolling if there are more than 4 items */
+  max-height: calc(9 * 30px); /* Show up to 9 items, assuming 30px per item */
+  overflow-y: auto; /* Enable vertical scrolling if there are more than 9 items */
+  display: flex;
+  flex-direction: column-reverse; /* Inversează ordinea elementelor */
+  scroll-behavior: smooth; /* Asigură o tranziție lină la scroll */
 }
 
 /* Hide scrollbar for Webkit browsers (Chrome, Safari, Edge) */

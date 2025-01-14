@@ -5,13 +5,13 @@ import logo from '../assets/logo.png';
 import profile_pic from "../assets/profile_pic.jpg";
 import PieChart from './PieChart';
 import { Link } from 'react-router-dom';
-
+ 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-
-
-
+ 
+ 
+ 
 const HomePage: React.FC = () => {
   //categorii pentru expense
   const [categories, setCategories] = useState<string[]>([
@@ -22,9 +22,9 @@ const HomePage: React.FC = () => {
     'DIVERTISMENT',   // Divertisment
     'TRANSPORT',      // Transport
     'CLOTHING',       // Îmbrăcăminte
-    'ECONOMY',        // Economii
+    'SAVINGS',        // Economii
   ]);
-
+ 
   // Maparea categoriilor (frontend -> backend)
   const categoryMap = {
     FOOD: 'ALIMENTATIE',
@@ -34,14 +34,14 @@ const HomePage: React.FC = () => {
     DIVERTISMENT: 'DIVERTISMENT',
     TRANSPORT: 'TRANSPORT',
     CLOTHING: 'IMBRACAMINTE',
-    ECONOMY: 'ECONOMII',
+    SAVINGS: 'CONTAINER',
   };
-
+ 
   // Memorizează categoriile pentru a preveni recalculările inutile
   const memorizedCategories = React.useMemo(() => categories, [categories]);
   const [message, setMessage] = useState<string | null>(null);
-  
-
+ 
+ 
   // const [showRentPopup, setShowRentPopup] = useState(false);
   // const [showWarningPopup, setShowWarningPopup] = useState(false);
   // const [rentAmount, setRentAmount] = useState<number>(0);
@@ -51,7 +51,7 @@ const [showWarningPopup, setShowWarningPopup] = useState(false); // Control pop-
 const [rentAmount, setRentAmount] = useState<number>(0); // Valoare introdusă pentru chirie
 const [rentSuggestion, setRentSuggestion] = useState<number | null>(null); // Valoare chirie sugerată
 const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie propusă
-
+ 
 //
   const [savingsSum, setSavingsSum] = useState<number>(0);
   const [installmentSum, setInstallmentSum] = useState<number>(0);
@@ -73,47 +73,47 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
   const [selectedInstallment, setSelectedInstallment] = useState<number | null>(null);
   const [recommendedTravelSum, setRecommendedTravelSum] = useState<number>(0);
   const [recommendedAccommodationSum, setRecommendedAccommodationSum] = useState<number>(0);
-
+ 
   const [showSubscriptionPopup, setShowSubscriptionPopup] = useState(false);
   const [showAddSubscriptionPopup, setShowAddSubscriptionPopup] = useState(false);
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
-
+ 
   const [newSubscriptionName, setNewSubscriptionName] = useState("");
   const [newSubscriptionPrice, setNewSubscriptionPrice] = useState("");
   const [paymentFrequency, setPaymentFrequency] = useState<"monthly" | "yearly">("monthly");
-
+ 
   // Stările pentru ziua și luna plății
   const [paymentDay, setPaymentDay] = useState<number>(1);  // Ziua pentru plata abonamentului
   const [paymentMonth, setPaymentMonth] = useState<number>(1);  // Luna pentru plata abonamentului (valabil doar pentru abonamentele anuale)
   const [showSavingsPopup, setShowSavingsPopup] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedMonths, setSelectedMonths] = useState('');
-
+ 
   const [name, setName] = useState<string>("");
-
-
+ 
+ 
   const closeMessage = () => setMessage(null);
-
+ 
   const handleOpenSavingsPopup = () => {
     setShowSavingsPopup(true);
   }
-
+ 
   const handleCloseSavingsPopup = () => {
     setShowSavingsPopup(false);
   };
-
-  
-
-
+ 
+ 
+ 
+ 
   const handleMonthSelection = async (months: string) => {
     setSelectedMonths(months); // Actualizează selecția lunilor (pentru styling sau alte utilizări)
-  
+ 
     const token = localStorage.getItem("token");
     if (!token) {
       console.error("Token-ul nu este disponibil");
       return;
     }
-  
+ 
     try {
       // Realizează cererea către backend
       const response = await fetch(`http://localhost:8080/api/rapoarte/economii?luni=${months}`, {
@@ -123,21 +123,21 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
           "Content-Type": "application/json",
         },
       });
-  
+ 
       if (!response.ok) {
         throw new Error("Eroare la obținerea datelor economiilor");
       }
-  
+ 
       const data = await response.json();
       console.log("Datele economiilor primite:", data); // Debug: verifică răspunsul din backend
-  
+ 
       setSelectedMonths(data); // Actualizează starea cu datele primite
     } catch (error) {
       console.error("Eroare la cererea datelor economiilor:", error);
     }
   };
-
-
+ 
+ 
   useEffect(() => {
     // Functie care face cererea pentru a obține datele economiilor
     const fetchSavingsData = async () => {
@@ -146,7 +146,7 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
         console.error('Token-ul nu este disponibil');
         return;
       }
-
+ 
       try {
         const response = await fetch(`http://localhost:8080/api/rapoarte/economii?luni=3`, {
           method: 'GET',
@@ -155,11 +155,11 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
             'Content-Type': 'application/json',
           },
         });
-
+ 
         if (!response.ok) {
           throw new Error('Eroare la obținerea datelor economiilor');
         }
-
+ 
         const data = await response.json();
         console.log('Date primite de la API:', data);
         setSelectedMonths(data); // Setează datele economiilor
@@ -167,12 +167,12 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
         console.error('Eroare:', error);
       }
     };
-
+ 
     if (showSavingsPopup && canvasRef.current) {
       fetchSavingsData(); // Apelăm funcția de fetch atunci când pop-up-ul se deschide
     }
   }, [showSavingsPopup]);
-
+ 
   useEffect(() => {
     if (showSavingsPopup && canvasRef.current && Object.keys(selectedMonths).length > 0) {
       const ctx = canvasRef.current.getContext('2d');
@@ -184,30 +184,30 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
       }
     }
   }, [showSavingsPopup, selectedMonths]);
-  
-  
-
+ 
+ 
+ 
   const drawChart = (ctx, data) => {
     const canvasWidth = ctx.canvas.width;
     const canvasHeight = ctx.canvas.height;
-  
+ 
     // Clear the canvas
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  
+ 
     const margin = 50;
     const chartWidth = canvasWidth - 2 * margin;
     const chartHeight = canvasHeight - 2 * margin;
-  
+ 
     // Prepare data
     const labels = Object.keys(data.months); // ["Jan 2023", "Feb 2023", ...]
     const values = Object.values(data.savings); // [12.34, 45.67, ...]
-  
+ 
     const maxValue = Math.max(...values);
     const minValue = Math.min(...values);
-  
+ 
     const xStep = chartWidth / labels.length;
     const yScale = chartHeight / (maxValue - minValue);
-  
+ 
     // Draw axes
     ctx.beginPath();
     ctx.moveTo(margin, margin);
@@ -216,32 +216,32 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 2;
     ctx.stroke();
-  
+ 
     // Draw arrows
     drawArrow(ctx, canvasWidth - margin, canvasHeight - margin, 10, 0); // X-axis
     drawArrow(ctx, margin, margin, 0, -10); // Y-axis
-  
+ 
     // Draw labels and points
     labels.forEach((label, index) => {
       const x = margin + index * xStep + xStep / 2;
       const y = canvasHeight - margin - (values[index] - minValue) * yScale;
-  
+ 
       // Draw point
       ctx.beginPath();
       ctx.arc(x, y, 5, 0, 2 * Math.PI);
       ctx.fillStyle = '#00ff00';
       ctx.fill();
-  
+ 
       // Draw label
       ctx.fillStyle = '#ffffff';
       ctx.textAlign = 'center';
       ctx.fillText(label, x, canvasHeight - margin + 20);
-  
+ 
       // Draw connecting line
       if (index > 0) {
         const prevX = margin + (index - 1) * xStep + xStep / 2;
         const prevY = canvasHeight - margin - (values[index - 1] - minValue) * yScale;
-  
+ 
         ctx.beginPath();
         ctx.moveTo(prevX, prevY);
         ctx.lineTo(x, y);
@@ -251,7 +251,7 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
       }
     });
   };
-  
+ 
   const drawArrow = (ctx, startX, startY, angleX, angleY) => {
     const arrowSize = 10;
     const angle = Math.atan2(angleY, angleX);
@@ -270,11 +270,11 @@ const [proposedRent, setProposedRent] = useState<number>(0); // Valoare chirie p
     ctx.lineWidth = 2;
     ctx.stroke();
   };
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
   // Tipul așteptat pentru obiectul de abonament
 interface SubscriptionDTO {
   nume: string;
@@ -398,13 +398,13 @@ const handleDeleteSubscription = async (subscriptionId: number) => {
     console.error("Eroare la ștergerea abonamentului:", error);
   }
 };
-
-
+ 
+ 
   // Funcții pentru deschiderea și închiderea pop-up-ului pentru Holiday Report
 const handleOpenHolidayPopup = () => {
   setShowHolidayPopup(true);
 };
-
+ 
 const handleCloseHolidayPopup = () => {
   setShowHolidayPopup(false);
   setRecommendedAccommodationSum(0);
@@ -412,16 +412,16 @@ const handleCloseHolidayPopup = () => {
   setHolidayDays(0); // Resetare număr de zile
   setHolidaySum(0); // Resetare sumă pentru vacanță
 };
-
+ 
 // Funcție pentru apelul automat al endpoint-ului /sugereaza-vacanta
 const fetchHolidaySuggestion = async (nrZile: number, bugetTotal: number) => {
   const token = localStorage.getItem("token");
-
+ 
   if (!token) {
     console.error("Token-ul nu este disponibil. Vă rugăm să vă autentificați.");
     return;
   }
-
+ 
   try {
     const response = await fetch(
       `http://localhost:8080/api/rapoarte/sugereaza-vacanta?nrZile=${nrZile}&bugetTotal=${bugetTotal}`,
@@ -432,13 +432,13 @@ const fetchHolidaySuggestion = async (nrZile: number, bugetTotal: number) => {
         },
       }
     );
-
+ 
     const contentType = response.headers.get("Content-Type");
-
+ 
     if (contentType && contentType.includes("application/json")) {
       const data = await response.json();
       console.log("Răspuns JSON:", data);
-
+ 
       // Afișează sumele recomandate
       setRecommendedTravelSum(data.bugetDistribuit.Transport);
       setRecommendedAccommodationSum(data.bugetDistribuit.Cazare);
@@ -452,22 +452,22 @@ const fetchHolidaySuggestion = async (nrZile: number, bugetTotal: number) => {
     setMessage("A apărut o eroare la obținerea bugetului propus.");
   }
 };
-
+ 
 // Monitorizează schimbările la numărul de zile și buget pentru a apela automat endpoint-ul
 useEffect(() => {
   if (holidayDays > 0 && holidaySum > 0) {
     fetchHolidaySuggestion(holidayDays, holidaySum);
   }
 }, [holidayDays, holidaySum]);
-
+ 
 const handleHolidaySubmit = async (e: React.FormEvent) => {
   const token = localStorage.getItem("token");
-
+ 
   if (!token) {
     setMessage("Token-ul nu este disponibil. Vă rugăm să vă autentificați.");
     return;
   }
-
+ 
   try {
     const response = await fetch(
       `http://localhost:8080/api/rapoarte/confirma-vacanta?confirm=${true}`,
@@ -478,9 +478,9 @@ const handleHolidaySubmit = async (e: React.FormEvent) => {
         },
       }
     );
-
+ 
     console.log(`Status: ${response.status} (${response.statusText})`);
-
+ 
     if (response.ok) {
       const message = await response.text();
       setMessage(message); // Mesaj de succes
@@ -495,65 +495,29 @@ const handleHolidaySubmit = async (e: React.FormEvent) => {
     setMessage("A apărut o eroare la confirmarea vacanței.");
   }
 };
-
+ 
 //inceput david
-
+ 
  // Deschidere și închidere popups
 const handleOpenRentPopup = () => {
   setShowRentPopup(true); // Deschide pop-up-ul
 };
-
+ 
 const handleCloseRentPopup = () => {
   setShowRentPopup(false); // Închide pop-up-ul
   setRentAmount(0); // Resetare sumă chirie introdusă
   setRentSuggestion(null); // Resetare valoare chirie sugerată
   setProposedRent(0); // Resetare chirie propusă
 };
-
-const handleCloseWarningPopup = async (isConfirmed: boolean) => {
-
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('Token-ul nu este disponibil. Vă rugăm să vă autentificați.');
-    return;
-  }
-
-  try {
-    const response = await fetch(`http://localhost:8080/api/rapoarte/confirma-chirie?confirm=${isConfirmed}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(proposedRent), // Trimite chiria propusă
-    });
-    if (response.ok) {
-      const responseText = await response.text();
-      alert(responseText); // Afișează mesajul de succes
-      setShowWarningPopup(false);
-      setShowRentPopup(false); // Închide pop-up-ul de rent
-      }
-    else {
-      const errorText = await response.text();
-      console.error('Eroare:', errorText);
-      alert('A apărut o eroare la trimiterea chiriei propuse.');
-    }
-  } catch (error) {
-    console.error('Eroare la trimiterea chiriei propuse:', error);
-    alert('A apărut o eroare la trimiterea chiriei propuse.');
-  }
-  
-};
-
-
+ 
 // Funcție pentru a trimite chiria propusă
 const submitProposedRent = async () => {
   const token = localStorage.getItem('token');
   if (!token) {
-    console.error('Token-ul nu este disponibil. Vă rugăm să vă autentificați.');
+    alert('Vă rugăm să vă autentificați pentru a continua.');
     return;
   }
-
+ 
   try {
     const response = await fetch(`http://localhost:8080/api/rapoarte/initiaza-chirie?chiriePropusa=${rentAmount}`, {
       method: 'POST',
@@ -561,54 +525,75 @@ const submitProposedRent = async () => {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(proposedRent), // Trimite chiria propusă
+      body: JSON.stringify({ chiriePropusa: rentAmount }), // Trimite chiria propusă
     });
-
+ 
     if (response.ok) {
-      const responseText = await response.text();
-      alert(responseText); // Afișează mesajul de succes
-      
-      if (rentAmount > proposedRent) { // Verifică dacă chiria introdusă este în intervalul permis
-        setShowWarningPopup(true);} // Afișează pop-up-ul de avertizare
-      else{
+      alert('Chiria propusă a fost trimisă cu succes.');
+ 
+ 
+      setProposedRent(rentAmount)
+ 
+      // Verifică dacă suma introdusă este mai mare decât suma sugerată
+      if (rentAmount > rentSuggestion) {
+        setShowWarningPopup(true); // Afișează pop-up-ul de avertizare
+      } else {
         setShowRentPopup(false); // Închide pop-up-ul după trimitere
       }
+ 
     } else {
-      const errorText = await response.text();
-      console.error('Eroare:', errorText);
-      alert('A apărut o eroare la trimiterea chiriei propuse.');
+      alert('A apărut o eroare la trimiterea chiriei propuse. Vă rugăm să încercați din nou.');
     }
-  } catch (error) {
-    console.error('Eroare la trimiterea chiriei propuse:', error);
-    alert('A apărut o eroare la trimiterea chiriei propuse.');
+  } catch {
+    alert('Eroare de rețea. Vă rugăm să verificați conexiunea.');
   }
 };
-
-const handleRentSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  
-  
-    // Apelăm funcția pentru a trimite chiria propusă
-    submitProposedRent();
-  
+ 
+// Funcție pentru a confirma chiria propusă
+const handleCloseWarningPopup = async (isConfirmed: boolean) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Vă rugăm să vă autentificați pentru a continua.');
+    return;
+  }
+ 
+  if (isConfirmed) {
+    // Dacă utilizatorul confirmă
+    try {
+      const response = await fetch(`http://localhost:8080/api/rapoarte/confirma-chirie?chiriePropusa=${rentAmount}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+ 
+      if (response.ok) {
+        alert('Chiria a fost confirmată cu succes.');
+        setShowWarningPopup(false); // Închide warning pop-up
+        setShowRentPopup(false); // Închide toate pop-up-urile
+      } else {
+        const errorText = await response.text();
+        alert(`A apărut o eroare la confirmarea chiriei: ${errorText}`);
+      }
+    } catch (error) {
+      alert('Eroare de rețea. Vă rugăm să verificați conexiunea.');
+    }
+  } else {
+    // Dacă utilizatorul refuză
+    setShowWarningPopup(false); // Închide warning pop-up
+    setShowRentPopup(true); // Revină la pop-up-ul anterior
+  }
 };
-
-const handleOpenPopup = () => {
-  setShowPopup(true); // Deschide un alt pop-up (dacă este cazul)
-};
-
-const handleClosePopup = () => {
-  setShowPopup(false); // Închide pop-up-ul corespunzător
-};
-
+ 
 // Funcție pentru a calcula chiria sugerată
 const fetchRentSuggestion = async () => {
   const token = localStorage.getItem('token');
   if (!token) {
-    console.error('Token-ul nu este disponibil. Vă rugăm să vă autentificați.');
+    alert('Vă rugăm să vă autentificați pentru a continua.');
     return;
   }
-
+ 
   try {
     const response = await fetch('http://localhost:8080/api/rapoarte/sugereaza-chirie', {
       method: 'GET',
@@ -616,42 +601,60 @@ const fetchRentSuggestion = async () => {
         'Authorization': `Bearer ${token}`,
       },
     });
-
+ 
     if (response.ok) {
       const suggestedRent = await response.json();
       setRentSuggestion(suggestedRent); // Actualizează valoarea chiriei sugerate
     } else {
-      const errorText = await response.text();
-      console.error('Eroare:', errorText);
-      alert('A apărut o eroare la obținerea chiriei sugerate.');
+      alert('A apărut o eroare la obținerea chiriei sugerate. Vă rugăm să încercați din nou.');
     }
-  } catch (error) {
-    console.error('Eroare la obținerea chiriei sugerate:', error);
-    alert('A apărut o eroare la obținerea chiriei sugerate.');
+  } catch {
+    alert('Eroare de rețea. Vă rugăm să verificați conexiunea.');
   }
 };
-
-// Apel automat al funcției `fetchRentSuggestion` la deschiderea pop-up-ului
+ 
+// Apel automat al funcției fetchRentSuggestion la deschiderea pop-up-ului
 useEffect(() => {
   if (showRentPopup) {
     fetchRentSuggestion(); // Apelează API-ul când pop-up-ul se deschide
   }
-}, [showRentPopup]); // Trigger la modificarea valorii `showRentPopup`
-
-
+}, [showRentPopup]); // Trigger la modificarea valorii showRentPopup
+ 
+// Deschidere și închidere pop-up general
+const handleOpenPopup = () => {
+  setShowPopup(true); // Deschide un alt pop-up (dacă este cazul)
+};
+ 
+const handleClosePopup = () => {
+  setShowPopup(false); // Închide pop-up-ul corespunzător
+};
+ 
+// Funcție pentru a trimite chiria propusă
+const handleRentSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+ 
+  // Verificăm condiția pentru pop-up-ul de avertizare
+  if (rentAmount > rentSuggestion) {
+    setShowWarningPopup(true); // Afișează pop-up-ul de avertizare
+  } else {
+    // Apelăm funcția pentru a trimite chiria propusă
+    submitProposedRent();
+  }
+};
+ 
 //final david
-
+ 
 const [suggestedInstallment, setSuggestedInstallment] = useState<number | null>(null);
 const [calculatedInstallment, setCalculatedInstallment] = useState<number | null>(null);
-
-
+ 
+ 
 const fetchInstallmentSuggestion = async () => {
   const token = localStorage.getItem('token'); // Preluare token din localStorage
   if (!token) {
     alert('Vă rugăm să vă autentificați pentru a continua.');
     return;
   }
-
+ 
   try {
     const response = await fetch('http://localhost:8080/api/rapoarte/sugerseaza-rata', {
       method: 'GET',
@@ -659,7 +662,7 @@ const fetchInstallmentSuggestion = async () => {
         'Authorization': `Bearer ${token}`, // Adaugă token-ul în header
       },
     });
-
+ 
     if (response.ok) {
       const suggestedInstallment = await response.json(); // Preia valoarea returnată din răspuns
       setSuggestedInstallment(suggestedInstallment); // Salvează valoarea în state
@@ -671,7 +674,7 @@ const fetchInstallmentSuggestion = async () => {
     alert('Eroare de rețea. Vă rugăm să verificați conexiunea.');
   }
 };
-
+ 
 const calculateInstallment = async (sum: number, months: number) => {
   try {
     const response = await fetch(
@@ -680,7 +683,7 @@ const calculateInstallment = async (sum: number, months: number) => {
         method: 'GET',
       }
     );
-
+ 
     if (response.ok) {
       const installment = await response.json(); // Obține valoarea ratei
       setCalculatedInstallment(installment); // Salvează rata în state
@@ -692,13 +695,13 @@ const calculateInstallment = async (sum: number, months: number) => {
     alert('Eroare de rețea. Vă rugăm să verificați conexiunea.');
   }
 };
-
+ 
 useEffect(() => {
   if (installmentSum && selectedInstallment) {
     calculateInstallment(installmentSum, selectedInstallment);
   }
 }, [installmentSum, selectedInstallment]);
-
+ 
 const handleOpenInstallmentsPopup = () => {
   setShowInstallmentsPopup(true); // Deschide popup-ul
   fetchInstallmentSuggestion();  // Apelează API-ul pentru a sugera rata
@@ -710,21 +713,21 @@ const handleOpenInstallmentsPopup = () => {
     setCustomInstallment('');
     setSelectedInstallment(null);
   };
-
+ 
   const handleInstallmentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+ 
     // Valoarea ratei care va fi trimisă la backend
     const rateToSubmit = calculatedInstallment;
-
+ 
     const token = localStorage.getItem('token'); // Preluare token din localStorage
   if (!token) {
     alert('Vă rugăm să vă autentificați pentru a continua.');
     return;
   }
-  
+ 
     if (rateToSubmit) {
-      
+ 
         try {
           const response = await fetch(`http://localhost:8080/api/rapoarte/adauga-rata?rataPropusa=${calculatedInstallment}`, {
             method: 'POST',
@@ -734,11 +737,11 @@ const handleOpenInstallmentsPopup = () => {
             },
             body: JSON.stringify({ rataPropusa: rateToSubmit }),
           }); 
-          
+ 
           // Logare informații despre răspuns
       console.log("Status cod:", response.status);  // Vei vedea codul statusului (ex: 200, 400, etc.)
       console.log("Status text:", response.statusText);  // Descrierea statusului (ex: "OK", "Bad Request", etc.)
-  
+ 
         if (response.status ===200) {
           const result = await response.json();
           console.log("Răspuns complet API:", result);
@@ -753,38 +756,38 @@ const handleOpenInstallmentsPopup = () => {
     } else {
       alert("Vă rugăm să selectați o rată.");
     }
-  
+ 
     handleCloseInstallmentsPopup(); // Închide popup-ul după trimiterea formularului
   };
-
+ 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Logica pentru a trimite datele introduse (de ex: adaugare expense)
     console.log("Expense submitted!");
     handleClosePopup();
   };
-
+ 
   const handleExpenseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+ 
     // Mapăm categoria aleasă din frontend la categoria corespunzătoare din backend
     const mappedCategory = categoryMap[category];
-
+ 
     // Construim obiectul care va fi trimis către back-end
     const expenseData = {
       nume: name, // "nume" trebuie să corespundă cu DTO-ul
       suma: parseFloat(amount.toFixed(2)), // "suma"
       tipCheltuiala: mappedCategory, // Folosim categoria mapată în română
     };
-
+ 
     try {
       const token = localStorage.getItem("token");
-
+ 
       if (!token) {
         setMessage("Autentificarea este necesară.");
         return;
       }
-
+ 
       const serverResponse = await fetch("http://localhost:8080/api/cheltuieli", {
         method: "POST",
         headers: {
@@ -793,7 +796,7 @@ const handleOpenInstallmentsPopup = () => {
         },
         body: JSON.stringify(expenseData),
       });
-
+ 
       if (serverResponse.ok) {
         let responseData;
         try {
@@ -803,10 +806,10 @@ const handleOpenInstallmentsPopup = () => {
           setMessage("Eroare la procesarea răspunsului.");
           return;
         }
-
+ 
         console.log("Răspuns server:", responseData);
         setMessage(responseData);
-
+ 
         // Resetăm valorile formularului
         setName("");
         setAmount(0);
@@ -822,19 +825,19 @@ const handleOpenInstallmentsPopup = () => {
       setMessage("A apărut o eroare. Te rugăm să încerci din nou.");
     }
   };
-
-
-
+ 
+ 
+ 
   const handleExpenseClosePopup = () => {
     setName(""); // Resetează numele
     setAmount(0); // Resetează suma
     setCategory(""); // Resetează categoria
     setShowPopup(false);
   };
-
-
+ 
+ 
   const [triggerReload, setTriggerReload] = useState(false); // Variabilă pentru trigger
-
+ 
 // useEffect pentru a actualiza savings din localStorage
   useEffect(() => {
   const savedSavings = localStorage.getItem("savings");
@@ -842,12 +845,12 @@ const handleOpenInstallmentsPopup = () => {
     setSavingsSum(Number(savedSavings)); // Setează savings din localStorage
   }
 }, [triggerReload]);
-
-
-
-
+ 
+ 
+ 
+ 
   return (
-
+ 
     <div className='home-page'>
       {message && (
         <div className="overlay" onClick={closeMessage}>
@@ -870,7 +873,7 @@ const handleOpenInstallmentsPopup = () => {
           <img src={profile_pic} alt="Profile" className="profile-image" />
         </Link>
       </header> 
-
+ 
       {/* Meniu lateral */}
       <aside className='sidebar'>
         <button onClick={handleOpenRentPopup}>Generate Rent Budget Report</button>
@@ -884,7 +887,7 @@ const handleOpenInstallmentsPopup = () => {
           <span>{savingsSum}</span>
         </div>
       </aside>
-
+ 
       {/* Conținut principal */}
       <main className='main-contents'>
         <div className='diagram'>
@@ -897,7 +900,7 @@ const handleOpenInstallmentsPopup = () => {
           <button onClick={handleOpenPopup}>+ Expense</button>
         </div>
       </main>
-
+ 
       {/* Pop-up pentru Cheltuieli */}
       {showPopup && (
         <div className='popup-overlay' onClick={handleClosePopup}>
@@ -931,7 +934,7 @@ const handleOpenInstallmentsPopup = () => {
                   ))}
                 </select>
               </div>
-
+ 
               <div className='parent-container'>
                 <button type='submit' className='submit-sub-button'>Add</button>
               </div>
@@ -940,9 +943,9 @@ const handleOpenInstallmentsPopup = () => {
           </div>
         </div>
       )}
-
-
-
+ 
+ 
+ 
       {/* Pop-up pentru Rent Budget */}
       {showRentPopup && (
         <div className='popup-overlay' onClick={handleCloseRentPopup}>
@@ -969,10 +972,10 @@ const handleOpenInstallmentsPopup = () => {
           </div>
         </div>
       )}
-
+ 
       {/* Pop-up pentru avertizare */}
       {showWarningPopup && (
-        <div className='popup-overlay' onClick={() =>handleCloseWarningPopup}>
+        <div className='popup-overlay' onClick={() => handleCloseWarningPopup(false)}>
           <div className='popup-container' onClick={(e) => e.stopPropagation()}>
             <p>The amount you introduced is not in the budget range. Want to continue?</p>
             <div className="popup-actions">
@@ -980,7 +983,7 @@ const handleOpenInstallmentsPopup = () => {
               <button
                 className="submit-sub-button"
                 onClick={() => {
-                  handleCloseWarningPopup(true)
+                  handleCloseWarningPopup(true); // Apelăm funcția corect pentru a confirma
                 }}
               >
                 Yes
@@ -989,8 +992,8 @@ const handleOpenInstallmentsPopup = () => {
           </div>
         </div>
       )}
-
-
+ 
+ 
       {showHolidayPopup && (
         <div className='popup-overlay-holiday' onClick={handleCloseHolidayPopup}>
           <div className='popup-container-holiday' onClick={(e) => e.stopPropagation()}>
@@ -1040,7 +1043,7 @@ const handleOpenInstallmentsPopup = () => {
           </div>
         </div>
       )}
-
+ 
       {/* Pop-up pentru Installments Report */}
       {showInstallmentsPopup && (
         <div className="popup-overlay" onClick={handleCloseInstallmentsPopup}>
@@ -1050,7 +1053,7 @@ const handleOpenInstallmentsPopup = () => {
               <div className="installment-sum">
                 <input type='number' placeholder='Total: ' id='installment' name='installment' value={installmentSum} onChange={(e) => setInstallmentSum(parseFloat(e.target.value))} min="0" step="10" required />
               </div>
-
+ 
               <div className="info-box">Budget range: {suggestedInstallment}</div>
               <p>Please choose in how many months you want to pay the installment:</p>
               <div className="installment-options">
@@ -1074,8 +1077,14 @@ const handleOpenInstallmentsPopup = () => {
                     placeholder="Insert a different option"
                     value={customInstallment}
                     onChange={(e) => {
-                      setCustomInstallment(parseInt(e.target.value) || 0);
-                      //setSelectedInstallment(null);
+                      const customValue = parseInt(e.target.value, 10) || 0; // Parsează valoarea ca număr
+                      if (customValue > 0) {
+                        setCustomInstallment(customValue); // Actualizează valoarea custom
+                        setSelectedInstallment(customValue); // Actualizează starea selectedInstallment
+                      } else {
+                        setCustomInstallment('');
+                        setSelectedInstallment(null); // Resetează dacă valoarea nu este validă
+                      }
                     }}
                     min="1"
                   />
@@ -1090,7 +1099,7 @@ const handleOpenInstallmentsPopup = () => {
           </div>
         </div>
       )}
-
+ 
 {showSavingsPopup && (
   <div className="popup-overlay" onClick={handleCloseSavingsPopup}>
     <div
@@ -1098,7 +1107,7 @@ const handleOpenInstallmentsPopup = () => {
       onClick={(e) => e.stopPropagation()}
     >
       <h2>Report - Savings</h2>
-
+ 
       {/* Canvas Area */}
       <div className="canvas-container">
         <canvas
@@ -1108,12 +1117,12 @@ const handleOpenInstallmentsPopup = () => {
           style={{ border: "1px solid black" }}
         ></canvas>
       </div>
-
+ 
       {/* Instruction Text */}
       <div className="select-months-display">
         Select the amount of months:
       </div>
-
+ 
       {/* Month Selector */}
       <div className="installment-options">
         {[3, 6, 12, 24, 60, "All"].map((months) => (
@@ -1128,10 +1137,10 @@ const handleOpenInstallmentsPopup = () => {
           </button>
         ))}
       </div>
-
+ 
       {/* Close Button */}
       <button className="x-button" onClick={handleCloseSavingsPopup}>×</button>
-
+ 
       {/* Percentage Display */}
       <div className="percentage-display">
         Your savings have changed by: <strong>15%</strong>{" "}
@@ -1140,9 +1149,9 @@ const handleOpenInstallmentsPopup = () => {
     </div>
   </div>
 )}
-
-
-
+ 
+ 
+ 
 {showSubscriptionPopup && (
       <div className="popup-overlay" onClick={handleCloseSubscriptionPopup}>
         <div className="popup-container-subscription" onClick={(e) => e.stopPropagation()}>
@@ -1175,6 +1184,7 @@ const handleOpenInstallmentsPopup = () => {
           <button onClick={handleOpenAddSubscriptionPopup} className="submit-sub-button">
             Add Subscription
           </button>
+          <button className="x-button" onClick={handleCloseSubscriptionPopup}>×</button>
         </div>
       </div>
     )}
@@ -1242,6 +1252,7 @@ const handleOpenInstallmentsPopup = () => {
                 Add Subscription
               </button>
             </form>
+            <button className="x-button" onClick={handleCloseAddSubscriptionPopup}>×</button>
           </div>
         </div>
       )}
@@ -1250,4 +1261,4 @@ const handleOpenInstallmentsPopup = () => {
   );
 };
  
-export default HomePage;
+export default HomePage
