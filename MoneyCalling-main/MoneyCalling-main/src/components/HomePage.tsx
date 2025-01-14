@@ -845,6 +845,59 @@ const handleOpenInstallmentsPopup = () => {
     setSavingsSum(Number(savedSavings)); // Setează savings din localStorage
   }
 }, [triggerReload]);
+
+// Starea pentru a gestiona vizibilitatea popup-ului de avertizare
+const [showWarningResetPopup, setShowWarningResetPopup] = useState(false); 
+const [isLoading, setIsLoading] = useState(false);
+
+// Funcția pentru deschiderea popup-ului de resetare
+const handleOpenWarningResetPopup = () => {
+  setShowWarningResetPopup(true);
+};
+
+// Funcția pentru închiderea popup-ului de resetare
+const handleCloseWarningResetPopup = () => {
+  setShowWarningResetPopup(false);
+};
+
+// Funcția pentru confirmarea resetării diagramei
+const handleConfirmReset = async () => {
+  setIsLoading(true); // Activăm starea de încărcare
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Vă rugăm să vă autentificați pentru a continua.');
+    setIsLoading(false);
+    return;
+  }
+
+  try {
+    // Apelăm endpoint-ul pentru finalizarea diagramei
+    const response = await fetch('http://localhost:8080/api/diagrame/finalizare', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      alert('The diagram has been successfully reset, and the saved money has been added to your savings!');
+      setShowWarningResetPopup(false); // Închide popup-ul de avertizare
+    } else {
+      alert('A apărut o eroare la resetarea diagramei. Vă rugăm să încercați din nou.');
+    }
+  } catch (error) {
+    alert('Eroare de rețea. Vă rugăm să verificați conexiunea.');
+  }
+
+  setIsLoading(false); // Deactivăm starea de încărcare
+};
+
+// Funcția pentru anularea resetării diagramei
+const handleCancelReset = () => {
+  setShowWarningResetPopup(false); // Închide popup-ul de avertizare fără a face nimic
+};
  
  
  
@@ -881,12 +934,35 @@ const handleOpenInstallmentsPopup = () => {
         <button onClick={handleOpenSubscriptionPopup}>Generate Subscription Report</button>
         <button onClick={handleOpenSavingsPopup}>Generate Savings Report</button>
         <button onClick={handleOpenHolidayPopup}>Generate Holiday Report</button>
+        <button onClick={handleOpenWarningResetPopup}>Reset Diagram(Admin property)</button>
         {/*<button className='add-button'>+</button>*/}
         <div className='savings'>
           <span>Savings:</span>
           <span>{savingsSum}</span>
         </div>
       </aside>
+
+      {/* Popup-ul de confirmare pentru reset diagram */}
+{showWarningResetPopup && (
+  <div className="popup-overlay">
+    <div className="reset-popup">
+      <h2>Are you sure you want to reset the diagram?</h2>
+      <p>All the money that you have not spent will be added to your savings.</p>
+      
+      <div className="reset-popup-buttons">
+        <button onClick={handleConfirmReset} disabled={isLoading}>
+          {isLoading ? 'Processing...' : 'Yes'}
+        </button>
+        <button onClick={handleCancelReset} disabled={isLoading}>
+          No
+        </button>
+      </div>
+      
+    </div>
+    <button className="x-button" onClick={handleCloseWarningResetPopup}>×</button>
+  </div>
+)}
+
  
       {/* Conținut principal */}
       <main className='main-contents'>
@@ -953,9 +1029,9 @@ const handleOpenInstallmentsPopup = () => {
             <h2>Rent Budget Report</h2>
             <form onSubmit={handleRentSubmit}>
               <div className='budget-box'>
-                {rentSuggestion ? `Budget range: ${rentSuggestion}` : 'Loading suggested rent...'}
+                {rentSuggestion ? `Maximum suggested: ${rentSuggestion}` : 'Loading suggested rent...'}
               </div>
-              <p>If you already are paying rent, please insert the amount:</p>
+              <p>Please insert the amount and consider our suggestion:</p>
               <input
                 type="number"
                 value={rentAmount}
@@ -1054,7 +1130,7 @@ const handleOpenInstallmentsPopup = () => {
                 <input type='number' placeholder='Total: ' id='installment' name='installment' value={installmentSum} onChange={(e) => setInstallmentSum(parseFloat(e.target.value))} min="0" step="10" required />
               </div>
  
-              <div className="info-box">Budget range: {suggestedInstallment}</div>
+              <div className="info-box">Maximum suggested: {suggestedInstallment}</div>
               <p>Please choose in how many months you want to pay the installment:</p>
               <div className="installment-options">
                 {installmentOptions.map((option) => (

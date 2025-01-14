@@ -188,7 +188,7 @@ const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched, updateTrigger 
         <div className="categories-card">
           <h4>Categories</h4>
           {data.labels.map((label, index) => {
-            const value = data.datasets[0]?.data?.[index] || 0;
+            const value = data.datasets[0]?.data?.[index].toFixed(2) || 0;
             const percentage = total > 0 ? ((value / total) * 100).toFixed(2) : '0.00';
             return (
               <div className="category" key={label}>

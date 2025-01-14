@@ -16,6 +16,98 @@ body {
   background-repeat: no-repeat;
 }
 
+/*inceput de iulian */
+
+/* Overlay-ul pentru pop-up, acoperă întreaga pagină */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* Fundal negru semitransparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Asigură-te că pop-up-ul este deasupra altor elemente */
+}
+
+/* Pop-up-ul propriu-zis pentru resetarea diagramei */
+.reset-popup {
+  background: #14123BE5; /* Fundal similar cu categoria cardurilor */
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Umbră similară cu celelalte componente */
+  color: #FFFFFF;
+  font-size: 18px;
+}
+
+/* Titlul pop-up-ului pentru confirmare */
+.reset-popup h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+/* Descrierea din pop-up-ul de resetare */
+.reset-popup p {
+  font-size: 16px;
+  color: #CBE3EF; /* Nuanță mai deschisă de albastru pentru textul informativ */
+}
+
+/* Stilizarea butoanelor de confirmare / anulare */
+.reset-popup-buttons button {
+  padding: 12px 25px;
+  margin: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #14123B; /* Culoare buton */
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Umbra la butoane */
+}
+
+/* Schimbă culoarea butonului la hover */
+.reset-popup-buttons button:hover {
+  background-color: #0056b3; /* Culoare mai închisă la hover */
+}
+
+/* Schimbă culoarea butonului la click */
+.reset-popup-buttons button:active {
+  background-color: #00408c; /* Culoare mai închisă la click */
+}
+
+/* Stilizarea butoanelor de confirmare și anulare */
+.reset-popup-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* Butonul de închidere 'X' din colțul dreapta sus */
+.reset-popup .x-button {
+  position: absolute;
+  top: 10px; /* Distanța față de marginea de sus */
+  right: 10px; /* Distanța față de marginea dreaptă */
+  background: transparent;
+  border: none;
+  color: #FFFFFF; /* Culoare pentru butonul de închidere */
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.reset-popup .x-button:hover {
+  color: #ff4747; /* Culoare de hover pentru butonul de închidere */
+}
+
+
+
+
+
+/*final iulian */
+
 
 .home-page {
   display: flex;
