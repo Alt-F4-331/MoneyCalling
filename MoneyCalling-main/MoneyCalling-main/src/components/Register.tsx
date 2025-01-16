@@ -111,7 +111,7 @@ const Register: React.FC = () => {
 
       if (response.status === 201) {
         setSuccessMessage('Account successfully created!');
-        navigate('/homepage');
+        navigate('/login');
       } else {
         setError('Failed to create account. Please try again.');
       }

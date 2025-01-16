@@ -93,6 +93,7 @@ const FinancialProfile: React.FC = () => {
 
   };
 
+
   const updateFinancialData = async () => {
     const token = localStorage.getItem('token');
     if (!token) return;

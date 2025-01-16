@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import FinancialProfile from './FinancialProfile';
+import { fetchFinancialData } from './financialProfile';
 
 
 
@@ -19,7 +21,7 @@ const HomePage: React.FC = () => {
         'HOME',           // Locuință
         'EDUCATION',      // Educație
         'HEALTH',         // Sănătate
-        'DIVERTISMENT',   // Divertisment
+        'ENTERTAINMENT',   // Divertisment
         'TRANSPORT',      // Transport
         'CLOTHING',       // Îmbrăcăminte
         'SAVINGS',        // Economii
@@ -31,7 +33,7 @@ const HomePage: React.FC = () => {
         HOME: 'LOCUINTA',
         EDUCATION: 'EDUCATIE',
         HEALTH: 'SANATATE',
-        DIVERTISMENT: 'DIVERTISMENT',
+        ENTERTAINMENT: 'DIVERTISMENT',
         TRANSPORT: 'TRANSPORT',
         CLOTHING: 'IMBRACAMINTE',
         SAVINGS: 'CONTAINER',
@@ -906,7 +908,20 @@ const HomePage: React.FC = () => {
         setIsProfileComplete(isComplete); // Actualizează starea locală cu valoarea citită din localStorage
     }, []);
 
-
+    
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchFinancialData();
+          console.log('Fetched data:', data);
+        } catch (error) {
+          console.error('Error in fetching data:', error);
+        }
+      };
+  
+      fetchData();
+    }, []); // Se execută o singură dată la montare
+    
 
     return (
 
@@ -951,7 +966,7 @@ const HomePage: React.FC = () => {
             {/* Popup-ul de confirmare pentru reset diagram */}
             {showWarningResetPopup && (
                 <div className="popup-overlay">
-                    <div className="reset-popup">
+                    <div className="popup-container">
                         <h2>Are you sure you want to reset the diagram?</h2>
                         <p>All the money that you have not spent will be added to your savings.</p>
 
@@ -963,9 +978,8 @@ const HomePage: React.FC = () => {
                                 No
                             </button>
                         </div>
-
+                        <button className="x-button" onClick={handleCloseWarningResetPopup}>×</button>
                     </div>
-                    <button className="x-button" onClick={handleCloseWarningResetPopup}>×</button>
                 </div>
             )}
 
@@ -1172,6 +1186,7 @@ const HomePage: React.FC = () => {
                                     />
                                 </div>
                             </div>
+                            <p>It is calculated with an interest of 5% per year!</p>
                             <div className="recommended-sum">Monthly sum: {calculatedInstallment}</div>
                             <div className='form-actions'>
                                 <button type="submit">Submit</button>
@@ -1223,11 +1238,7 @@ const HomePage: React.FC = () => {
                         {/* Close Button */}
                         <button className="x-button" onClick={handleCloseSavingsPopup}>×</button>
 
-                        {/* Percentage Display */}
-                        <div className="percentage-display">
-                            Your savings have changed by: <strong>15%</strong>{" "}
-                            {selectedMonths && `in the last ${selectedMonths} months`}
-                        </div>
+                        
                     </div>
                 </div>
             )}
@@ -1245,7 +1256,7 @@ const HomePage: React.FC = () => {
                                 subscriptions.map((subscription) => (
                                     <div key={subscription.id} className="subscription-item">
                                         <span>
-                                            <strong>{subscription.nume}</strong> - {subscription.valoare}€ / {subscription.tipAbonament}
+                                            <strong>{subscription.nume}</strong> - {subscription.valoare}$ / {subscription.tipAbonament}
                                         </span>
                                         <p>
                                             Payment Due:{" "}
@@ -1306,7 +1317,7 @@ const HomePage: React.FC = () => {
                                     type="number"
                                     value={newSubscriptionPrice}
                                     onChange={(e) => setNewSubscriptionPrice(e.target.value)}
-                                    placeholder={`Subscription Value (€/${paymentFrequency === "monthly" ? "month" : "year"})`}
+                                    placeholder={`Subscription Value ($/${paymentFrequency === "monthly" ? "month" : "year"})`}
                                     required
                                 />
                             </div>
