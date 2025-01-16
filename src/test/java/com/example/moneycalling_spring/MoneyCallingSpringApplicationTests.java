@@ -753,6 +753,11 @@ class MoneyCallingSpringApplicationTests {
         int result = diagService.getFirstAvailableId();
         assertEquals(diagServ.getId()+2, result);
 
+        //testare bani economisti
+        float banie = diagService.baniEconomisiti(diagServ, 50000);
+        // banie has value 0 because of no expenes added to the diagram
+        assertEquals(0.0f, banie, "banie should match");
+
         //testare deletebyid
         diagService.stergeDiagramaById(diagServ.getId());
         diagService.stergeDiagramaById(test.getId());
@@ -849,9 +854,8 @@ class MoneyCallingSpringApplicationTests {
         res = raportService.getChiriePropusa(1);
         assertFalse(res.isPresent(), "the chiriePropusa must be deleted");
 
-        //testare deletebydiagrama
 
-
+        raportService.saveRaport(raportServ);
         //testare deletebyid
         raportService.stergeRaportById(raportServ.getId());
 
@@ -882,6 +886,10 @@ class MoneyCallingSpringApplicationTests {
         List<Abonament> lista = abonamentService.getAllAbonamente();
         assertEquals(lista.get(0).getId(), abonamentServ.getId());
 
+        //testare first available id
+        int res = abonamentService.getFirstAvailableId();
+        assertEquals(abonamentServ.getId()+1 , res);
+
         //testare getabonament by id
         assertEquals(abonamentServ.getId(), abonamentService.getAbonamentById(abonamentServ.getId()).get().getId());
 
@@ -890,6 +898,9 @@ class MoneyCallingSpringApplicationTests {
 
         //testarea get abonament by utilizator si nume
         ///assertEquals(abonamentServ.getId(), abonamentService.getAbonamentByUserAndName(utilizatorServ, utilizatorServ.getNume()).get().getId());
+
+        //testare verificare abonamente lunar/anual
+        abonamentService.verificaAbonamente();
 
         //testare getfirstid
         int result = abonamentService.getFirstAvailableId();
