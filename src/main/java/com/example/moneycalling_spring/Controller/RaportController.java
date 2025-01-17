@@ -126,6 +126,7 @@ public class RaportController {
         return new ResponseEntity<>(rata, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "http://localhost:5173")
     @PostMapping("/adauga-rata")
     @Operation(summary = "Sugereaza rata pe baza sumei si numarului de ani")
     public ResponseEntity<?> addRata(@RequestHeader("Authorization") String token, @RequestParam float rataPropusa) {
@@ -134,7 +135,14 @@ public class RaportController {
 
         Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();
 
-        Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "rata", rataPropusa, Cheltuiala.TipCheltuiala.TRANSPORT, diagrama);
+        Float procentMaximtrans = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.TRANSPORT, 0.0f);
+        float sumaMaximaLocuinta = (utilizator.getProfil().getVenit() * procentMaximtrans) / 100;
+
+        if(rataPropusa > sumaMaximaLocuinta)
+            return new ResponseEntity<>("Proposed installment exceeds the maximum limit allowed for transport! Maximum allowed:  "+sumaMaximaLocuinta,HttpStatus.BAD_REQUEST);
+
+
+        Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "installment", rataPropusa, Cheltuiala.TipCheltuiala.TRANSPORT, diagrama);
         cheltuialaService.saveCheltuiala(ch);
 
         Float procentRamas = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.TRANSPORT, 0.0f);
@@ -142,9 +150,8 @@ public class RaportController {
 
         diagrama.getProcenteCheltuieli().put(Cheltuiala.TipCheltuiala.TRANSPORT, procentNou);
         diagramaService.saveDiagrama(diagrama);
-        return ResponseEntity.status(HttpStatus.OK)
-                .header("X-Custom-Status-Text", "Request was successful")
-                .body("The proposed rate has been automatically accepted.");
+        return new ResponseEntity<>("The installment has been added",HttpStatus.OK);
+
     }
 
     @PostMapping("/initiaza-chirie")
@@ -165,8 +172,9 @@ public class RaportController {
         Float procentMaximLocuinta = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
         float sumaMaximaLocuinta = (venit * procentMaximLocuinta) / 100;
 
+
         if (chiriePropusa > sumaMaximaLocuinta) {
-            return new ResponseEntity<>("Proposed rent exceeds the maximum limit allowed for housing! Maximum allowed: " + sumaMaximaLocuinta, HttpStatus.OK);
+            return new ResponseEntity<>("Proposed rent exceeds the maximum limit allowed for housing! Maximum allowed: " + sumaMaximaLocuinta, HttpStatus.BAD_REQUEST);
         }
 
         if (chiriePropusa > chirieSugerata) {
@@ -192,7 +200,7 @@ public class RaportController {
 
         Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();  // No exception handling
 
-        Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "chirie", chiriePropusa, Cheltuiala.TipCheltuiala.LOCUINTA, diagrama);
+        Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "Rent", chiriePropusa, Cheltuiala.TipCheltuiala.LOCUINTA, diagrama);
         cheltuialaService.saveCheltuiala(ch);
         Float procentRamas = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
 

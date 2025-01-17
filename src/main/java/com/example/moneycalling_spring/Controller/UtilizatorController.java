@@ -146,6 +146,7 @@ public class UtilizatorController {
         // Salveaza utilizatorul cu profilul financiar necompletat
         Utilizator utilizatorSalvat = utilizatorService.saveUtilizator(utilizator);
 
+
         // Returneaza utilizatorul creat cu HTTP Status 201 Created
         return new ResponseEntity<>(utilizatorSalvat, HttpStatus.CREATED);
     }
