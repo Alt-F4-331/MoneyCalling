@@ -1,42 +1,91 @@
 # MoneyCalling
 
 ### Tehnologii:
-- *Back-End*: Java cu Spring Boot și baza de date PostgreSQL.
-- *Front-End*: React, folosind JavaScript, TypeScript, JSX, HTML, CSS, și opțional GraphQL și JSON.
+În dezvoltarea aplicației MoneyCalling, am utilizat următoarele tehnologii:
+React: pentru dezvoltarea interfeței utilizatorului (front-end), oferind o aplicație dinamică și interactivă.
+TypeScript: folosit pe front-end pentru a adăuga tipuri statice și a preveni erorile în cod.
+JSON: pentru schimbul de date între client și server.
+HTML & CSS: pentru structura și stilizarea aplicației, asigurându-se că designul este responsive.
+Java Spring Boot: pentru back-end, facilitând dezvoltarea rapidă și gestionarea bazelor de date.
+PostgreSQL: pentru gestionarea bazelor de date, oferind o soluție robustă și scalabilă.
+Aceste tehnologii au permis construirea unei aplicații performante, scalabile și ușor de utilizat.
 
 ---
 
 ### Cum va funcționa aplicația?
 
-#### *Ecranul de Start (Login)*
-La deschiderea aplicației, utilizatorul va fi întâmpinat de un ecran de login. Aici, se va solicita introducerea *username-ului* și a *parolei. Dacă utilizatorul nu are un cont, poate apăsa pe butonul **"Creare cont"*, care îl va direcționa către ecranul de înregistrare. Dacă are deja un cont, se va autentifica folosind datele salvate în baza de date și va fi redirecționat către ecranul principal al aplicației.
+Aplicația MoneyCalling este un instrument intuitiv și puternic pentru gestionarea finanțelor personale. Aceasta oferă utilizatorilor funcționalități precum urmărirea cheltuielilor, setarea obiectivelor financiare, vizualizarea statisticilor și administrarea profilului personal.
+Aplicația este structurată pe mai multe secțiuni, fiecare având un scop specific pentru a îmbunătăți controlul financiar al utilizatorului.
 
-> *Notă: Ecranul de login va conține doar **două câmpuri* (username și parolă) și *două butoane* (Login și Creare cont).
+### Ecranul de autentificare (Log In)
 
----
+Descriere: Acesta este punctul de acces principal în aplicație. Utilizatorii pot introduce adresa de e-mail și parola pentru a accesa contul lor personal.
+Instrucțiuni de utilizare:
+Introduceți adresa de e-mail în câmpul "Email".
+Introduceți parola în câmpul "Password".
+Apăsați butonul Log In pentru a accesa aplicația.
 
-#### *Ecranul de Creare Cont*
-După apăsarea butonului "Creare cont", utilizatorul va fi redirecționat către un ecran denumit "Creare Cont". Acest ecran va conține *un singur câmp* de introducere a datelor și *un singur buton* de submit. După introducerea fiecărui câmp, cerința de introducere se va schimba, iar utilizatorul va completa succesiv informațiile cerute:
+### Homepage
 
-- Prima dată va introduce *numele*.
-- După apăsarea butonului Submit, câmpul de introducere se va reseta și cerința va deveni *prenume*.
-- Acest proces se va repeta pentru email și alte date necesare până la completarea tuturor informațiilor din profilul utilizatorului.
+Descriere: Aceasta este pagina principală a aplicației, unde utilizatorii pot vizualiza un rezumat al situației lor financiare.
+Funcționalități cheie:
+Graficul circular: Afișează repartizarea cheltuielilor pe categorii (ex. mâncare, divertisment, economii).
+Tabelul de cheltuieli: Prezintă o listă cu cele mai recente tranzacții.
+Instrucțiuni de utilizare:
+Consultați graficul pentru o privire de ansamblu.
+Examinați lista de tranzacții pentru a vedea detalii despre cheltuielile recente.
 
-Odată completat, contul va fi salvat în baza de date, iar utilizatorul va fi redirecționat automat către ecranul principal al aplicației.
+### Profilul financiar (Financial Profile)
 
-> *Notă: Ecranul de creare cont va conține în permanență **un singur câmp* și *două butoane* (Submit și Go Back).
+Descriere: Această secțiune permite utilizatorilor să editeze informațiile personale legate de finanțe.
+Funcționalități:
+Actualizarea numelui, veniturilor și altor detalii personale.
+Instrucțiuni de utilizare:
+Introduceți sau editați informațiile din câmpurile disponibile.
+Apăsați butonul Save pentru a salva modificările.
 
----
+### Raport (Reports)
 
-#### *Ecranul Principal*
-Ecranul principal va afișa o diagramă de tip *"Pizza"* care ilustrează distribuția bugetului utilizatorului pe diverse categorii de cheltuieli zilnice, cum ar fi:
-- *Cumpărături*
-- *Facturi întreținere*
-- *Facturi telefon/televizor*
+Descriere: Secțiunea de rapoarte oferă utilizatorilor informații detaliate despre situația lor financiară.
+Tipuri de rapoarte:
+Raport buget: Prezintă progresul față de un buget setat.
+Raport Rate (Auto): Prezinta un program de rate lunare personalizat.
+Raport economii: Afișează evoluția economiilor.
+Raport abonamente: Listează abonamentele active și costurile acestora.
+Raport vacanță: Ajută utilizatorii să planifice și să economisească pentru vacanțe.
+Instrucțiuni de utilizare:
+Selectați un tip de raport din lista disponibilă.
+Completați câmpurile necesare (ex: perioada de timp).
+Apăsați butonul Submit pentru a genera raportul.
 
-Aceste categorii vor fi predefinite cu cheltuieli de bază, dar utilizatorul va putea adăuga noi categorii de cheltuieli prin completarea unor rapoarte. Vor exista funcționalități adiționale precum:
-- *Buget chirie*: Adăugarea cheltuielilor legate de chirie.
-- *Achiziții costisitoare*: Gestionarea achizițiilor mari (electrocasnice, vacanțe, vehicule etc.).
-- *Editare profil financiar*: Modificarea profilului financiar, în cazul schimbărilor de venit sau alte detalii financiare personale.
+### Departamente
 
-Fiecare raport va avea un ecran dedicat, pentru o gestionare clară a cheltuielilor și modificărilor financiare.
+Front-end: Echipa de front-end, formată din Baciu Rebeca, Albu Marina și Asimionesei Ștefana,
+ s-a ocupat de realizarea interfeței utilizatorului și de partea funcțională a aplicației care nu interacționează direct cu back-endul.
+
+Back-end: Echipa de back-end, formată din Boghian Iulian, Boisteanu Alexandra și Brădeanu Paul, a implementat funcționalitățile aplicației și gestionarea bazelor de date.
+
+QA: Apavaloaie Tudor s-a ocupat de asigurarea stabilității aplicației, monitorizând și testând continuu funcționalitățile pentru a garanta că aplicația rămâne sigură și performantă de la un sprint la altul.
+
+Full Stack: Catrinari George, Andreica David și Boghian Iulian au fost responsabili de implementarea comunicării dintre front-end și back-end, asigurându-se că aplicația este cu adevărat funcțională.
+
+Scrum Master: Andrieș Andrei a coordonat activitățile administrative ale proiectului și a gestionat planul de evoluție al acestuia, facilitând comunicarea și progresul echipei.
+
+UI Designer: Amaistroaie Mădălina a realizat schițele interfeței utilizatorului, iar pe baza acestora s-a construit front-endul și s-au realizat logourile.
+
+Product Owner: Andreica David a fost responsabil de definirea viziunii și obiectivelor aplicației, stabilind prioritățile și cerințele pentru fiecare sprint. A colaborat îndeaproape cu echipa pentru a asigura că produsul final îndeplinește așteptările utilizatorilor și obiectivele de afaceri, facilitând o comunicare eficientă între toate departamentele.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
