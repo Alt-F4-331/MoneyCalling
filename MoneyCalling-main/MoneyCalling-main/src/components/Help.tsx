@@ -97,7 +97,7 @@ const Help: React.FC = () => {
           <h2>Contact Us</h2>
           <p>
             If you can’t find the answer here, our Support Team is available to assist you.
-            Email Support: <a href="mailto:altF4@gmail.com">altF4@gmail.com</a><br />
+            Email Support: <a href="mailto:altF4sup@gmail.com">altF4sup@gmail.com</a><br />
             Phone Support: 07********
           </p>
         </section>

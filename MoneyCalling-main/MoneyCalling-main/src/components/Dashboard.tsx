@@ -13,6 +13,7 @@ const Dashboard: React.FC = () => {
     const [chartData, setChartData] = useState({ income: 0, savings: 0, expenses: 0 });
     const [sumaContainer, setSumaContainer] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [message, setMessage] = useState<string | null>(null);
  
     const token = localStorage.getItem("token"); // Token-ul utilizatorului
  
@@ -48,7 +49,7 @@ const Dashboard: React.FC = () => {
                 // Nu există date pentru luna și anul selectat
                 setChartData({ savings: 0, expenses: 0 });
                 setSumaContainer(0);
-                alert("No data available for the selected month and year.");
+                setMessage("No data available for this month.")
                 return;
             }
  
