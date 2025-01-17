@@ -181,7 +181,7 @@ public class RaportController {
             return new ResponseEntity<>("Proposed rent exceeds the suggested amount of " + chirieSugerata + ". Continue? Call the /confirma-chirie endpoint to confirm or decline.", HttpStatus.OK);
         }
 
-        Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "chirie", chiriePropusa, Cheltuiala.TipCheltuiala.LOCUINTA, diagrama);
+        Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "Rent", chiriePropusa, Cheltuiala.TipCheltuiala.LOCUINTA, diagrama);
         cheltuialaService.saveCheltuiala(ch);
         Float procentRamas = diagrama.getProcenteCheltuieli().getOrDefault(Cheltuiala.TipCheltuiala.LOCUINTA, 0.0f);
 
@@ -271,7 +271,7 @@ public class RaportController {
         Diagrama diagrama = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();  // No exception handling
 
         if (confirm) {
-            Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "vacanta", bugetPropus, Cheltuiala.TipCheltuiala.CONTAINER, diagrama);
+            Cheltuiala ch = new Cheltuiala(cheltuialaService.getFirstAvailableId(), "Holiday", bugetPropus, Cheltuiala.TipCheltuiala.CONTAINER, diagrama);
             cheltuialaService.saveCheltuiala(ch);
 
             ProfilFinanciar profilFinanciar = utilizator.getProfil();
