@@ -15,46 +15,44 @@ import java.util.Optional;
 @Service
 public class AbonamentService {
     private final AbonamentRepository abonamentRepository;
-
     private final DiagramaRepository diagramaRepository;
-
     private final UtilizatorRepository utilizatorRepository;
-
     private final CheltuialaService cheltuialaService;
 
-
-
-
-
+    // Constructor pentru injectarea dependintelor
     public AbonamentService(AbonamentRepository abonamentRepository, DiagramaRepository diagramaRepository, UtilizatorRepository utilizatorRepository1, CheltuialaService cheltuialaService) {
         this.abonamentRepository = abonamentRepository;
-
         this.diagramaRepository = diagramaRepository;
-
         this.utilizatorRepository = utilizatorRepository1;
         this.cheltuialaService = cheltuialaService;
     }
 
+    // Metoda pentru obtinerea tuturor abonamentelor
     public List<Abonament> getAllAbonamente() {
         return abonamentRepository.findAll();
     }
 
+    // Metoda pentru obtinerea unui abonament dupa ID
     public Optional<Abonament> getAbonamentById(int id) {
         return abonamentRepository.findById(id);
     }
 
+    // Metoda pentru obtinerea abonamentelor dupa ID-ul utilizatorului
     public List<Abonament> getAbonamenteByUtilizatorId(int utilizatorId) {
         return abonamentRepository.findByUtilizatorId(utilizatorId);
     }
 
+    // Metoda pentru adaugarea unui nou abonament
     public Abonament addAbonament(Abonament abonament) {
         return abonamentRepository.save(abonament);
     }
 
+    // Metoda pentru stergerea unui abonament dupa ID
     public void deleteAbonament(int id) {
         abonamentRepository.deleteById(id);
     }
 
+    // Metoda pentru obtinerea primului ID disponibil
     public int getFirstAvailableId() {
         List<Integer> allIds = abonamentRepository.findAllIds();
         int id = 1;
@@ -64,35 +62,37 @@ public class AbonamentService {
         return id;
     }
 
+    // Metoda pentru obtinerea unui abonament dupa utilizator si nume
     public Optional<Abonament> getAbonamentByUserAndName(Utilizator utilizator, String nume) {
         return abonamentRepository.findByUtilizatorAndNume(utilizator, nume);
     }
 
-    // Acesta este un task care se va executa la începutul fiecărei zile
-    @Scheduled(cron = "0 0 0 * * ?")//Se execută zilnic la miezul nopții
+    // Task programat pentru verificarea abonamentelor zilnic la miezul noptii
+    @Scheduled(cron = "0 0 0 * * ?")
     //@Scheduled(fixedRate = 60000) asta a fost pentru test,apeleaza la fiecare minut
     public void verificaAbonamente() {
         LocalDate today = LocalDate.now();
 
-        // Verifică abonamentele lunare
+        // Verifica abonamentele lunare
         List<Abonament> abonamenteLunare = abonamentRepository.findByTipAbonament("Lunar");
         abonamenteLunare.stream()
                 .filter(abonament -> abonament.getZi() == today.getDayOfMonth())
                 .forEach(this::procesareAbonamentLunar);
 
-        // Verifică abonamentele anuale
+        // Verifica abonamentele anuale
         List<Abonament> abonamenteAnuale = abonamentRepository.findByTipAbonament("Anual");
         abonamenteAnuale.stream()
                 .filter(abonament -> abonament.getZi() == today.getDayOfMonth() && abonament.getLuna() == today.getMonthValue())
                 .forEach(this::procesareAbonamentAnual);
     }
 
+    // Metoda pentru procesarea abonamentelor lunare
     private void procesareAbonamentLunar(Abonament abonament) {
         Utilizator utilizator = abonament.getUtilizator();
         Optional<Diagrama> optionalDiagrama = diagramaRepository.findByUserAndActiva(utilizator);
 
         if (!optionalDiagrama.isPresent()) {
-            System.out.println("Diagrama activă nu a fost găsită pentru utilizator: " + utilizator.getNume());
+            System.out.println("Diagrama activa nu a fost gasita pentru utilizator: " + utilizator.getNume());
             return;
         }
 
@@ -126,12 +126,13 @@ public class AbonamentService {
         System.out.println("Abonamentul lunar procesat cu succes: " + abonament.getNume());
     }
 
+    // Metoda pentru procesarea abonamentelor anuale
     private void procesareAbonamentAnual(Abonament abonament) {
         Utilizator utilizator = abonament.getUtilizator();
         Optional<Diagrama> optionalDiagrama = diagramaRepository.findByUserAndActiva(utilizator);
 
         if (!optionalDiagrama.isPresent()) {
-            System.out.println("Diagrama activă nu a fost găsită pentru utilizator: " + utilizator.getNume());
+            System.out.println("Diagrama activa nu a fost gasita pentru utilizator: " + utilizator.getNume());
             return;
         }
 
@@ -159,5 +160,4 @@ public class AbonamentService {
 
         System.out.println("Abonamentul anual procesat cu succes: " + abonament.getNume());
     }
-
 }

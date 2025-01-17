@@ -24,25 +24,23 @@ public class CheltuialaController {
     private final CheltuialaService cheltuialaService;
     private final DiagramaService diagramaService;
     private final UtilizatorService utilizatorService;
-
     private final JwtUtil jwtUtil;
-
 
     public CheltuialaController(CheltuialaService cheltuialaService, DiagramaService diagramaService, UtilizatorService utilizatorService, JwtUtil jwtUtil) {
         this.cheltuialaService = cheltuialaService;
-        this.diagramaService= diagramaService;
+        this.diagramaService = diagramaService;
         this.utilizatorService = utilizatorService;
         this.jwtUtil = jwtUtil;
     }
 
     @Operation(summary = "Obtine cheltuiala dupa id")
     @GetMapping("/{id}")
-    public ResponseEntity<Cheltuiala> getCheltuialaById(@PathVariable int id)
-    {
+    public ResponseEntity<Cheltuiala> getCheltuialaById(@PathVariable int id) {
         Optional<Cheltuiala> cheltuiala = cheltuialaService.getById(id);
         return cheltuiala.map(ResponseEntity::ok)
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
     @Operation(summary = "Adauga o noua cheltuiala pentru diagrama")
     @PostMapping
     public ResponseEntity<?> createCheltuiala(@RequestHeader("Authorization") String token,
@@ -62,22 +60,14 @@ public class CheltuialaController {
         }
 
         Diagrama diagrama = diagrama_opt.get();
-
         Cheltuiala.TipCheltuiala tip = chDTO.getTipCheltuiala();
-        float suma = chDTO.getSuma()  ;
+        float suma = chDTO.getSuma();
         float venitTotal = utilizator.getProfil().getVenit();
 
-
-
-
-        if(tip == Cheltuiala.TipCheltuiala.CONTAINER)
-        {
+        if (tip == Cheltuiala.TipCheltuiala.CONTAINER) {
             Float economii = diagrama.getProcenteCheltuieli().get(tip);
-            if(economii == null || suma > economii)
-                return ResponseEntity.ok("nu mai ai suficienti bani in containerul de economii");
-
-
-
+            if (economii == null || suma > economii)
+                return ResponseEntity.ok("You don't have enough money in the savings container");
 
             diagrama.getProcenteCheltuieli().put(tip, economii - suma);
 
@@ -90,36 +80,30 @@ public class CheltuialaController {
 
             Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
 
-            return ResponseEntity.ok("Cheltuiala adaugata cu succes");
+            return ResponseEntity.ok("Expense added successfully");
+        } else {
+            Float procentRamas = diagrama.getProcenteCheltuieli().get(tip);
+            if (procentRamas == null || (procentRamas * venitTotal) / 100 < suma) {
+                return ResponseEntity.ok("You don't have enough money for this type of expense");
+            }
 
+            float procentNou = procentRamas - (suma / venitTotal) * 100; // se calculeaza procentul ramas, dupa cheltuiala
 
-
+            diagrama.getProcenteCheltuieli().put(tip, procentNou);
+            diagramaService.saveDiagrama(diagrama);
         }
-        else
-        {
-        Float procentRamas = diagrama.getProcenteCheltuieli().get(tip);
-        if (procentRamas == null || (procentRamas * venitTotal)/100 < suma) {
-            return ResponseEntity.ok("Nu mai ai suficienti bani pentru tipul asta de cheltuiala");
-        }
-
-        float procentNou= procentRamas - (suma/ venitTotal) *100;//se calculeaza procentul ramas,dupa cheltuiala
-
-        diagrama.getProcenteCheltuieli().put(tip, procentNou);
-        diagramaService.saveDiagrama(diagrama);}
         Cheltuiala ch = chDTO.mapToEntity(cheltuialaService.getFirstAvailableId(), diagrama);
 
         Cheltuiala savedCheltuiala = cheltuialaService.saveCheltuiala(ch);
 
-        return ResponseEntity.ok("Cheltuiala adaugata cu succes");
-
+        return ResponseEntity.ok("Expense added successfully");
     }
+
     /*
     functia e creare cheltuiala primeste din front id-ul diagramei in care
-    se adauga cheltuiala si datele cheltuielii.dupa ce este adaugata cheltuiala,
-    din procentul alocat tipului cheltuielii,se scade suma cheltuielii adaugate.
+    se adauga cheltuiala si datele cheltuielii. dupa ce este adaugata cheltuiala,
+    din procentul alocat tipului cheltuielii, se scade suma cheltuielii adaugate.
     */
-
-
 
     @Operation(summary = "Sterge cheltuiala dupa id")
     @DeleteMapping("/{id}")
@@ -127,17 +111,15 @@ public class CheltuialaController {
         cheltuialaService.stergeCheltuialaById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    //sterge cheltuiala cu un id specific
-    //primeste ID-ul cheltuielii din URL: /API/cheltuieli/1
-    //returneaza statusul HTTP 204(utilizatorul a fost sters)
+    // sterge cheltuiala cu un id specific
+    // primeste ID-ul cheltuielii din URL: /API/cheltuieli/1
+    // returneaza statusul HTTP 204 (utilizatorul a fost sters)
 
-
-    // Endpoint pentru a obține toate cheltuielile după id-ul diagramei
+    // Endpoint pentru a obtine toate cheltuielile dupa id-ul diagramei
     @Operation(summary = "Obtine toate cheltuielile dintr-o diagrama")
     @GetMapping("/diagrama/{idDiagrama}")
     public ResponseEntity<?> getAllCheltuieliByIdDiagrama(@RequestHeader("Authorization") String token) {
-        //aceasta functie se foloseste pentru legenda de cheltuileli pentru o diagrama
-
+        // aceasta functie se foloseste pentru legenda de cheltuieli pentru o diagrama
 
         int userId = jwtUtil.getUserIdByToken(token);
 
@@ -158,14 +140,14 @@ public class CheltuialaController {
         if (cheltuieli.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        // Transformăm entitățile în DTO-uri
+        // Transformam entitatile in DTO-uri
         List<CheltuialaRequestDTO> cheltuialaDTOs = cheltuieli.stream()
                 .map(cheltuiala -> new CheltuialaRequestDTO(
                         cheltuiala.getId(),
                         cheltuiala.getNume(),
                         cheltuiala.getSuma(),
                         cheltuiala.getTipCheltuiala(),
-                        diagrama.getId() // sau cheltuiala.getIdDiagrama() dacă există direct
+                        diagrama.getId() // sau cheltuiala.getIdDiagrama() daca exista direct
                 ))
                 .toList();
 

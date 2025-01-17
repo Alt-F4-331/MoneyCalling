@@ -8,7 +8,6 @@ import com.example.moneycalling_spring.Service.UtilizatorService;
 import com.example.moneycalling_spring.dto.AbonamentDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +19,7 @@ import java.util.Optional;
 @RequestMapping("/api/abonamente")
 public class AbonamentController {
     private final AbonamentService abonamentService;
-
     private final JwtUtil jwtUtil;
-
     private final UtilizatorService utilizatorService;
 
     public AbonamentController(AbonamentService abonamentService, JwtUtil jwtUtil, UtilizatorService utilizatorService) {
@@ -44,21 +41,15 @@ public class AbonamentController {
         }
         Utilizator utilizator = utilizatorOptional.get();
 
-
-        // Căutăm abonamentul pe baza utilizatorului și a numelui
+        // Cautam abonamentul pe baza utilizatorului si a numelui
         Optional<Abonament> abonament = abonamentService.getAbonamentByUserAndName(utilizator, numeAbonament);
 
         return abonament.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-
-
     }
-
-
 
     @GetMapping("/abonamente")
     @Operation(summary = "Afiseaza lista abonamentelor pe care le are un utilizator")
     public List<Abonament> getAbonamenteByUtilizator(@RequestHeader("Authorization") String token) {
-
         int userId = jwtUtil.getUserIdByToken(token);
         return abonamentService.getAbonamenteByUtilizatorId(userId);
     }
@@ -75,13 +66,12 @@ public class AbonamentController {
 
         int idAbonament = abonamentService.getFirstAvailableId();
 
-        Abonament abonament = new Abonament(idAbonament,abonamentDTO.getNume() , abonamentDTO.getValoare(),
-                abonamentDTO.getTipAbonament(),abonamentDTO.getZiua(),abonamentDTO.getLuna(),utilizator);
+        Abonament abonament = new Abonament(idAbonament, abonamentDTO.getNume(), abonamentDTO.getValoare(),
+                abonamentDTO.getTipAbonament(), abonamentDTO.getZiua(), abonamentDTO.getLuna(), utilizator);
 
         abonamentService.addAbonament(abonament);
 
-
-        return ResponseEntity.ok("Abonament adaugat cu succes");
+        return ResponseEntity.ok("Subscription added successfully");
     }
 
     @DeleteMapping("/{id}")
@@ -92,6 +82,5 @@ public class AbonamentController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
-
     }
 }

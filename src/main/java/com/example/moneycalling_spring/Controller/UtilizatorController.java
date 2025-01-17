@@ -1,8 +1,6 @@
-package  com.example.moneycalling_spring.Controller;
+package com.example.moneycalling_spring.Controller;
 
-import com.example.moneycalling_spring.Domain.Diagrama;
-import com.example.moneycalling_spring.Domain.ProfilFinanciar;
-import com.example.moneycalling_spring.Domain.Utilizator;
+import com.example.moneycalling_spring.Domain.*;
 import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.CheltuialaService;
 import com.example.moneycalling_spring.Service.DiagramaService;
@@ -29,34 +27,27 @@ import java.util.Optional;
 @RequestMapping("/api/utilizatori")
 public class UtilizatorController {
     private final UtilizatorService utilizatorService;
-
     private final ProfilFinanciarService profilFinanciarService;
-
     private final JwtUtil jwtutil;
-
     private final DiagramaService diagramaService;
 
-
-    public UtilizatorController(UtilizatorService utilizatorService, ProfilFinanciarService profilFinanciarService , JwtUtil jwt, CheltuialaService cheltuialaService, DiagramaService diagramaService) {
-
+    public UtilizatorController(UtilizatorService utilizatorService, ProfilFinanciarService profilFinanciarService, JwtUtil jwt, CheltuialaService cheltuialaService, DiagramaService diagramaService) {
         this.utilizatorService = utilizatorService;
-        this.profilFinanciarService=profilFinanciarService;
+        this.profilFinanciarService = profilFinanciarService;
         this.jwtutil = jwt;
-
         this.diagramaService = diagramaService;
     }
+
     @Operation(summary = "Obtine utilizator dupa email")
     @GetMapping("/email")
-    public ResponseEntity<Utilizator> getUtilizatorByEmail(@RequestParam String email)
-    {
-        Optional<Utilizator> utilizator=utilizatorService.getByEmail(email);
+    public ResponseEntity<Utilizator> getUtilizatorByEmail(@RequestParam String email) {
+        Optional<Utilizator> utilizator = utilizatorService.getByEmail(email);
         return utilizator.map(ResponseEntity::ok).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    //permite cautarea unui user dupa email
-    //foloseste parametrul email di URL(ex:/api/utilizatori/email?email=test@example.com)
-    //daca user-ul e gasit,returneaza ResponseEntity.ok(utilizator)(cod de status HTTP E 200)
-    //daca nu e gasit,returneaza Https.Status.NOT_FOUND(400)
-
+    // permite cautarea unui user dupa email
+    // foloseste parametrul email din URL (ex: /api/utilizatori/email?email=test@example.com)
+    // daca user-ul e gasit, returneaza ResponseEntity.ok(utilizator) (cod de status HTTP 200)
+    // daca nu e gasit, returneaza HttpStatus.NOT_FOUND (404)
 
     @Operation(summary = "Obtine utilizator dupa id")
     @GetMapping("/{id}")
@@ -65,9 +56,8 @@ public class UtilizatorController {
         return utilizator.map(ResponseEntity::ok)
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    //la fel ca la getUtilizatorByEmail
-
-    //exemplu URL: /api/utilizatori/1
+    // la fel ca la getUtilizatorByEmail
+    // exemplu URL: /api/utilizatori/1
 
     @Operation(summary = "Sterge utilizator dupa id")
     @DeleteMapping("/{id}")
@@ -75,9 +65,9 @@ public class UtilizatorController {
         utilizatorService.stergeUtilizatorById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    //sterge utilizatorul cu un id specific
-    //primeste ID-ul utilizatorului din URL: /API/UTILIZATOR/1
-    //returneaza statusul HTTP 204(utilizatorul a fost sters)
+    // sterge utilizatorul cu un id specific
+    // primeste ID-ul utilizatorului din URL: /api/utilizatori/1
+    // returneaza statusul HTTP 204 (utilizatorul a fost sters)
 
     @Operation(summary = "Sterge toti utilizatorii")
     @DeleteMapping
@@ -85,29 +75,28 @@ public class UtilizatorController {
         utilizatorService.deleteAll();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    //sterge tot
+    // sterge tot
 
     @Operation(summary = "Adauga un utilizator")
     @PostMapping
     public ResponseEntity<Utilizator> createUtilizator(@Valid @RequestBody Utilizator utilizator) {
         Utilizator savedUtilizator = utilizatorService.saveUtilizator(utilizator);
         return new ResponseEntity<>(savedUtilizator, HttpStatus.CREATED);
-    }//Metoda primeste datele utilizatorului in corpul solicitarii sub forma de JSON
-    //status HTTP  e 201
+    }
+    // Metoda primeste datele utilizatorului in corpul solicitarii sub forma de JSON
+    // status HTTP e 201
 
     @Operation(summary = "Afiseaza toti utilizatorii")
     @GetMapping
     public ResponseEntity<List<Utilizator>> getAllUtilizatori() {
         List<Utilizator> utilizatori = utilizatorService.getAllUtilizatori();
         return new ResponseEntity<>(utilizatori, HttpStatus.OK);
-    }//returneaza HTTP status 200
+    }
+    // returneaza HTTP status 200
 
-
-    @Operation(summary = "Autentificare utilizator", description = "Verifică email-ul și parola utilizatorului pentru autentificare")
+    @Operation(summary = "Autentificare utilizator", description = "Verifica email-ul si parola utilizatorului pentru autentificare")
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequest) {
-
-
         String email = loginRequest.getEmail();
         String parola = loginRequest.getParola();
 
@@ -117,30 +106,27 @@ public class UtilizatorController {
             int userId = utilizator.get().getId();
             String token = jwtutil.generateToken(userId);
 
-            // Crează un obiect Map cu token-ul
+            // Creaza un obiect Map cu token-ul
             Map<String, String> responseMap = new HashMap<>();
             responseMap.put("token", token);
 
-            // Serializare Map într-un String JSON
+            // Serializare Map intr-un String JSON
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String jsonResponse = objectMapper.writeValueAsString(responseMap);
-                return ResponseEntity.ok(jsonResponse);  // Returnează JSON-ul ca String
+                return ResponseEntity.ok(jsonResponse);  // Returneaza JSON-ul ca String
             } catch (Exception e) {
                 return new ResponseEntity<>("Error serializing response", HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            //return ResponseEntity.ok(token);
         } else {
-            return new ResponseEntity<>("Email sau parolă incorectă", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Incorrect email or password", HttpStatus.UNAUTHORIZED);
         }
     }
 
-    @Operation(summary = "Creează un cont de utilizator fără profil financiar completat")
+    @Operation(summary = "Creeaza un cont de utilizator fara profil financiar completat")
     @PostMapping("/createAccount")
     public ResponseEntity<Utilizator> createAccount(@Valid @RequestBody CreareContDto cont) {
-
-        System.out.println("Creare cont primit: ");  // Log pentru a verifica dacă cererea ajunge
-        // Inițializează un utilizator gol
+        // Initializeaza un utilizator gol
         Utilizator utilizator = new Utilizator();
 
         utilizator.setId(utilizatorService.getFirstAvailableId());
@@ -154,20 +140,19 @@ public class UtilizatorController {
 
         ProfilFinanciar profilFinanciarGol = new ProfilFinanciar(profilFinanciarService.getFirstAvailableId());
 
-        // Setează profilul financiar gol pentru utilizatorul nou
+        // Seteaza profilul financiar gol pentru utilizatorul nou
         utilizator.setProfil(profilFinanciarGol);
 
-        // Salvează utilizatorul cu profilul financiar necompletat
+        // Salveaza utilizatorul cu profilul financiar necompletat
         Utilizator utilizatorSalvat = utilizatorService.saveUtilizator(utilizator);
 
-        // Returnează utilizatorul creat cu HTTP Status 201 Created
+        // Returneaza utilizatorul creat cu HTTP Status 201 Created
         return new ResponseEntity<>(utilizatorSalvat, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Actualizeaza datele user-ului logat")
     @PostMapping("/updateAccount")
-    public ResponseEntity<Utilizator> updateAccount(@RequestHeader("Authorization") String token,@Valid @RequestBody UpdateUserDTO updateUserDTO) {
-
+    public ResponseEntity<Utilizator> updateAccount(@RequestHeader("Authorization") String token, @Valid @RequestBody UpdateUserDTO updateUserDTO) {
         int userId = jwtutil.getUserIdByToken(token);
 
         Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
@@ -182,12 +167,11 @@ public class UtilizatorController {
         utilizator.setEmail(updateUserDTO.getEmail());
         utilizator.setParola(updateUserDTO.getParola());
 
-        // Salvează utilizatorul cu profilul financiar necompletat
+        // Salveaza utilizatorul cu profilul financiar necompletat
         Utilizator utilizatorSalvat = utilizatorService.saveUtilizator(utilizator);
 
-        // Returnează utilizatorul creat cu HTTP Status 201 Created
+        // Returneaza utilizatorul creat cu HTTP Status 201 Created
         return new ResponseEntity<>(utilizatorSalvat, HttpStatus.CREATED);
-
     }
 
     @PutMapping("/profil-financiar")
@@ -195,19 +179,13 @@ public class UtilizatorController {
     public ResponseEntity<ProfilFinanciar> updateProfilFinanciar(
             @RequestHeader("Authorization") String token,
             @RequestBody @Valid ProfilFinanciarDto profilFinanciarNou) {
-
-        System.out.println("Token primit: " + token); // Adaugă log pentru a verifica dacă token-ul este corect
-
-        // Verifică dacă token-ul este valid
+        // Verifica daca token-ul este valid
         if (token == null || !token.startsWith("Bearer ")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        String jwtToken = token.substring(7);  // Extrage token-ul fără "Bearer "
-//
-        // 1. Extrage userId din token
-        if(!jwtutil.validateToken(jwtToken))
-        {
+        String jwtToken = token.substring(7);  // Extrage token-ul fara "Bearer "
+        if (!jwtutil.validateToken(jwtToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -235,18 +213,12 @@ public class UtilizatorController {
         int luna = today.getMonthValue();
         int an = today.getYear();
 
-
-
         Optional<Diagrama> optionalDiagrama = diagramaService.findDiagramaByDataAndUser(luna, an, userId);
 
         if (optionalDiagrama.isEmpty())
-             diagramaService.createAndConfigureDiagrama(utilizator,zi ,luna,an);
+            diagramaService.createAndConfigureDiagrama(utilizator, zi, luna, an);
 
-        // 4. Returnează profilul actualizat
+        // Returneaza profilul actualizat
         return ResponseEntity.ok(profilSalvat);
-
-
     }
-
-
 }

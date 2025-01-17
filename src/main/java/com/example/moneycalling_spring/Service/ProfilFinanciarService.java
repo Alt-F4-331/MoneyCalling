@@ -13,25 +13,24 @@ public class ProfilFinanciarService {
     private ProfilFinanciarRepository profilrepo;
 
     @Autowired
-    public ProfilFinanciarService(ProfilFinanciarRepository pf)
-    {
+    public ProfilFinanciarService(ProfilFinanciarRepository pf) {
         this.profilrepo = pf;
     }
 
-    public ProfilFinanciar saveProfilFinanciar(ProfilFinanciar pf)
-    {
+    // Metoda pentru salvarea unui profil financiar
+    public ProfilFinanciar saveProfilFinanciar(ProfilFinanciar pf) {
         return profilrepo.save(pf);
-        // creeaza un nou obiect de tip profil financiar
-        // daca id-ul nu exista, iar daca exista
-        // modifica obiectul cu id-ul dat
+        // Creeaza un nou obiect de tip profil financiar daca ID-ul nu exista,
+        // iar daca exista, modifica obiectul cu ID-ul dat
     }
 
-    public void stergeProfilFinanciarById(int id)
-    {
+    // Metoda pentru stergerea unui profil financiar dupa ID
+    public void stergeProfilFinanciarById(int id) {
         profilrepo.deleteById(id);
-        // sterge un profil dupa id
+        // Sterge un profil dupa ID
     }
 
+    // Metoda pentru obtinerea primului ID disponibil
     public int getFirstAvailableId() {
         List<Integer> allIds = profilrepo.findAllIds();
         int id = 1;
@@ -41,17 +40,17 @@ public class ProfilFinanciarService {
         return id;
     }
 
-    public List<ProfilFinanciar> getAllProfiluriFinanciare()
-    {
+    // Metoda pentru obtinerea tuturor profilurilor financiare
+    public List<ProfilFinanciar> getAllProfiluriFinanciare() {
         return profilrepo.findAll();
-        // returneaza toate profilurile financiare
-        // doar pt administrator?
+        // Returneaza toate profilurile financiare (doar pentru administrator?)
     }
 
-    public void deleteAll(){
+    // Metoda pentru stergerea tuturor profilurilor financiare
+    public void deleteAll() {
         profilrepo.deleteAll();
-        // sterge toate profilurile financiare
+        // Sterge toate profilurile financiare
     }
 
-    //metode extra dupa
+    // Metode suplimentare pot fi adaugate aici
 }

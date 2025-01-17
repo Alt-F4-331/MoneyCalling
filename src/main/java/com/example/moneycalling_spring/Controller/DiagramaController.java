@@ -5,7 +5,6 @@ import com.example.moneycalling_spring.Security.JwtUtil;
 import com.example.moneycalling_spring.Service.CheltuialaService;
 import com.example.moneycalling_spring.Service.DiagramaService;
 import com.example.moneycalling_spring.Service.UtilizatorService;
-import com.example.moneycalling_spring.dto.CheltuialaRequestDTO;
 import com.example.moneycalling_spring.dto.DiagramaRequestDTO;
 import com.example.moneycalling_spring.dto.SumeResponeDTO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
-
 import java.util.*;
 
 @RestController
@@ -22,17 +20,11 @@ import java.util.*;
 public class DiagramaController {
 
     private final DiagramaService diagramaService;
-
-
     private final UtilizatorService utilizatorService;
-
     private final CheltuialaService cheltuialaService;
-
     private final JwtUtil jwtutil;
 
-
-    public DiagramaController(DiagramaService service, UtilizatorService utilizatorService, CheltuialaService cheltuialaService, JwtUtil jwtutil)
-    {
+    public DiagramaController(DiagramaService service, UtilizatorService utilizatorService, CheltuialaService cheltuialaService, JwtUtil jwtutil) {
         this.diagramaService = service;
         this.utilizatorService = utilizatorService;
         this.cheltuialaService = cheltuialaService;
@@ -56,7 +48,6 @@ public class DiagramaController {
         }
         return new ResponseEntity<>(diagrame, HttpStatus.OK);
     }
-    //aici ceva nu merge
 
     @Operation(summary = "Creeaza o noua diagrama")
     @PostMapping
@@ -73,50 +64,45 @@ public class DiagramaController {
         Diagrama diagrama = new Diagrama();
 
         // Dacă utilizatorul există, îl asociem diagramei
-
-        // Obținem utilizatorul din Optional
-        Data data = new Data(diagramaRequestDTO.getData().getZi(),diagramaRequestDTO.getData().getLuna(),diagramaRequestDTO.getData().getAn());
+        Data data = new Data(diagramaRequestDTO.getData().getZi(), diagramaRequestDTO.getData().getLuna(), diagramaRequestDTO.getData().getAn());
         diagrama.setId(diagramaRequestDTO.getId());
         diagrama.setDataDiagrama(data);
         diagrama.setUser(utilizator);
         diagrama.setActiva(true);
-        diagrama.initializeProcente(diagrama,utilizator.getProfil().getContainerEconomii());
+        diagrama.initializeProcente(diagrama, utilizator.getProfil().getContainerEconomii());
         Diagrama savedDiagrama = diagramaService.saveDiagrama(diagrama);
         diagramaService.seteazaDiagramaActiva(diagrama);
 
-
-
-        //atunci cand se creeaza o diagrama nou,diagrama creata devine activa,restul nu sunt active
-
-        return new ResponseEntity<>(savedDiagrama, HttpStatus.CREATED); // Răspuns cu 201 când e salvat
+        // atunci cand se creeaza o diagrama noua, diagrama creata devine activa, restul nu sunt active
+        return new ResponseEntity<>(savedDiagrama, HttpStatus.CREATED); // Raspuns cu 201 cand e salvat
     }
 
-    // Endpoint pentru a șterge o diagrama după ID
+    // Endpoint pentru a sterge o diagrama dupa ID
     @Operation(summary = "Sterge o diagrama dupa un id")
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteDiagrama(@PathVariable("id") int id) {
         try {
             diagramaService.stergeDiagramaById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Răspuns 204 dacă s-a șters cu succes
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Raspuns 204 daca s-a sters cu succes
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // În caz de eroare
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // In caz de eroare
         }
     }
 
-    // Endpoint pentru a șterge toate diagramele
+    // Endpoint pentru a sterge toate diagramele
     @Operation(summary = "Sterge toate diagramele")
     @DeleteMapping
     public ResponseEntity<HttpStatus> deleteAllDiagrame() {
         try {
             diagramaService.deleteAll();
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Răspuns 204 pentru ștergerea tuturor
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Raspuns 204 pentru stergerea tuturor
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // În caz de eroare
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // In caz de eroare
         }
     }
 
-    // Endpoint pentru obținerea tuturor diagramelor asociate unui utilizator
-    @Operation(summary = "Obține toate diagramele pentru un utilizator")
+    // Endpoint pentru obtinerea tuturor diagramelor asociate unui utilizator
+    @Operation(summary = "Obtine toate diagramele pentru un utilizator")
     @GetMapping("/utilizator/{userId}")
     public ResponseEntity<List<Diagrama>> getAllDiagrameByUtilizator(@RequestHeader("Authorization") String token) {
         int userId = jwtutil.getUserIdByToken(token);
@@ -129,16 +115,15 @@ public class DiagramaController {
         List<Diagrama> diagrame = diagramaService.getAllDiagrameByUtilizator(utilizator);
 
         if (diagrame.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Returnăm 204 dacă nu sunt diagrame
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Returnam 204 daca nu sunt diagrame
         }
 
-        return new ResponseEntity<>(diagrame, HttpStatus.OK); // Returnăm diagramele cu status 200
+        return new ResponseEntity<>(diagrame, HttpStatus.OK); // Returnam diagramele cu status 200
     }
 
     @GetMapping("/configurare")
-    public ResponseEntity<Map<Cheltuiala.TipCheltuiala, Float>> configurareDiagrama(@RequestHeader("Authorization") String token)
-    {
-        //functie care returneaza pentru fiecare tip,sumele respective.
+    public ResponseEntity<Map<Cheltuiala.TipCheltuiala, Float>> configurareDiagrama(@RequestHeader("Authorization") String token) {
+        // functie care returneaza pentru fiecare tip, sumele respective
 
         int userId = jwtutil.getUserIdByToken(token);
 
@@ -152,17 +137,16 @@ public class DiagramaController {
 
         Map<Cheltuiala.TipCheltuiala, Float> sumePeTip = new HashMap<>();
 
-        Map<Cheltuiala.TipCheltuiala , Float> procentePeTip = diagramaService.getDiagramaActivaByUtilizator(utilizator).get().getProcenteCheltuieli();
-
+        Map<Cheltuiala.TipCheltuiala, Float> procentePeTip = diagramaService.getDiagramaActivaByUtilizator(utilizator).get().getProcenteCheltuieli();
 
         for (Map.Entry<Cheltuiala.TipCheltuiala, Float> entry : procentePeTip.entrySet()) {
             Cheltuiala.TipCheltuiala tip = entry.getKey();
             float procent = entry.getValue();
 
-            // Calculăm suma pentru fiecare tip de cheltuială
+            // Calculam suma pentru fiecare tip de cheltuiala
             float suma = venitTotal * (procent / 100);
 
-            // Adăugăm suma în map-ul sumePeTip
+            // Adaugam suma in map-ul sumePeTip
             sumePeTip.put(tip, suma);
         }
 
@@ -175,7 +159,7 @@ public class DiagramaController {
             @RequestParam int an,
             @RequestHeader("Authorization") String token) {
 
-        // Obține userId din token
+        // Obtine userId din token
         int userId = jwtutil.getUserIdByToken(token);
         Optional<Utilizator> utilizatorOptional = utilizatorService.getById(userId);
 
@@ -196,7 +180,7 @@ public class DiagramaController {
         float sumaCh = 0;
         float sumaContainer = 0;
 
-        // Calculează sumele
+        // Calculeaza sumele
         for (Cheltuiala cheltuiala : cheltuieli) {
             if (!cheltuiala.getTipCheltuiala().equals(Cheltuiala.TipCheltuiala.CONTAINER)) {
                 sumaCh += cheltuiala.getSuma();
@@ -210,20 +194,17 @@ public class DiagramaController {
         sumaContainer = Math.round(sumaContainer * 100) / 100f;
         float economii = Math.round((utilizator.getProfil().getVenit() - sumaCh) * 100) / 100f;
 
-        // Construiește DTO-ul pentru răspuns
+        // Construiește DTO-ul pentru raspuns
         SumeResponeDTO responseDTO = new SumeResponeDTO(sumaCh, sumaContainer, economii);
 
         return ResponseEntity.ok(responseDTO);
     }
 
     @Operation(summary = "Creeaza o noua diagrama")
-    @PostMapping(("/finalizare"))
+    @PostMapping("/finalizare")
     public ResponseEntity<?> finalizareDiagrama(
-            @RequestHeader("Authorization") String token
-    )
-    {
-        //buton pentru finalizare diagrama,o nouadiagrama se face , iar ce a ramas din vechea diagrama se adauga la
-        //containerul de economii
+            @RequestHeader("Authorization") String token) {
+        // Buton pentru finalizare diagrama, o noua diagrama se face, iar ce a ramas din vechea diagrama se adauga la containerul de economii
 
         int userId = jwtutil.getUserIdByToken(token);
 
@@ -237,30 +218,21 @@ public class DiagramaController {
 
         Diagrama diagramaCurenta = diagramaService.getDiagramaActivaByUtilizator(utilizator).get();
 
-        pf.setContainerEconomii(pf.getContainerEconomii() + diagramaService.baniEconomisiti(diagramaCurenta , pf.getVenit()));
-        //actualizeaza containerul ,adaugand sumele ramase
+        pf.setContainerEconomii(pf.getContainerEconomii() + diagramaService.baniEconomisiti(diagramaCurenta, pf.getVenit()));
+        // Actualizeaza containerul, adaugand sumele ramase
 
         utilizator.setProfil(pf);
         utilizatorService.saveUtilizator(utilizator);
-        int luna , an;
-        if(diagramaCurenta.getDataDiagrama().getLuna() == 12)
-        {
-            luna =1;
-            an = diagramaCurenta.getDataDiagrama().getAn()+1;
-
-        }
-        else {
-            luna = diagramaCurenta.getDataDiagrama().getLuna()+1;
+        int luna, an;
+        if (diagramaCurenta.getDataDiagrama().getLuna() == 12) {
+            luna = 1;
+            an = diagramaCurenta.getDataDiagrama().getAn() + 1;
+        } else {
+            luna = diagramaCurenta.getDataDiagrama().getLuna() + 1;
             an = diagramaCurenta.getDataDiagrama().getAn();
         }
 
-        Diagrama diagramaNoua =diagramaService.createAndConfigureDiagrama(utilizator,pf.getDataSalar(),luna,an);
+        Diagrama diagramaNoua = diagramaService.createAndConfigureDiagrama(utilizator, pf.getDataSalar(), luna, an);
         return ResponseEntity.ok(diagramaNoua);
     }
-
-
-
-
-
 }
-

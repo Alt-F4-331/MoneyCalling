@@ -40,39 +40,36 @@ public class JwtUtil {
         return Integer.parseInt(claims.getSubject());
     }
 
-    // Metodă pentru validarea token-ului//
+    // Metodă pentru validarea token-ului
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             System.out.println("Token valid!");
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            System.out.println("Token invalid! Detalii: " + e.getMessage());
+            System.out.println("Invalid token! Details: " + e.getMessage());
             return false;
         }
     }
 
-    public int getUserIdByToken(String token)
-    {
+    // Metodă pentru obținerea ID-ului utilizatorului din token
+    public int getUserIdByToken(String token) {
         // Verifică dacă token-ul este valid
         if (token == null || !token.startsWith("Bearer ")) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST).getStatusCodeValue();
         }
 
         String jwtToken = token.substring(7);  // Extrage token-ul fără "Bearer "
-//
-        // 1. Extrage userId din token
-        if(!validateToken(jwtToken))
-        {
-            System.out.println("token2");
+
+        // Validează token-ul
+        if (!validateToken(jwtToken)) {
+            System.out.println("Invalid token during user ID extraction");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED).getStatusCodeValue();
         }
 
+        // Extrage userId din token
         int userId = extractUserId(jwtToken);
 
-
         return userId;
-
-
     }
 }

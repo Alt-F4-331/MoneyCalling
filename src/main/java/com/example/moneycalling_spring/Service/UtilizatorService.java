@@ -16,20 +16,19 @@ public class UtilizatorService {
     private UtilizatorRepository utilrepo;
 
     @Autowired
-    public UtilizatorService(UtilizatorRepository utilizatorRepository){
-        this.utilrepo=utilizatorRepository;
+    public UtilizatorService(UtilizatorRepository utilizatorRepository) {
+        this.utilrepo = utilizatorRepository;
     }
 
-    public Utilizator saveUtilizator(@Valid Utilizator utilizator)
-    {
-
+    // Metoda pentru salvarea unui utilizator
+    public Utilizator saveUtilizator(@Valid Utilizator utilizator) {
         return utilrepo.save(utilizator);
-        //aceasta metoda poate fi folosita si pentru update:
-        //-daca este creata un user cu un id nou il creeaza
-        //-daca exista deja acel id,il actualizeaza
+        // Aceasta metoda poate fi folosita si pentru update:
+        // - daca este creat un utilizator cu un ID nou, il creeaza
+        // - daca exista deja acel ID, il actualizeaza
     }
 
-    // Metodă care returnează primul ID liber
+    // Metoda care returneaza primul ID disponibil
     public int getFirstAvailableId() {
         List<Integer> allIds = utilrepo.findAllIds();
         int id = 1;
@@ -39,33 +38,33 @@ public class UtilizatorService {
         return id;
     }
 
-    public void stergeUtilizatorById(int id){
+    // Metoda pentru stergerea unui utilizator dupa ID
+    public void stergeUtilizatorById(int id) {
         utilrepo.deleteById(id);
-        //sterge un user dupa un id
+        // Sterge un utilizator dupa ID
     }
 
-    public Optional<Utilizator> getById(int id)
-    {
+    // Metoda pentru obtinerea unui utilizator dupa ID
+    public Optional<Utilizator> getById(int id) {
         return utilrepo.findById(id);
     }
 
-    public List<Utilizator> getAllUtilizatori(){
-
+    // Metoda pentru obtinerea tuturor utilizatorilor
+    public List<Utilizator> getAllUtilizatori() {
         return utilrepo.findAll();
-        //returneaza toti utilizatorii
+        // Returneaza toti utilizatorii
     }
 
-    public void deleteAll(){
+    // Metoda pentru stergerea tuturor utilizatorilor
+    public void deleteAll() {
         utilrepo.deleteAll();
-        //sterge toti userii
+        // Sterge toti utilizatorii
     }
 
-    public Optional<Utilizator> getByEmail(String email)
-    {
+    // Metoda pentru obtinerea unui utilizator dupa email
+    public Optional<Utilizator> getByEmail(String email) {
         return utilrepo.findByEmail(email);
     }
 
-
-    //metode extra dupa
-
+    // Metode suplimentare pot fi adaugate aici
 }
