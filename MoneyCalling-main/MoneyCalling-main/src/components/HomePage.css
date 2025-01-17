@@ -463,7 +463,7 @@ body {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  max-height: calc(9 * 30px); /* Show up to 9 items, assuming 30px per item */
+  max-height: calc(8 * 30px); /* Show up to 9 items, assuming 30px per item */
   overflow-y: auto; /* Enable vertical scrolling if there are more than 9 items */
   display: flex;
   flex-direction: column-reverse; /* Inversează ordinea elementelor */
@@ -558,55 +558,72 @@ body {
 }
 
 /* Grup de formular */
+
+/* Gruparea generală a elementelor */
 .form-group {
   display: flex;
   align-items: center; /* Centrare verticală a textului cu inputul */
   justify-content: space-between; /* Spațiere între label și input */
   gap: 15px;
+  margin-left: -30px; /* Aliniere globală pentru grup */
+}
+
+.form-group-expensecateg {
+  display: flex;
+  align-items: center; /* Centrare verticală a textului cu inputul */
+  justify-content: space-between; /* Spațiere între label și input */
+  gap: 15px;
+  margin-left: -30px; /* Aliniere globală pentru grup */
 }
 
 /* Etichete */
 .form-group label {
   font-size: 18px !important;
-  margin-right: 10px; /* Spațiu între etichetă și input */
-  flex: 1; /* Ajustează lățimea pentru etichete */
-  text-align: right; /* Textul etichetei aliniat la dreapta */
+  margin: -5px; /* Eliminăm marginile implicite */
+  padding: -5px; /* Eliminăm paddingul implicit */
+  flex: 1; /* Ajustare proporțională pentru spațiu */
+  text-align: center; /* Textul etichetei aliniat la dreapta */
 }
 
 /* Inputuri */
 .form-group input {
-  flex: 1; /* Eliminăm distribuția proporțională */
-  width: 1000px; /* Setăm o lățime fixă */
+  flex: 2; /* Distribuție proporțională pentru inputuri */
+  max-width: 100%; /* Lățime adaptivă */
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-right: 70px;
 }
 
+/* Butoane de acțiune */
 .form-actions button {
   width: 30%;
-  padding: 5px;
-  font-size: 18px;
+  padding: 10px; /* Ajustăm paddingul pentru consistență */
+  font-size: 16px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+  transition: opacity 0.3s ease; /* Animație la hover */
 }
 
+/* Stilizare pentru butonul de submit */
 .form-actions button[type='submit'] {
   background-color: #1F1E70;
   color: #FFFFFF;
 }
 
+/* Stilizare pentru butonul generic */
 .form-actions button[type='button'] {
   background-color: #444;
   color: #FFFFFF;
 }
 
+/* Efect hover pentru toate butoanele */
 .form-actions button:hover {
   opacity: 0.9;
 }
+
 
 .delete-sub-button {
   background: none; /* Elimină fundalul */

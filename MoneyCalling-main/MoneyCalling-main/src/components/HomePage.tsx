@@ -5,12 +5,14 @@ import logo from '../assets/logo.png';
 import profile_pic from "../assets/profile_pic.jpg";
 import PieChart from './PieChart';
 import { Link } from 'react-router-dom';
+import { fetchFinancialData } from './FinancialProfile';
+import { useNavigate } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import FinancialProfile from './FinancialProfile';
-import { fetchFinancialData } from './financialProfile';
+//import { fetchFinancialData } from './financialProfile';
 
 
 
@@ -908,19 +910,40 @@ const HomePage: React.FC = () => {
         setIsProfileComplete(isComplete); // Actualizează starea locală cu valoarea citită din localStorage
     }, []);
 
-    
+    //la financialfetch
+    const [financialData, setFinancialData] = useState({
+        venit: 0,
+        domiciliu: '',
+        containerEconomii: 0,
+        dataSalar: 0
+      });
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+    const [dataFetched, setDataFetched] = useState(false); // Tri
+
+    useState(false); // Trigger pentru actualizare
+
+
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const data = await fetchFinancialData();
-          console.log('Fetched data:', data);
-        } catch (error) {
-          console.error('Error in fetching data:', error);
+        fetchFinancialData(
+          setFinancialData,
+          setIsProfileComplete,
+          setMessage,
+          setLoading,
+          navigate,
+          setSavingsSum,
+          setDataFetched
+        );
+      }, []);
+      useEffect(() => {
+        if (dataFetched) {
+          setSavingsSum(financialData.containerEconomii);
         }
-      };
-  
-      fetchData();
-    }, []); // Se execută o singură dată la montare
+      }, [dataFetched, financialData]);
+
+      const handleRefresh = () => {
+        window.location.reload(); // Reîncarcă pagina curentă
+    };
     
 
     return (
@@ -1011,7 +1034,7 @@ const HomePage: React.FC = () => {
                                 <label htmlFor='amount'>Amount:</label>
                                 <input type='number' id='amount' name='amount' value={amount} onChange={(e) => setAmount(parseFloat(e.target.value))} min="0" step="any" required />
                             </div>
-                            <div className='form-group'>
+                            <div className='form-group-categexpense'>
                                 <label htmlFor='category'>Category:</label>
                                 <select
                                     id='category'
@@ -1032,7 +1055,7 @@ const HomePage: React.FC = () => {
                             </div>
 
                             <div className='parent-container'>
-                                <button type='submit' className='submit-sub-button'>Add</button>
+                                <button type='submit' className='submit-sub-button' onClick={handleRefresh}>Add</button>
                             </div>
                         </form>
                         <button className="x-button" onClick={handleClosePopup}>×</button>
@@ -1261,8 +1284,8 @@ const HomePage: React.FC = () => {
                                         <p>
                                             Payment Due:{" "}
                                             {subscription.tipAbonament === "Lunar"
-                                                ? `Day ${subscription.ziua}`
-                                                : `Day ${subscription.ziua}, Month ${subscription.luna}`}
+                                                ? `Day ${7}`
+                                                : `Day ${7}, Month ${subscription.luna}`}
                                         </p>
                                         <button
                                             onClick={() => handleDeleteSubscription(subscription.id)}  // Trimiterea ID-ului

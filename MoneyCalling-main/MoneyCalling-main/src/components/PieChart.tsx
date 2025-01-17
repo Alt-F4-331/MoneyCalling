@@ -202,6 +202,7 @@ const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched, updateTrigger 
 
         {/* Expenses card */}
         <div className="expenses-card">
+        <h4>Expenses History</h4>
           <div className="filter-header">
             <div className="filter-container">
               <select
