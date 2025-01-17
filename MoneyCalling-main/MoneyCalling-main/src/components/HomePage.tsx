@@ -465,6 +465,10 @@ const HomePage: React.FC = () => {
             fetchHolidaySuggestion(holidayDays, holidaySum);
         }
     }, [holidayDays, holidaySum]);
+    
+
+    //inceput ale
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
     const handleHolidaySubmit = async (e: React.FormEvent) => {
         const token = localStorage.getItem("token");
@@ -493,15 +497,16 @@ const HomePage: React.FC = () => {
                 localStorage.setItem('savings', String(savingsSum));
                 setTriggerReload((prev) => !prev);
             } else {
-                const errorText = await response.text();
-                setMessage(`Eroare: ${errorText}`); // Mesaj de eroare
+                const errorText = await response.json();
+                //setMessage(`Eroare: ${errorText}`); Mesaj de eroare
+                setValidationErrors(errorText);
             }
         } catch (error) {
             console.error("Eroare la confirmarea vacanței:", error);
             setMessage("A apărut o eroare la confirmarea vacanței.");
         }
     };
-
+    //sfarsit ale
     //inceput david
 
     // Deschidere și închidere popups
@@ -662,7 +667,7 @@ const HomePage: React.FC = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/rapoarte/sugerseaza-rata', {
+            const response = await fetch('http://localhost:8080/api/rapoarte/sugereaza-rata', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`, // Adaugă token-ul în header
@@ -766,6 +771,8 @@ const HomePage: React.FC = () => {
         handleCloseInstallmentsPopup(); // Închide popup-ul după trimiterea formularului
     };
 
+    const [isVariableTrue, setIsVariableTrue] = useState(false);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Logica pentru a trimite datele introduse (de ex: adaugare expense)
@@ -779,6 +786,13 @@ const HomePage: React.FC = () => {
         // Mapăm categoria aleasă din frontend la categoria corespunzătoare din backend
         const mappedCategory = categoryMap[category];
 
+        console.log(mappedCategory);
+        if (mappedCategory === 'CONTAINER') {
+            setIsVariableTrue(true);
+          }
+          else{
+            setIsVariableTrue(false);
+          }
         // Construim obiectul care va fi trimis către back-end
         const expenseData = {
             nume: name, // "nume" trebuie să corespundă cu DTO-ul
@@ -942,7 +956,9 @@ const HomePage: React.FC = () => {
       }, [dataFetched, financialData]);
 
       const handleRefresh = () => {
-        window.location.reload(); // Reîncarcă pagina curentă
+        if(isVariableTrue)
+          window.location.reload(); // Reîncarcă pagina curentă
+        else console.log(isVariableTrue);
     };
     
 
@@ -1055,7 +1071,13 @@ const HomePage: React.FC = () => {
                             </div>
 
                             <div className='parent-container'>
-                                <button type='submit' className='submit-sub-button' onClick={handleRefresh}>Add</button>
+                            <button 
+                             type='submit' 
+                             className='submit-sub-button' 
+                             onClick={handleRefresh}
+                               >
+                              Add
+                             </button>
                             </div>
                         </form>
                         <button className="x-button" onClick={handleClosePopup}>×</button>
@@ -1113,55 +1135,63 @@ const HomePage: React.FC = () => {
             )}
 
 
-            {showHolidayPopup && (
-                <div className='popup-overlay-holiday' onClick={handleCloseHolidayPopup}>
-                    <div className='popup-container-holiday' onClick={(e) => e.stopPropagation()}>
-                        <h2>Holiday Report</h2>
-                        <form onSubmit={handleHolidaySubmit}>
-                            <div className='form-group-holiday'>
-                                <label htmlFor='holidayDays'>Insert number of days:</label>
-                                <input
-                                    type="number"
-                                    id="holidayDays"
-                                    name="holidayDays"
-                                    value={holidayDays}
-                                    onChange={(e) => setHolidayDays(parseFloat(e.target.value))}
-                                    min="0"
-                                    step="any"
-                                    required
-                                />
-                            </div>
-                            <div className='form-group-holiday'>
-                                <label htmlFor='holidaySum'>Insert sum for holiday:</label>
-                                <input
-                                    type="number"
-                                    id="holidaySum"
-                                    name="holidaySum"
-                                    value={holidaySum}
-                                    onChange={(e) => setHolidaySum(parseFloat(e.target.value))}
-                                    min="0"
-                                    step="any"
-                                    required
-                                />
-                            </div>
-                            {/* Recomandare pentru sumă travel */}
-                            <div className="recommended-sum-holiday">
-                                <label>Recommended sum for travel (round trip):</label>
-                                <div className="recommended-value-holiday">{recommendedTravelSum}</div>
-                            </div>
-                            {/* Recomandare pentru sumă cazare */}
-                            <div className="recommended-sum-holiday">
-                                <label>Recommended sum for accommodation ($/day):</label>
-                                <div className="recommended-value-holiday">{recommendedAccommodationSum}</div>
-                            </div>
-                            <div className='form-actions'>
-                                <button type="submit">Submit</button>
-                            </div>
-                        </form>
-                        <button className="x-button" onClick={handleCloseHolidayPopup}>×</button>
-                    </div>
+{showHolidayPopup && (
+    <div className='popup-overlay-holiday' onClick={handleCloseHolidayPopup}>
+        <div className='popup-container-holiday' onClick={(e) => e.stopPropagation()}>
+            <h2>Holiday Report</h2>
+            <form onSubmit={handleHolidaySubmit}>
+                <div className='form-group-holiday'>
+                    <label htmlFor='holidayDays'>Insert number of days:</label>
+                    <input
+                        type="number"
+                        id="holidayDays"
+                        name="holidayDays"
+                        value={holidayDays}
+                        onChange={(e) => setHolidayDays(parseFloat(e.target.value))}
+                        min="0"
+                        step="any"
+                        required
+                    />
                 </div>
-            )}
+                <div className='form-group-holiday'>
+                    <label htmlFor='holidaySum'>Insert sum for holiday:</label>
+                    <input
+                        type="number"
+                        id="holidaySum"
+                        name="holidaySum"
+                        value={holidaySum}
+                        onChange={(e) => setHolidaySum(parseFloat(e.target.value))}
+                        min="0"
+                        step="any"
+                        required
+                    />
+                </div>
+                {/* Recomandare pentru sumă travel */}
+                <div className="recommended-sum-holiday">
+                    <label>Recommended sum for travel (round trip):</label>
+                    <div className="recommended-value-holiday">{recommendedTravelSum}</div>
+                </div>
+                {/* Recomandare pentru sumă cazare */}
+                <div className="recommended-sum-holiday">
+                    <label>Recommended sum for accommodation ($/day):</label>
+                    <div className="recommended-value-holiday">{recommendedAccommodationSum}</div>
+                </div>
+                {/* Afișare erori de validare */}
+                {validationErrors.length > 0 && (
+                    <div className="validation-errors">
+                        {validationErrors.map((error, index) => (
+                            <p key={index} className="error">{error}</p>
+                        ))}
+                    </div>
+                )}
+                <div className='form-actions'>
+                    <button type="submit" onClick={handleRefresh}>Submit</button>
+                </div>
+            </form>
+            <button className="x-button" onClick={handleCloseHolidayPopup}>×</button>
+        </div>
+    </div>
+)}
 
             {/* Pop-up pentru Installments Report */}
             {showInstallmentsPopup && (

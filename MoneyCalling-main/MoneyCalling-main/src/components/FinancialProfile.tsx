@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import logo from  '../assets/logo.png';
 import profile_pic from "../assets/profile_pic.jpg";
 import { jwtDecode } from 'jwt-decode';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
  
 // Definim tipul pentru payload-ul decodat din token
 type DecodedToken = {
@@ -142,8 +142,16 @@ const FinancialProfile: React.FC = () => {
           setDataFetched);
       }
     } catch (error) {
-      console.error('Error updating user data:', error);
-      setMessage('Failed to update profile');
+      const axiosError = error as AxiosError;
+  if (axiosError.response && axiosError.response.status === 400) {
+    console.log('Validation Errors:', axiosError.response.data); // Adaugă acest log
+    const validationErrors = axiosError.response.data as { [key: string]: string };
+    const errorMessages = Object.values(validationErrors);
+    setMessage(errorMessages.join(", "));
+  } else {
+    console.error('Error updating user data:', axiosError);
+    setMessage('Failed to update profile');
+  }
     }
   };
  
@@ -199,23 +207,23 @@ const FinancialProfile: React.FC = () => {
             <h3 className='subtitle'>Income:</h3>
             <div className="form-group">
               <input
-                 type="number"
-                 name="venit"
-                 placeholder="Income:"
-                 value={financialData.venit}
-                 onChange={handleInputChange}
-                 readOnly={!isEditing}
+                type="number"
+                name="venit"
+                placeholder="Income:"
+                value={financialData.venit}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
               />
             </div>
             <h3 className='subtitle'>Home Address:</h3>
             <div className="form-group">
               <input
-                 type="text"
-                 name="domiciliu"
-                 placeholder="Home Address:"
-                 value={financialData.domiciliu}
-                 onChange={handleInputChange}
-                 readOnly={!isEditing}
+                type="text"
+                name="domiciliu"
+                placeholder="Home Address:"
+                value={financialData.domiciliu}
+                onChange={handleInputChange}
+                readOnly={!isEditing}
               />
             </div>
             <h3 className='subtitle'>Savings:</h3>
@@ -241,17 +249,16 @@ const FinancialProfile: React.FC = () => {
               />
             </div>
             <div className="edit-button-container">
-            {isEditing ? (
+              {isEditing ? (
                 <button className="edit-button" onClick={updateFinancialData}>Save</button>
               ) : (
                 <button className="edit-button" onClick={() => setIsEditing(true)}>Edit</button>
               )}
-          </div>
+            </div>
           </div>
         )}
       </div>
     </div>
   );
 };
- 
 export default FinancialProfile;

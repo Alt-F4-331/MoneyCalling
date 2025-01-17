@@ -24,6 +24,17 @@ const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched, updateTrigger 
       },
     ],
   });
+  const [dataFilter, setDataFilter] = useState({
+    labels: [] as string[],
+    datasets: [
+      {
+        label: 'Spendings',
+        data: [] as number[],
+        backgroundColor: [] as string[],
+        borderWidth: 0,
+      },
+    ],
+  });
 
   const categoryMap = {
     ALIMENTATIE: 'Food',
@@ -34,7 +45,7 @@ const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched, updateTrigger 
     TRANSPORT: 'Transport',
     IMBRACAMINTE: 'Clothing',
     ECONOMII: 'Economy',
-    CONTAINER: 'Container', // Dacă este necesar
+    CONTAINER: 'Savings', // Dacă este necesar
   };
 
   const [loading, setLoading] = useState(true);
@@ -113,6 +124,10 @@ const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched, updateTrigger 
         const labelsInEnglish = labelsInRomanian.map((label) => categoryMap[label] || label); // Folosim maparea
         const values = labelsInRomanian.map((label) => backendData[label]);
 
+        const labelsInRomanianFilter = Object.keys(backendData);
+        const labelsInEnglishFilter = labelsInRomanianFilter.map((label) => categoryMap[label] || label); // Folosim maparea
+        const valuesFilter = labelsInRomanianFilter.map((label) => backendData[label]);
+
         const backgroundColors = ['#DE80F2', '#EFDA89', '#3BAEE1', '#F28B82', '#A7F28B', '#F3A683', '#CAB6F2', '#E0E0E0'];
 
         setData({
@@ -122,6 +137,18 @@ const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched, updateTrigger 
               label: 'Spendings',
               data: values,
               backgroundColor: backgroundColors.slice(0, labelsInEnglish.length),
+              borderWidth: 0,
+            },
+          ],
+        });
+
+        setDataFilter({
+          labels: labelsInEnglishFilter, // Setăm categoriile în engleză
+          datasets: [
+            {
+              label: 'Spendings',
+              data: valuesFilter,
+              backgroundColor: backgroundColors.slice(0, labelsInEnglishFilter.length),
               borderWidth: 0,
             },
           ],
@@ -211,7 +238,7 @@ const PieChart: React.FC<PieChartProps> = ({ onCategoriesFetched, updateTrigger 
                 defaultValue="All"
               >
                 <option value="All">All</option>
-                {data.labels.map((label) => (
+                {dataFilter.labels.map((label) => (
                   <option key={label} value={label}>
                     {label}
                   </option>

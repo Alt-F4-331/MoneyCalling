@@ -111,7 +111,9 @@ const Register: React.FC = () => {
 
       if (response.status === 201) {
         setSuccessMessage('Account successfully created!');
-        navigate('/login');
+        setTimeout(() => {
+          navigate('/login');
+        }, 3000);
       } else {
         setError('Failed to create account. Please try again.');
       }
@@ -231,6 +233,7 @@ const Register: React.FC = () => {
             />
             {error && <p className="error">{error}</p>}
             <button className="next-button" onClick={submitForm}>Register</button>
+            {successMessage && <p>{successMessage}</p>}
             <button className="back-button" onClick={prevStep}>Back</button>
           </div>
         )}
