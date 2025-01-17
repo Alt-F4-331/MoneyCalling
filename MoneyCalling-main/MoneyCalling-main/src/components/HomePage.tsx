@@ -72,6 +72,7 @@ const HomePage: React.FC = () => {
     const [showHolidayPopup, setShowHolidayPopup] = useState(false);
     const [holidayDays, setHolidayDays] = useState<number>(0);
     const [holidaySum, setHolidaySum] = useState<number>(0);
+    
     const [showInstallmentsPopup, setShowInstallmentsPopup] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [installmentOptions, setInstallmentOptions] = useState([6, 12, 24, 36, 48]);
@@ -492,10 +493,11 @@ const HomePage: React.FC = () => {
             console.log(`Status: ${response.status} (${response.statusText})`);
 
             if (response.ok) {
-                const message = await response.text();
-                setMessage(message); // Mesaj de succes
-                localStorage.setItem('savings', String(savingsSum));
-                setTriggerReload((prev) => !prev);
+                
+                setMessage("The sum for holiday has been added"); 
+                
+                setTimeout(() => {handleRefresh();}, 2000);
+
             } else {
                 const errorText = await response.json();
                 //setMessage(`Eroare: ${errorText}`); Mesaj de eroare
@@ -540,20 +542,34 @@ const HomePage: React.FC = () => {
             });
 
             if (response.ok) {
-                alert('Chiria propusă a fost trimisă cu succes.');
-
-
-                setProposedRent(rentAmount)
-
+                setProposedRent(rentAmount);
+                console.log(rentAmount);
                 // Verifică dacă suma introdusă este mai mare decât suma sugerată
                 if (rentAmount > rentSuggestion) {
                     setShowWarningPopup(true); // Afișează pop-up-ul de avertizare
                 } else {
+                    let responseData;
+                try {
+                    responseData = await response.text();
+                } catch (error) {
+                    console.error("Eroare la citirea răspunsului:", error);
+                    setMessage("Eroare la procesarea răspunsului.");
+                }
+                    setMessage(responseData);
                     setShowRentPopup(false); // Închide pop-up-ul după trimitere
                 }
 
             } else {
-                alert('A apărut o eroare la trimiterea chiriei propuse. Vă rugăm să încercați din nou.');
+                console.log(response.ok);
+                let responseData;
+                try {
+                    responseData = await response.text();
+                } catch (error) {
+                    console.error("Eroare la citirea răspunsului:", error);
+                    setMessage("Eroare la procesarea răspunsului.");
+                }
+                    setMessage(responseData);
+                    setShowRentPopup(false);
             }
         } catch {
             alert('Eroare de rețea. Vă rugăm să verificați conexiunea.');
@@ -580,9 +596,16 @@ const HomePage: React.FC = () => {
                 });
 
                 if (response.ok) {
-                    alert('Chiria a fost confirmată cu succes.');
                     setShowWarningPopup(false); // Închide warning pop-up
                     setShowRentPopup(false); // Închide toate pop-up-urile
+                    let responseData;
+                try {
+                    responseData = await response.text();
+                } catch (error) {
+                    console.error("Eroare la citirea răspunsului:", error);
+                    setMessage("Eroare la procesarea răspunsului.");
+                }
+                    setMessage(responseData);
                 } else {
                     const errorText = await response.text();
                     alert(`A apărut o eroare la confirmarea chiriei: ${errorText}`);
@@ -644,19 +667,20 @@ const HomePage: React.FC = () => {
     const handleRentSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Verificăm condiția pentru pop-up-ul de avertizare
-        if (rentAmount > rentSuggestion) {
-            setShowWarningPopup(true); // Afișează pop-up-ul de avertizare
-        } else {
+        submitProposedRent();
+
+        
+        
             // Apelăm funcția pentru a trimite chiria propusă
-            submitProposedRent();
-        }
+            
+        
     };
 
     //final david
 
     const [suggestedInstallment, setSuggestedInstallment] = useState<number | null>(null);
     const [calculatedInstallment, setCalculatedInstallment] = useState<number | null>(null);
+    const [rateToSubmit, setRateToSubmit] = useState<number | null>(null);
 
 
     const fetchInstallmentSuggestion = async () => {
@@ -667,7 +691,7 @@ const HomePage: React.FC = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/rapoarte/sugereaza-rata', {
+            const response = await fetch(`http://localhost:8080/api/rapoarte/sugereaza-rata`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`, // Adaugă token-ul în header
@@ -686,7 +710,14 @@ const HomePage: React.FC = () => {
         }
     };
 
+    const [sum, setSum] = useState<number>(0);
+    const [months, setMonths] = useState<number>(0);
+
+    
+
     const calculateInstallment = async (sum: number, months: number) => {
+        console.log(sum);
+        console.log(months);
         try {
             const response = await fetch(
                 `http://localhost:8080/api/rapoarte/calculeaza-rata?sumaPropusa=${sum}&luni=${months}`,
@@ -708,7 +739,9 @@ const HomePage: React.FC = () => {
     };
 
     useEffect(() => {
-        if (installmentSum && selectedInstallment) {
+        
+        
+        if (installmentSum>0 && selectedInstallment !== null) {
             calculateInstallment(installmentSum, selectedInstallment);
         }
     }, [installmentSum, selectedInstallment]);
@@ -728,8 +761,8 @@ const HomePage: React.FC = () => {
     const handleInstallmentSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Valoarea ratei care va fi trimisă la backend
-        const rateToSubmit = calculatedInstallment;
+        
+        
 
         const token = localStorage.getItem('token'); // Preluare token din localStorage
         if (!token) {
@@ -737,7 +770,8 @@ const HomePage: React.FC = () => {
             return;
         }
 
-        if (rateToSubmit) {
+        
+        if (calculatedInstallment) {
 
             try {
                 const response = await fetch(`http://localhost:8080/api/rapoarte/adauga-rata?rataPropusa=${calculatedInstallment}`, {
@@ -753,16 +787,30 @@ const HomePage: React.FC = () => {
                 console.log("Status cod:", response.status);  // Vei vedea codul statusului (ex: 200, 400, etc.)
                 console.log("Status text:", response.statusText);  // Descrierea statusului (ex: "OK", "Bad Request", etc.)
 
-                if (response.status === 200) {
+                if (response.ok) {
                     const result = await response.json();
                     console.log("Răspuns complet API:", result);
-                    alert(result); // Poți înlocui alert cu un mesaj de succes sau altceva
+                    let responseData;
+                try {
+                    responseData = await response.text();
+                    setMessage(responseData);
+                } catch (error) {
+                    console.error("Eroare la citirea răspunsului:", error);
+                    setMessage("Eroare la procesarea răspunsului.");
+                }
                 } else {
-                    const errorText = await response.text();
-                    alert(`A apărut o eroare: ${errorText}`);
+                    let responseData;
+                try {
+                    responseData = await response.text();
+                    setMessage(responseData);
+                } catch (error) {
+                    console.error("Eroare la citirea răspunsului:", error);
+                    setMessage("Eroare la procesarea răspunsului.");
+                }
                 }
             } catch (error) {
-                alert("Installment added succesful");
+
+                setMessage("Installment added succesfully");
             }
         } else {
             alert("Vă rugăm să selectați o rată.");
@@ -786,13 +834,7 @@ const HomePage: React.FC = () => {
         // Mapăm categoria aleasă din frontend la categoria corespunzătoare din backend
         const mappedCategory = categoryMap[category];
 
-        console.log(mappedCategory);
-        if (mappedCategory === 'CONTAINER') {
-            setIsVariableTrue(true);
-          }
-          else{
-            setIsVariableTrue(false);
-          }
+        
         // Construim obiectul care va fi trimis către back-end
         const expenseData = {
             nume: name, // "nume" trebuie să corespundă cu DTO-ul
@@ -829,6 +871,9 @@ const HomePage: React.FC = () => {
 
                 console.log("Răspuns server:", responseData);
                 setMessage(responseData);
+                if(mappedCategory === 'CONTAINER')
+                    setTimeout(() => {handleRefresh();}, 2000);
+                    
 
                 // Resetăm valorile formularului
                 setName("");
@@ -902,8 +947,10 @@ const HomePage: React.FC = () => {
             });
 
             if (response.ok) {
-                alert('The diagram has been successfully reset, and the saved money has been added to your savings!');
-                setShowWarningResetPopup(false); // Închide popup-ul de avertizare
+                            //mesaj
+                setShowWarningResetPopup(false);
+                setMessage("Diagram has been reset");
+                setTimeout(() => {handleRefresh();}, 2000);
             } else {
                 alert('A apărut o eroare la resetarea diagramei. Vă rugăm să încercați din nou.');
             }
@@ -956,9 +1003,9 @@ const HomePage: React.FC = () => {
       }, [dataFetched, financialData]);
 
       const handleRefresh = () => {
-        if(isVariableTrue)
+    
           window.location.reload(); // Reîncarcă pagina curentă
-        else console.log(isVariableTrue);
+        
     };
     
 
@@ -1010,8 +1057,9 @@ const HomePage: React.FC = () => {
                         <p>All the money that you have not spent will be added to your savings.</p>
 
                         <div className="reset-popup-buttons">
-                            <button onClick={handleConfirmReset} disabled={isLoading}>
+                            <button onClick={handleConfirmReset} disabled={isLoading} >
                                 {isLoading ? 'Processing...' : 'Yes'}
+                                 
                             </button>
                             <button onClick={handleCancelReset} disabled={isLoading}>
                                 No
@@ -1074,7 +1122,7 @@ const HomePage: React.FC = () => {
                             <button 
                              type='submit' 
                              className='submit-sub-button' 
-                             onClick={handleRefresh}
+                             
                                >
                               Add
                              </button>
@@ -1185,7 +1233,7 @@ const HomePage: React.FC = () => {
                     </div>
                 )}
                 <div className='form-actions'>
-                    <button type="submit" onClick={handleRefresh}>Submit</button>
+                    <button type="submit">Submit</button>
                 </div>
             </form>
             <button className="x-button" onClick={handleCloseHolidayPopup}>×</button>

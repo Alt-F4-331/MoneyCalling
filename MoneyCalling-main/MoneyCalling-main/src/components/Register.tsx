@@ -113,12 +113,18 @@ const Register: React.FC = () => {
         setSuccessMessage('Account successfully created!');
         setTimeout(() => {
           navigate('/login');
-        }, 3000);
+        }, 2000);
       } else {
         setError('Failed to create account. Please try again.');
       }
     } catch (err) {
-      setError('Server communication error. Please try again.');
+      let errorMessage = '';
+      if (!password || !cpassword || password !== cpassword) {
+        errorMessage = 'Passwords do not match or are empty.';
+      } else {
+        errorMessage = validateField('password', password);
+      }
+      setSuccessMessage(errorMessage);          
     }
   };
 
